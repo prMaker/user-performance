@@ -40,11 +40,11 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Transactional
     public void save(UserInfo userInfo, UserPerformance userPerformance) throws AuthenException{
         // 1.本人修改
-        if(userInfo.getUserInfoId().longValue() == userPerformance.getUserInfoId().longValue()){
-            userPerformanceDao.updateById(userPerformance);
-            _logger.info("用户修改数据{}", userPerformance);
-        }
-        // 2.其他人修改
+//        if(userInfo.getUserInfoId().longValue() == userPerformance.getUserInfoId().longValue()){
+//            userPerformanceDao.updateById(userPerformance);
+//            _logger.info("用户修改数据{}", userPerformance);
+//        }
+        // 2.上级修改
         permissionService.getAuthen(userInfo, userPerformance);//校验权限
         if(userInfo.getUserInfoId().longValue() == Util.ADMIN_ID){
             // 如果是管理员，则直接修改原始数据

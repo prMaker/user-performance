@@ -7,7 +7,7 @@ import com.performance.service.exec.AuthenException;
 public interface PermissionService {
 
     /**
-     * 校验单条数据当前用户是否可以修改
+     * 校验单条数据当前用户是否可以修改审核校验
      *
      * 校验策略：
      * 1.配置超级管理员，超级管理员可以修改，若是超级管理员修改之后，其他人不可以修改

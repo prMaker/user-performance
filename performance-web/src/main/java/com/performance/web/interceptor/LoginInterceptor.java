@@ -34,8 +34,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         UserInfo userInfo = null;
         UserLogin userLogin = null;
         try {
-            if(request.getRequestURI().startsWith("/login/toLogin") ||
-                    request.getRequestURI().startsWith("/login/doLogin")){// 登录页面
+            if(request.getRequestURI().startsWith("/userLogin/toLogin") ||
+                    request.getRequestURI().startsWith("/userLogin/doLogin")){// 登录页面
                 return true;
             }
             if(StringUtils.isBlank(request.getParameter("loginId"))) return false;// FIXME 重定向到登陆页面

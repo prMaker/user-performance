@@ -24,22 +24,6 @@ public class UserLoginPageParam extends PageParam {
      */
     private Long createdUserId;
 
-    public long getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(long pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
     public String getOrderField() {
         return orderField;
     }

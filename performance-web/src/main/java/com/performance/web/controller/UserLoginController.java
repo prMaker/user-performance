@@ -76,7 +76,7 @@ public class UserLoginController {
         _logger.info("userLoginName：{}新建用户：{}", LoginSession.getUserLogin().getLoginName(), userLogin);
         userLoginService.save(userLogin);
         redirectAttr.addAttribute("infoMsg","创建成功！");
-        return "redirect:/userLogin/list";
+        return "redirect:/userLogin/list?loginId=" + LoginSession.getUserLogin().getLoginId();
     }
 
     private void packUserLAndInfoParam(UserLogin userLogin) {

@@ -46,6 +46,7 @@
 
   <welcome-file-list>
     <welcome-file>/test/home</welcome-file>
+    <welcome-file>/test/temp</welcome-file>
   </welcome-file-list>
 
 

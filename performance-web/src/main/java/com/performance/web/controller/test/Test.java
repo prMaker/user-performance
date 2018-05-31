@@ -40,6 +40,11 @@ public class Test {
         return "success";
     }
 
+    @RequestMapping("/temp")
+    public String temp(){
+        return "/test/temp";
+    }
+
 
 //    (is_deleted,login_name,password,dispostion
 //   ,login_state,created_time,modified_time,created_user,modified_user,created_user_id,modified_user_id)

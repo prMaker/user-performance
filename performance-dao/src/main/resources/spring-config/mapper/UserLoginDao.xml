@@ -64,4 +64,20 @@
         </where>
     </select>
 
+    <select id="selectForPage" parameterType="com.performance.common.query.UserLoginPageParam">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_login
+        <where>
+            created_user_id = #{createdUserId}
+            OR modified_user_id = #{modifiedUserId}
+            AND is_deleted = 0;
+        </where>
+
+        <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
+            ORDER BY #{orderField},#{orderDir}
+        </if>
+        limit #{offset},#{limit}
+    </select>
+
 </mapper>
