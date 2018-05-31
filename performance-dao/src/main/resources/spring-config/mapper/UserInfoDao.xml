@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.performance.dao.mapper.UserInfoDao">
+
+    <resultMap id="resultMap" type="com.performance.pojo.UserInfo">
+        <id property="loginId" column="login_id"/>
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="loginName" column="login_name"/>
+        <result property="password" column="password"/>
+        <result property="idCard" column="id_card"/>
+        <result property="userName" column="user_name"/>
+        <result property="dispostion" column="dispostion"/>
+        <result property="loginState" column="login_state"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="createdUserInfoId" column="created_user_info_id"/>
+        <result property="modifiedUserInfoId" column="modified_user_info_id"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_info_id,login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id
+    </sql>
+
+    <insert id="insert" parameterType="com.performance.pojo.UserInfo">
+        INSERT INTO user_info (login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id)
+        VALUES (#{loginId},#{idCard},#{userName},#{birthday}
+        ,#{sex},#{phone},0,#{pid},#{dispostion},#{createdTime},#{modifiedTime}
+        ,#{createdUserInfoId},#{modifiedUserInfoId});
+    </insert>
+
+    <select id="selectById" resultMap="resultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_info
+        WHERE user_info_id = #{id} AND is_deleted=0;
+    </select>
+
+    <update id="updateById" parameterType="com.performance.pojo.UserInfo">
+        UPDATE user_info SET
+        login_id=#{loginId},
+        id_card=#{idCard},
+        user_name=#{userName},
+        birthday=#{birthday},
+        sex=#{sex},
+        phone=#{phone},
+        is_deleted=#{isDeleted},
+        pid=#{pid},
+        dispostion=#{dispostion},
+        modified_time=now(),
+        modified_user_info_id=#{modifiedUserInfoId}
+        WHERE user_info_id=#{userInfoId} AND is_deleted=0;
+    </update>
+
+    <select id="selectAllChild" parameterType="java.lang.Long" resultMap="resultMap" resultType="List">
+        SELECT
+         <include refid="Base_Column_List"/>
+         FROM user_info
+            WHERE pid in
+            (
+                (
+                    SELECT user_info_id FROM user_info
+                    WHERE pid in
+                    (SELECT user_info_id FROM user_info
+                    WHERE pid=#{userInfoId})
+                )
+                UNION
+                    (SELECT user_info_id FROM user_info
+                    WHERE pid=#{userInfoId})
+                UNION
+                    SELECT #{userInfoId}
+            )
+            AND is_deleted=0;
+    </select>
+
+    <select id="containsChild" parameterType="Map" resultType="com.performance.pojo.UserInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_info
+        WHERE pid in
+            (
+                (
+                    SELECT user_info_id FROM user_info
+                    WHERE pid in
+                    (SELECT user_info_id FROM user_info
+                    WHERE pid=#{parent})
+                )
+                UNION
+                    (SELECT user_info_id FROM user_info
+                    WHERE pid=#{parent})
+                UNION
+                    SELECT #{parent}
+            )
+            AND user_info_id = #{child}
+            AND is_deleted=0;
+    </select>
+
+    <select id="selectForPage" parameterType="com.performance.common.query.UserInfoPageParam"
+            resultMap="resultMap">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_info
+        <where>
+            pid in
+            (
+                SELECT user_info_id FROM user_info WHERE pid in
+                    (SELECT user_info_id FROM user_info  WHERE pid=1 UNION SELECT 1)
+            )
+            AND is_deleted=0
+        </where>
+
+
+--
+--         /**
+--         * 排序字段
+--         */
+--         private String orderField;
+--         /**
+--         * 排序方向
+--         */
+--         private String orderDir;
+        <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
+            ORDER BY #{orderField},#{orderDir}
+        </if>
+
+        limit #{offset},#{limit}
+
+
+        <!--
+            SELECT
+            <include refid="Base_Column_List"/>
+            FROM user_info
+            WHERE
+                pid in
+                (
+                    (
+                        SELECT user_info_id FROM user_info
+                        WHERE pid in
+                        (SELECT user_info_id FROM user_info
+                        WHERE pid=#{pid})
+                    )
+                  UNION
+                        (SELECT user_info_id FROM user_info
+                        WHERE pid=#{pid})
+                  UNION
+                        SELECT #{pid}
+                )
+        -->
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer"
+            parameterType="com.performance.pojo.UserInfo">
+        SELECT count(1) FROM user_info
+        WHERE is_deleted=0;
+    </select>
+
+</mapper>

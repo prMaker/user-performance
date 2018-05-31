@@ -1,0 +1,4 @@
+INSERT INTO user_info
+(login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_id,modified_user_id)
+VALUES
+(1,'410882199009013439','admin','20190105',1,18832058799,0,0,99,now(),now(),0,0);

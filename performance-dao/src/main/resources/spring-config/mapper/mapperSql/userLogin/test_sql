@@ -1,0 +1,62 @@
+##  查询当前用户下是否存在另一用户数据
+
+## 五层嵌套：  包含超级管理员用户
+
+SELECT user_info_id FROM user_info
+WHERE pid in
+(
+SELECT user_info_id FROM user_info
+WHERE pid in
+(SELECT user_info_id FROM user_info
+WHERE pid in (SELECT user_info_id FROM user_info
+WHERE pid=27))
+UNION
+(SELECT user_info_id FROM user_info
+WHERE pid in (SELECT user_info_id FROM user_info
+WHERE pid=27))
+UNION
+(SELECT user_info_id FROM user_info
+WHERE pid=27)
+UNION
+SELECT 27
+) AND user_info_id = 42;
+
+##  四层嵌套
+
+SELECT user_info_id FROM user_info
+WHERE pid in
+(
+(SELECT user_info_id FROM user_info
+WHERE pid in (SELECT user_info_id FROM user_info
+WHERE pid=27))
+UNION
+(SELECT user_info_id FROM user_info
+WHERE pid=27)
+UNION
+SELECT 27
+) AND user_info_id = 42;
+
+
+
+
+INSERT INTO user_login
+(is_deleted,login_name,password,dispostion,created_time,modified_time
+,created_user,modified_user,created_user_id,modified_user_id)
+ VALUES
+(0,'admin','admin',99,now(),now()
+,'admin','admin',0,0);
+
+
+INSERT INTO user_login
+(is_deleted,login_name,password,dispostion,created_time,modified_time
+,created_user,modified_user,created_user_id,modified_user_id)
+ VALUES
+(0,'department1','department1',4,now(),now()
+,'admin','admin',1,1);
+
+
+
+
+UPDATE user_login SET user_info_id = '1' WHERE login_id ='1' ;
+
+

@@ -1,0 +1,51 @@
+    private Long performanceId;
+    private Long userInfoId;
+    private Integer isDeleted;
+    private String performanceContent;
+    private Integer performanceScore;
+    private Long operateUserInfoId;
+    private Timestamp createdTime;
+    private Timestamp modifiedTime;
+    private Integer isLocked;
+    private Integer operateDisposition;
+    private String performanceTime;
+
+performanceId,userInfoId,isDeleted,performanceContent,performanceScore,operateUserInfoId,createdTime,modifiedTime,isLocked,operateDisposition,performanceTime
+
+performance_id=#{performanceId},
+user_info_id=#{userInfoId},
+is_deleted=#{isDeleted},
+performance_content=#{performanceContent},
+performance_score=#{performanceScore},
+operate_user_info_id=#{operateUserInfoId},
+created_time=#{createdTime},
+modified_time=#{modifiedTime},
+is_locked=#{isLocked},
+operate_dispostion=#{operateDisposition},
+performance_time=#{performanceTime}
+
+
+
+
+
+
+    performance_id	用户绩效表ID	bigInt	N/Y	用户绩效表ID
+    user_info_id	用户信息表ID	bigInt	N/N	用户信息表ID
+    is_deleted	是否删除	int	N/N	是否删除0,1
+    performance_content	绩效内容	varchar	Y/N	绩效内容
+    performance_score	绩效分数	int	N/N	绩效分数
+    operate_user_info_id	操作人id(user_id)	long	Y/N	操作人id(user_id)
+    created_time	创建时间	timestamp	N/N	创建时间
+    modified_time	修改时间	timestamp	N/N	修改时间
+    is_locked	是否锁定	int	N/N	是否锁定 0,1
+    operate_dispostion	操作人职级	int	Y/N	低职级不能修改高职级修改的数据
+    performance_time	绩效月份	varchar	N/N
+
+performance_id,user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_dispostion,performance_time
+
+
+#{item.userInfoId},#{item.isDeleted},#{item.performanceContent},#{item.performanceScore},#{item.operateUserInfoId},#{item.createdTime},#{item.modifiedTime},#{item.isLocked},#{item.operateDisposition},#{item.performanceTime}
+
+
+
+

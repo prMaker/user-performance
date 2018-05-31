@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.performance.dao.mapper.UserLoginDao">
+
+    <resultMap id="resultMap" type="com.performance.pojo.UserLogin">
+        <id property="loginId" column="login_id"/>
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="loginName" column="login_name"/>
+        <result property="password" column="password"/>
+        <result property="dispostion" column="dispostion"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="createdUser" column="created_user"/>
+        <result property="modifiedUser" column="modified_user"/>
+        <result property="createdUserId" column="created_user_id"/>
+        <result property="modifiedUserId" column="modified_user_id"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        login_id,user_info_id,is_deleted,login_name,password,dispostion,created_time,modified_time,created_user,modified_user,created_user_id,modified_user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.performance.pojo.UserLogin">
+        INSERT INTO user_login (user_info_id,is_deleted,login_name,password,dispostion,created_time
+        ,modified_time,created_user,modified_user,created_user_id,modified_user_id)
+        VALUES (#{userInfoId},0,#{loginName},#{password},#{dispostion},#{createdTime}
+        ,#{modifiedTime},#{createdUser},#{modifiedUser},#{createdUserId},#{modifiedUserId});
+    </insert>
+
+    <select id="selectById" resultMap="resultMap" resultType="com.performance.pojo.UserLogin"
+            parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_login
+        WHERE login_id = #{id} AND is_deleted = 0;
+    </select>
+
+    <update id="updateById" parameterType="com.performance.pojo.UserLogin">
+        UPDATE user_login SET
+        user_info_id=#{userInfoId},is_deleted=#{isDeleted},login_name=#{loginName},password=#{password},dispostion=#{dispostion},created_time=#{createdTime},modified_time=now(),created_user=#{createdUser},modified_user=#{modifiedUser}
+        WHERE login_id=#{loginId} AND is_deleted=0;
+    </update>
+
+    <select id="getAllLoginUser" resultMap="resultMap" resultType="java.util.List">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_login
+        WHERE is_deleted = 0;
+
+    </select>
+
+    <select id="selectByCondition" resultMap="resultMap" resultType="com.performance.pojo.UserLogin" parameterType="com.performance.pojo.UserLogin">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_login
+        <where>
+            <if test="loginName != null and loginName != '' ">
+                login_name=#{loginName}
+            </if>
+            <if test="password != null and password != ''">
+                AND password=#{password}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.performance.dao.mapper.UserPerformanceDao">
+
+    <resultMap id="resultMap" type="com.performance.pojo.UserPerformance">
+        <id property="performanceId" column="performance_id"/>
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="performanceContent" column="performance_content"/>
+        <result property="performanceScore" column="performance_score"/>
+        <result property="operateUserInfoId" column="operate_user_info_id"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="isLocked" column="is_locked"/>
+        <result property="operateDisposition" column="operate_disposition"/>
+        <result property="performanceTime" column="performance_time"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        performance_id,user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time
+    </sql>
+
+    <insert id="insert" parameterType="com.performance.pojo.UserPerformance">
+        INSERT INTO user_info (user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time)
+        VALUES (#{userInfoId},0,#{performanceContent},#{performanceScore}
+        ,#{operateUserInfoId},now(),now(),#{isLocked},#{operateDisposition}
+        ,#{performanceTime});
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO user_performance
+        (user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userInfoId},#{item.isDeleted},#{item.performanceContent},#{item.performanceScore},#{item.operateUserInfoId},#{item.createdTime},#{item.modifiedTime},#{item.isLocked},#{item.operateDisposition},#{item.performanceTime})
+        </foreach>
+    </insert>
+
+    <update id="updateById" parameterType="com.performance.pojo.UserPerformance">
+        UPDATE user_performance SET
+        <if test="isDeleted != null and isDeleted != ''">
+            is_deleted=#{isDeleted},
+        </if>
+        <if test="performanceContent != null and performanceContent != ''">
+            performance_content=#{performanceContent},
+        </if>
+        <if test="performanceScore != null and performanceScore != ''">
+            performance_score=#{performanceScore},
+        </if>
+        <if test="operateUserInfoId != null and operateUserInfoId != ''">
+            operate_user_info_id=#{operateUserInfoId},
+        </if>
+        <if test="isLocked != null and isLocked != ''">
+            is_locked=#{isLocked},
+        </if>
+        <if test="operateDisposition != null and operateDisposition != ''">
+            operate_disposition=#{operateDisposition},
+        </if>
+        <if test="performanceTime != null and performanceTime != ''">
+            performance_time=#{performanceTime}
+        </if>
+        WHERE performanceId=#{performanceId} AND is_deleted=0;
+    </update>
+
+    <select id="selectById" resultMap="resultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_performance
+        WHERE performance_id = #{id}
+    </select>
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        UPDATE user_performance SET
+        is_deleted=1
+        WHERE performanceId=#{performanceId};
+    </update>
+
+    <update id="lockPerformance" parameterType="com.performance.pojo.UserPerformance">
+        UPDATE user_performance SET
+        is_locked=1
+        WHERE performance_time=#{performanceTime} AND is_deleted = 0;
+    </update>
+
+    <select id="selectForPage" resultMap="resultMap"
+            resultType="com.performance.pojo.UserPerformance"
+            parameterType="java.util.Map"
+            >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_performance
+        <where>
+            user_info_id IN
+            <foreach collection="userInfos" item="item" index="index" open="(" close=")" separator=",">
+                #{item.userInfoId}
+            </foreach>
+            <if test="performanceTime != null and performanceTime != ''">
+                AND performance_time = #{performanceTime}
+            </if>
+            AND is_deleted = 0;
+        </where>
+    </select>
+
+</mapper>

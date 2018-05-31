@@ -1,0 +1,65 @@
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="loginName" column="login_name"/>
+        <result property="password" column="password"/>
+        <result property="dispostion" column="dispostion"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="createdUser" column="created_user"/>
+        <result property="modifiedUser" column="modified_user"/>
+
+
+        <id property="loginId" column="login_id" jdbcType="bigInt"/>
+        <result property="userInfoId" column="user_info_id" jdbcType="bigInt"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="int"/>
+        <result property="loginName" column="login_name" jdbcType="varchar"/>
+        <result property="password" column="password" jdbcType="varchar"/>
+        <result property="dispostion" column="dispostion" jdbcType="int"/>
+        <result property="createdTime" column="created_time" jdbcType="timestamp"/>
+        <result property="modifiedTime" column="modified_time" jdbcType="timestamp"/>
+        <result property="createdUser" column="created_user" jdbcType="varchar"/>
+        <result property="modifiedUser" column="modified_user" jdbcType="varchar"/>
+        <result property="createdUserId" column="created_user_id" jdbcType="bigInt"/>
+        <result property="modifiedUserId" column="modified_user_id" jdbcType="bigInt"/>
+
+login_id=#{loginId},user_info_id=#{userInfoId},is_deleted=#{isDeleted},login_name=#{loginName},password=#{password},dispostion=#{dispostion},login_state=#{loginState},created_time=#{createdTime},modified_time=#{modifiedTime},created_user=#{createdUser},modified_user=#{modifiedUser}
+
+
+
+
+表西文名		 user_login	表中文名	用户登录账号信息表
+序号	列西文名	列中文名	数据类型	非空/主键	备注
+	login_id	登录信息表ID	bigInt	N/Y
+	user_info_id	用户信息表ID	bigInt	Y/N
+	is_deleted	用户删除操作	int	N/N	是否删除0,1
+	login_name	用户名	varchar	N/N	用户名
+	password	密码	varchar	N/N	密码
+	dispostion	职位	int	N/N	职级，分为四级 0,1,2,3
+	created_time	创建时间	timestamp	N/N	创建时间
+	modified_time	修改时间	timestamp	N/N	修改时间
+	created_user	创建人	varchar	N/N	创建人
+	modified_user	修改人	varchar	N/N	修改人
+
+
+
+
+    private Long loginId;
+    private Long userInfoId;
+    private Integer isDeleted;
+    private String loginName;
+    private String password;
+    private Integer dispostion;
+    private String loginState;
+    private Timestamp createdTime;
+    private Timestamp modifiedTime;
+    private String createdUser;
+    private String modifiedUser;
+    private Long createdUserId;// 创建人用户ID
+    private Long modifieduserId;// 修改人用户ID
+
+
+
+    login_id,user_info_id,is_deleted,login_name,password,dispostion,created_time,modified_time,created_user,modified_user
+
+
+    loginId,userInfoId,isDeleted,loginName,password,dispostion,createdTime,modifiedTime,createdUser,modifiedUser

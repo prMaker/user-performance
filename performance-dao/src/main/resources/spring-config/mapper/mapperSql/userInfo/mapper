@@ -1,0 +1,65 @@
+<result property="loginId" column="login_id"/>
+<result property="idCard" column="id_card"/>
+<result property="userName" column="user_name"/>
+<result property="birthday" column="birthday"/>
+<result property="sex" column="sex"/>
+<result property="phone" column="phone"/>
+<result property="isDeleted" column="is_deleted"/>
+<result property="pid" column="pid"/>
+<result property="dispostion" column="dispostion"/>
+<result property="createdTime" column="created_time"/>
+<result property="modifiedTime" column="modified_time"/>
+<result property="createdUser" column="created_user"/>
+<result property="modifiedUser" column="modified_user"/>
+
+    private Long userInfoId;
+    private Long loginId;
+    private String idCard;
+    private String userName;
+    private String birthday;
+    private Integer sex;
+    private String phone;
+    private Integer isDeleted;
+    private Long pid;
+    private Integer dispostion;
+    private Timestamp createdTime;
+    private Timestamp modifiedTime;
+    private Long createdUserInfoId;
+    private Long modifiedUserInfoId;
+
+
+    user_info_id	用户信息表ID	bigInt	N/Y
+    login_id	登录信息ID	bigInt	N/N
+    id_card	身份证号	varchar	N/N
+    user_name	用户姓名	varchar	N/N
+    birthday	用户生日	varchar	N/N
+    sex	用户性别	int	N/N
+    phone	用户电话	varchar	Y/N
+    is_deleted	是否删除	int	N/N
+    pid	父ID	bigInt	N/N
+    dispostion	职位	int	N/N
+    created_time	创建时间	timestamp	N/N
+    modified_time	修改时间	timestamp	N/N
+    created_user	创建人	varchar	N/N
+    modified_user	修改人	varchar	N/N
+
+
+userInfoId,loginId,idCard,userName,birthday,sex,phone,isDeleted,pid,dispostion,createdTime,modifiedTime,createdUser,modifiedUser
+user_info_id,login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id
+
+
+
+user_info_id=#{userInfoId},
+login_id=#{loginId},
+id_card=#{idCard},
+user_name=#{userName},
+birthday=#{birthday},
+sex=#{sex},
+phone=#{phone},
+is_deleted=#{isDeleted},
+pid=#{pid},
+dispostion=#{dispostion},
+created_time=#{createdTime},
+modified_time=#{modifiedTime},
+created_user=#{createdUser},
+modified_user=#{modifiedUser}
