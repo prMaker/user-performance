@@ -86,7 +86,7 @@ public class UserLoginController {
         userLogin.setModifiedUserId(LoginSession.getUserLogin().getLoginId());
     }
 
-    @RequestMapping(value = "list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(ModelMap modelMap){
         if(null == LoginSession.getUserInfo()){
             modelMap.put("infoMsg", "没有创建个人信息无法看到员工列表");
