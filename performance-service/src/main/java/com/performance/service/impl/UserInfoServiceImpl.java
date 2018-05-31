@@ -12,6 +12,7 @@ import com.performance.service.PermissionService;
 import com.performance.service.Po.UserInfoPerfor;
 import com.performance.service.UserInfoService;
 import com.performance.service.exec.AuthenException;
+import com.performance.service.exec.ErrorDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -51,7 +52,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userLoginDao.updateById(userLogin);
     }
 
-    public List<UserInfoPerfor> getUserIPByParam(UserInfo currUserInfo, UserInfoPageParam param) throws RuntimeException {
+    public List<UserInfoPerfor> getUserIPByParam(UserInfo currUserInfo, UserInfoPageParam param) throws ErrorDataException {
 
         List<UserInfo> userInfos = userInfoDao.selectForPage(param);
 //        UserPerformance performance = new UserPerformance();
@@ -77,13 +78,13 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     private List<UserInfoPerfor> getUserInfoPerfors(UserInfo currUserInfo, UserInfoPageParam param
             , List<UserInfo> userInfos, List<UserPerformance> performances)
-            throws RuntimeException{
+            throws ErrorDataException{
         List<UserInfoPerfor> userInfoPerfors = new ArrayList<UserInfoPerfor>();
 
         // 1.   数据若不一致性，即数据出现问题，一般不会
         if(userInfos.size() != performances.size()){
             _logger.error("查询数据库表user_info和user_performance数据不一致，参数{}", param);
-            throw new RuntimeException("后台数据不一致，请联系管理员！");
+            throw new ErrorDataException("后台数据不一致，请联系管理员！");
         }
 
         // 2.   JDK8 排序查出的数据

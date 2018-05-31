@@ -34,23 +34,22 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Value("adminId")// 管理员账户信息ID
     private String adminId;
     // 并发新增绩效信息锁定
-    // 单机版本处理方案
     private volatile String batchSaveFlag;
 
     @Transactional
     public void save(UserInfo userInfo, UserPerformance userPerformance) throws AuthenException{
-        // 1.本人修改
-//        if(userInfo.getUserInfoId().longValue() == userPerformance.getUserInfoId().longValue()){
-//            userPerformanceDao.updateById(userPerformance);
-//            _logger.info("用户修改数据{}", userPerformance);
-//        }
-        // 2.上级修改
+        // 1.如果是之前修改人修改，则直接更新
+        if(userInfo.getUserInfoId().longValue() == userPerformance.getOperateUserInfoId().longValue()){
+            userPerformanceDao.updateById(userPerformance);
+            _logger.info("用户修改数据{}", userPerformance);
+        }
+        // 2.管理员修改
         permissionService.getAuthen(userInfo, userPerformance);//校验权限
         if(userInfo.getUserInfoId().longValue() == Util.ADMIN_ID){
-            // 如果是管理员，则直接修改原始数据
+            // 如果是管理员，则直接修改原始数据，修改信息放到 日志中
             userPerformanceDao.updateById(userPerformance);
             _logger.error("当前管理员用户修改审核数据成功！修改之后的数据为：{}", userPerformance);
-        } else {
+        } else {// 3.上级的上级修改  则直接新增数据，同时软删除之前用户信息
             userPerformance.setOperateDisposition(userInfo.getDispostion());
             userPerformance.setOperateUserInfoId(userInfo.getUserInfoId());
             userPerformanceDao.insert(userPerformance);

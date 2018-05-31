@@ -42,6 +42,7 @@ public class UserPerformanceController {
         userPerformance.setOperateDisposition(LoginSession.getUserInfo().getDispostion());
 
         try {
+            _logger.info("用户{}审核数据：{}", LoginSession.getUserInfo(), userPerformance);
             userPerformanceService.save(LoginSession.getUserInfo(), userPerformance);
         } catch (AuthenException ex) {
             return new Result(false, ex.getMessage());
@@ -86,6 +87,7 @@ public class UserPerformanceController {
         if(LoginSession.getUserInfo().getDispostion().intValue() != DispositionEnum.FourLevel.getCode()){
             return new Result(false, "只有经理可以审核数据，您没有权限！");
         }
+        _logger.error("用户:{}锁定审核数据月份：{}", LoginSession.getUserInfo(), performanceTime);
         UserPerformance performance = new UserPerformance();
         performance.setPerformanceTime(performanceTime);
         userPerformanceService.lockPerformance(performance);

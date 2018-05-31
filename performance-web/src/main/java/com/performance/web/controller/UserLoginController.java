@@ -89,6 +89,7 @@ public class UserLoginController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(ModelMap modelMap){
         if(null == LoginSession.getUserInfo()){
+            _logger.info("没有创建个人信息无法看到员工列表用户账号信息：" + LoginSession.getUserLogin());
             modelMap.put("infoMsg", "没有创建个人信息无法看到员工列表");
             return "login/list";
         }

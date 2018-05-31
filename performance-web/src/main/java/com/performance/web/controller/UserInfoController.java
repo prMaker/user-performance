@@ -7,6 +7,7 @@ import com.performance.pojo.UserLogin;
 import com.performance.service.Po.UserInfoPerfor;
 import com.performance.service.UserInfoService;
 import com.performance.service.UserLoginService;
+import com.performance.service.exec.ErrorDataException;
 import com.performance.web.interceptor.session.LoginSession;
 import com.performance.web.vo.DataTableParam;
 import com.performance.web.vo.DataTableVO;
@@ -54,6 +55,7 @@ public class UserInfoController {
         userInfo.setCreatedUserInfoId(createdLogin.getUserInfoId());
         userInfo.setModifiedUserInfoId(createdLogin.getUserInfoId());
         userInfo.setDispostion(LoginSession.getUserLogin().getDispostion());
+        _logger.info("用户账户：{}保存用户信息成功：{}", LoginSession.getUserLogin(), userInfo);
         userInfoService.save(userInfo);
         redirectAttr.addAttribute("infoMsg", "修改用户信息成功");
         return "redirect:/userInfo/list?loginId=" + LoginSession.getUserLogin().getLoginId();
@@ -74,7 +76,7 @@ public class UserInfoController {
 
         try {
             checkAndSetParam(dTParam, param);
-            handlerDTParamToP(dTParam, param);
+            _logger.info("用户：{}查询用户信息：{}", LoginSession.getUserInfo());
             List<UserInfoPerfor> userInfoPerfors = userInfoService.getUserIPByParam(LoginSession.getUserInfo(), param);
             Long count = userInfoService.getUserIPCount(param);
 
@@ -87,30 +89,40 @@ public class UserInfoController {
             _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
                     , ex);
             return new Result(false, ex.getMessage());
+        } catch (IllegalStateException ex) {
+            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
+                    , ex);
+            return new Result(false, ex.getMessage());
+        } catch (ErrorDataException ex) {
+            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
+                    ,ex);
+            return new Result(false, ex.getMessage());
         }
         return new Result().setData(vo);
     }
 
-    private void checkAndSetParam(DataTableParam dTParam, UserInfoPageParam param) {
+    private void checkAndSetParam(DataTableParam dTParam, UserInfoPageParam param)
+            throws IllegalArgumentException, IllegalStateException{
         Assert.notNull(dTParam);
+        if(null == LoginSession.getUserInfo()){
+            _logger.error("用户账号：{}查看用户信息失败：没有记录用户信息", LoginSession.getUserLogin());
+            throw new IllegalStateException("只有完善用户信息后才能查看当前月份用户信息列表!");
+        }
         param = param == null ? new UserInfoPageParam() : param;
 //        Assert.notNull(param);
         if(StringUtils.isBlank(param.getPerformanceTime())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
             param.setPerformanceTime(sdf.format(new Date()));
         }
-//        Assert.notNull(param.getPerformanceTime(), "审核时间不能为空！");
-    }
-
-    private void handlerDTParamToP(DataTableParam dataTableParam, UserInfoPageParam param) {
 //        dataTableParam.setOrderDir("");
 //        dataTableParam.setOrderField("");
 
-        param.setPageNum(dataTableParam.getPageNo());
-        param.setPageSize(dataTableParam.getPageSize());
+        param.setPageNum(dTParam.getPageNo());
+        param.setPageSize(dTParam.getPageSize());
 //        param.setOrderDir(dataTableParam.getOrderDir());
 //        param.setOrderField(dataTableParam.getOrderField());
         param.setPid(LoginSession.getUserInfo().getUserInfoId());
+//        Assert.notNull(param.getPerformanceTime(), "审核时间不能为空！");
     }
 
     @InitBinder("userInfo")
