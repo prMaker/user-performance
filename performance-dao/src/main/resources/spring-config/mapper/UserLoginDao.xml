@@ -38,7 +38,13 @@
 
     <update id="updateById" parameterType="com.performance.pojo.UserLogin">
         UPDATE user_login SET
-        user_info_id=#{userInfoId},is_deleted=#{isDeleted},login_name=#{loginName},password=#{password},dispostion=#{dispostion},created_time=#{createdTime},modified_time=now(),created_user=#{createdUser},modified_user=#{modifiedUser}
+        <if test="userInfoId != null">user_info_id=#{userInfoId},</if>
+        <if test="isDeleted != null">is_deleted=#{isDeleted},</if>
+        <if test="loginName != null">login_name=#{loginName},</if>
+        <if test="password != null">password=#{password},</if>
+        <if test="dispostion != null">dispostion=#{dispostion},</if>
+        <if test="modifiedUser != null">modified_user=#{modifiedUser},</if>
+        modified_time=now()
         WHERE login_id=#{loginId} AND is_deleted=0;
     </update>
 

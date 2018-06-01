@@ -28,35 +28,36 @@
 </div>
 
 <!-- 内容区域 -->
-<div class="app-content">
+<div class="app-content pd50">
     <div ui-butterbar></div>
     <a href class="off-screen-toggle hide" data-toggle="class:off-screen" data-target=".app-aside"></a>
     <div class="app-content-body fade-in-up">
 
-        <!-- 内容主体 -->
-        <div id="screen_content"></div>
-        <!-- /内容主体 -->
+        <div>
+            <h3><span id="info-msg"></span></h3>
+        </div>
 
-        <div id="user-info-data-table-div"></div>
+        <div id="screen_content">
+            <table class="table" id="user-info-data-table">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>用户姓名</th>
+                    <th>用户性别</th>
+                    <th>用户生日</th>
+                    <th>用户身份证号</th>
+                    <th>用户电话</th>
+                    <th>用户职位</th>
+                    <th>用户创建时间</th>
+                    <th>用户当月评分</th>
+                    <th>用户当月绩效评价</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
 
-        <table class="table" id="user-info-data-table">
-            <thead>
-            <tr>
-                <th>编号</th>
-                <th>用户姓名</th>
-                <th>用户性别</th>
-                <th>用户生日</th>
-                <th>用户身份证号</th>
-                <th>用户电话</th>
-                <th>用户职位</th>
-                <th>用户创建时间</th>
-                <th>用户当月评分</th>
-                <th>用户当月绩效评价</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
 
     </div>
 </div>
@@ -70,6 +71,5 @@
     var user_login_id = ${sessionScope.userLogin.loginId};
 </script>
 <script src="/main/js/userInfo/list.js"></script>
-
 </body>
 </html>

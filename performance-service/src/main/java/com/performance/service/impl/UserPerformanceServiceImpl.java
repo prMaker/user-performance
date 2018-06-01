@@ -1,6 +1,7 @@
 package com.performance.service.impl;
 
 import com.performance.common.Util;
+import com.performance.common.exec.DataValidateException;
 import com.performance.dao.mapper.UserInfoDao;
 import com.performance.dao.mapper.UserPerformanceDao;
 import com.performance.pojo.UserInfo;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -37,28 +39,54 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     private volatile String batchSaveFlag;
 
     @Transactional
-    public void save(UserInfo userInfo, UserPerformance userPerformance) throws AuthenException{
-        // 1.如果是之前修改人修改，则直接更新
-        if(userPerformance.getOperateUserInfoId() != null
-                && userInfo.getUserInfoId().longValue() == userPerformance.getOperateUserInfoId().longValue()){
-            userPerformanceDao.updateById(userPerformance);
-            _logger.info("用户修改数据{}", userPerformance);
+    public void save(UserInfo userInfo, UserPerformance newUP) throws AuthenException, DataValidateException{
+        checkSaveParam(newUP);
+        UserPerformance olderUP = userPerformanceDao.selectById(newUP.getPerformanceId());
+        // 1.如果是之前修改人修改或自己首次添加，则直接更新
+        if(olderUP.getOperateUserInfoId() == null
+                || olderUP.getOperateUserInfoId().longValue() == newUP.getOperateUserInfoId().longValue()){
+            userPerformanceDao.updateById(newUP);
+            _logger.info("用户修改数据{}", newUP);
         }
         // 2.管理员修改
-        permissionService.getAuthen(userInfo, userPerformance);//校验权限
+        permissionService.getAuthen(userInfo, newUP);//校验权限
         if(userInfo.getUserInfoId().longValue() == Util.ADMIN_ID){
             // 如果是管理员，则直接修改原始数据，修改信息放到 日志中
-            userPerformanceDao.updateById(userPerformance);
-            _logger.error("当前管理员用户修改审核数据成功！修改之后的数据为：{}", userPerformance);
+            userPerformanceDao.updateById(newUP);
+            _logger.error("当前管理员用户修改审核数据成功！修改之后的数据为：{}", newUP);
         } else {// 3.上级的上级修改  则直接新增数据，同时软删除之前用户信息
-            userPerformance.setOperateDisposition(userInfo.getDispostion());
-            userPerformance.setOperateUserInfoId(userInfo.getUserInfoId());
-            userPerformanceDao.insert(userPerformance);
-            userPerformanceDao.deleteById(userPerformance);
-            _logger.info("用户{}审核数据{}", userInfo, userPerformance);
+            userPerformanceDao.insert(newUP);
+            userPerformanceDao.deleteById(newUP);
+            _logger.info("用户{}审核数据{}", userInfo, newUP);
         }
 
 
+    }
+
+    /**
+     * 校验 score和content 内容必须有一个有值
+     * 校验  0 < score < 100
+     * @param newUP
+     */
+    private void checkSaveParam(UserPerformance newUP) throws DataValidateException{
+        if(null == newUP.getPerformanceScore() && null == newUP.getPerformanceContent()){
+            throw new DataValidateException("分数和内容必填一项！");
+        }
+        if(newUP.getPerformanceScore() != null
+                && newUP.getPerformanceScore().intValue() > 100
+                        && newUP.getPerformanceScore().intValue() < 0){
+            throw new DataValidateException("分数超过范围");
+        }
+        if(newUP.getPerformanceContent() != null
+                && newUP.getPerformanceContent().getBytes().length > 1000000){
+            throw new DataValidateException("填写内容过长！");
+        }
+    }
+
+    private void packUpdateParam(UserPerformance olderUP, UserPerformance userPerformance) {
+        userPerformance.setPerformanceTime(olderUP.getPerformanceTime());
+        userPerformance.setOperateDisposition(olderUP.getOperateDisposition());
+        userPerformance.setOperateUserInfoId(olderUP.getOperateUserInfoId());
     }
 
     @Transactional

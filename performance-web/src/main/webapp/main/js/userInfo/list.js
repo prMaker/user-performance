@@ -43,44 +43,6 @@ var dataTableObj = (function () {
                     return tmpObj;
                 }
             },
-            /*
-                <th>编号</th>
-                <th>用户姓名</th>
-                <th>用户性别</th>
-                <th>用户生日</th>
-                <th>用户身份证号</th>
-                <th>用户电话</th>
-                <th>用户职位</th>
-                <th>用户创建时间</th>
-                <th>用户当月评分</th>
-                <th>用户当月绩效评价</th>
-            */
-
-            /*
-                protected Long userInfoId;
-                protected String userName;
-                protected Integer sex;
-                protected String birthday;
-                protected String idCard;
-                protected String phone;
-                protected Integer dispostion;
-                protected Timestamp createdTime;
-                userPerformance.performanceScore;
-                userPerformance.performanceContent;
-                PermissionToFix
-            */
-
-            /*
-                private Long performanceId;
-                private Long userInfoId;
-                private Integer isDeleted;
-                private Long operateUserInfoId;
-                private Timestamp createdTime;
-                private Timestamp modifiedTime;
-                private Integer isLocked;
-                private Integer operateDisposition;
-                private String performanceTime;
-            */
             columns: [
                 { data: "userInfoId" ,
                     "render": function (data, type, row, meta) {
@@ -93,26 +55,6 @@ var dataTableObj = (function () {
                         return data;
                     }
                 },
-                // 创建人
-                //{
-                //    data: "createUserName",
-                //    "render": function (data, type, row, meta) {
-                //        return data + '(' + row.createUser.replace("erp_", "") + ')';
-                //    }
-                //},
-                /*
-                protected Long userInfoId;
-                protected String userName;
-                protected Integer sex;
-                protected String birthday;
-                protected String idCard;
-                protected String phone;
-                protected Integer dispostion;
-                protected Timestamp createdTime;
-                userPerformance.performanceScore;
-                userPerformance.performanceContent;
-                PermissionToFix
-                */
                 {
                     data: "sex",
                     "render": function (data, type, row, meta) {
@@ -166,21 +108,35 @@ var dataTableObj = (function () {
                 {
                     data: "userPerformance.performanceScore",
                     "render": function (data, type, row, meta) {
-                        // console.log(
-                        //     "data:" + data + "   " +
-                        //     "type:" + type + "   " +
-                        //     "row:" + row + "   " +
-                        //     "meta:" + meta
-                        // );
-                        // return row["userPerformance"]["performanceScore"];
-                        return "精彩马上呈现";
+
+                        var INPUT_TEMPL_SCORE = ''
++ '<input type="text" older-val="{olderVal}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
+
+
+                        if(!data){
+                            return "当月绩效信息尚未生成，请稍等！";
+                        } else {
+                            return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, data)
+                                .replace(/\{olderVal\}/g,data)
+                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId);
+                        }
                     }
                 },
                 {
                     data: "userPerformance.performanceContent",
                     "render": function (data, type, row, meta) {
                         // return row.userPerformance.performanceContent;
-                        return "精彩马上呈现";
+                        // return "精彩马上呈现";
+                        var INPUT_TEMPL_CONTENT = '' +
+'<input type="text" older-val="{olderVal}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
+
+                        if(!data){
+                            return "当月绩效信息尚未生成，请稍等！";
+                        } else {
+                            return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, data)
+                                .replace(/\{olderVal\}/g, data)
+                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId);
+                        }
                     }
                 },
             ],
@@ -218,12 +174,6 @@ var dataTableObj = (function () {
         return param;
     }
 
-
-    //搜索
-    $("#user-info-btn-search").click(function(){
-        dataTable.ajax.reload();
-    });
-
     return {
 
         "packDataTableParam" : packDataTableParam,
@@ -231,5 +181,105 @@ var dataTableObj = (function () {
     };
 })();
 
-console.log("123123");
-dataTableObj.initFormDataTable();
+var ListObj = (function () {
+
+    var ListObj = function () {
+        this.init();
+    };
+
+    /**
+     * 初始化
+     */
+    ListObj.prototype.init = function () {
+        dataTableObj.initFormDataTable();
+        this.setOption();
+    };
+
+    /**
+     * 设置参数
+     */
+    ListObj.prototype.setOption = function () {
+        this.listen();
+    };
+
+    /**
+     * 添加监听事件
+     */
+    ListObj.prototype.listen = function () {
+
+        //搜索监听
+        $("#user-info-btn-search").click(function(){
+            dataTable.ajax.reload();
+        });
+
+        //修改分数监听
+        $("#user-info-data-table").delegate(".user-performance-performance-score", "blur", updateScore);
+        //修改评价监听
+        $("#user-info-data-table").delegate(".user-performance-performance-content", "blur", updateContent);
+
+
+        function updateScore() {
+            console.log("监听到修改分数");
+            console.log("新的值：" + $(this).val() + "旧值：" + $(this).attr("older-val"));
+            var newScore = $(this).val();
+            var olderScore = $(this).attr("older-val");
+            var userPerformanceId = $(this).attr("user-performance-id");
+            if(newScore == olderScore){
+                return;
+            }
+
+            $.ajax({
+                url:"/userPerformance/doSave",
+                type:"POST",
+                data:{
+                    "userPerformance.performanceScore": newScore,
+                    "userPerformance.performanceId": userPerformanceId,
+                    "loginId":user_login_id
+                    },
+                async:true,
+                dataType:"json",
+                success:function (data) {
+                    if(data.success){
+                        $("#info-msg").text(data.msg);
+                    } else {
+                        $("#info-msg").text(data.msg);
+                    }
+                }
+            });
+        };
+        function updateContent() {
+            console.log("监听到修改分数");
+            console.log("新的值：" + $(this).val() + "旧值：" + $(this).attr("older-val"));
+            var newContent = $(this).val();
+            var olderContent = $(this).attr("older-val");
+            var userPerformanceId = $(this).attr("user-performance-id");
+            if(newContent == olderContent){
+                return;
+            }
+
+            $.ajax({
+                url:"/userPerformance/doSave",
+                type:"POST",
+                data:
+                    {
+                        "userPerformance.performanceId": userPerformanceId,
+                        "userPerformance.performanceContent": newContent,
+                        "loginId":user_login_id
+                    },
+                async:true,
+                dataType:"json",
+                success:function (data) {
+                    if(data.success){
+                        $("#info-msg").text(data.msg);
+                    } else {
+                        $("#info-msg").text(data.msg);
+                    }
+                }
+            });
+        }
+    };
+
+    return ListObj;
+})();
+
+ListObj = new ListObj();

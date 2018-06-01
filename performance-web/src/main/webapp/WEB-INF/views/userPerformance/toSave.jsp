@@ -24,7 +24,7 @@
     private Integer operateDisposition;
     private String performanceTime;
 --%>
-<form action="/performance/toSave" method="post">
+<form action="/userPerformance/toSave" method="post">
 
 </form>
 

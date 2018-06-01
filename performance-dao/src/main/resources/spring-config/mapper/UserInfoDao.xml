@@ -38,18 +38,20 @@
 
     <update id="updateById" parameterType="com.performance.pojo.UserInfo">
         UPDATE user_info SET
-        login_id=#{loginId},
-        id_card=#{idCard},
-        user_name=#{userName},
-        birthday=#{birthday},
-        sex=#{sex},
-        phone=#{phone},
-        is_deleted=#{isDeleted},
-        pid=#{pid},
-        dispostion=#{dispostion},
-        modified_time=now(),
-        modified_user_info_id=#{modifiedUserInfoId}
-        WHERE user_info_id=#{userInfoId} AND is_deleted=0;
+        <if test="loginId != null">login_id=#{loginId},</if>
+        <if test="idCard != null">id_card=#{idCard},</if>
+        <if test="userName != null">user_name=#{userName},</if>
+        <if test="birthday != null">birthday=#{birthday},</if>
+        <if test="sex != null">sex=#{sex},</if>
+        <if test="phone != null">phone=#{phone},</if>
+        <if test="isDeleted != null">is_deleted=#{isDeleted},</if>
+        <if test="pid != null">pid=#{pid},</if>
+        <if test="dispostion != null">dispostion=#{dispostion},</if>
+        <if test="modifiedUserInfoId != null">modified_user_info_id=#{modifiedUserInfoId},</if>
+        modified_time=now()
+        <where>
+            user_info_id=#{userInfoId} AND is_deleted=0;
+        </where>
     </update>
 
     <select id="selectAllChild" parameterType="java.lang.Long" resultMap="resultMap" resultType="List">

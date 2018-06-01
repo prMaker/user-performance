@@ -1,5 +1,6 @@
 package com.performance.web.controller;
 
+import com.performance.common.exec.DataValidateException;
 import com.performance.common.util.DateUtil;
 import com.performance.pojo.UserPerformance;
 import com.performance.pojo.constant.DispositionEnum;
@@ -12,13 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 
 @Controller
-@RequestMapping("/performance")
+@RequestMapping("/userPerformance")
 public class UserPerformanceController {
 
     private static final Logger _logger = LoggerFactory.getLogger(UserPerformanceController.class);
@@ -53,9 +55,9 @@ public class UserPerformanceController {
      * @param userPerformance
      * @return
      */
-    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @RequestMapping(value = "/doSave",method = RequestMethod.POST)
     @ResponseBody
-    public Result save(UserPerformance userPerformance){
+    public Result doSave(UserPerformance userPerformance){
         if(null == userPerformance){
             return new Result(false, "请求参数异常！");
         }
@@ -66,6 +68,8 @@ public class UserPerformanceController {
             _logger.info("用户{}审核数据：{}", LoginSession.getUserInfo(), userPerformance);
             userPerformanceService.save(LoginSession.getUserInfo(), userPerformance);
         } catch (AuthenException ex) {
+            return new Result(false, ex.getMessage());
+        } catch (DataValidateException ex) {
             return new Result(false, ex.getMessage());
         }
         return new Result().setMsg("保存成功");
@@ -119,6 +123,11 @@ public class UserPerformanceController {
     private String getUserInfoList(RedirectAttributes redirectAttr) {
         redirectAttr.addAttribute("userLoginId", LoginSession.getUserLogin().getLoginId());
         return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
+    }
+
+    @InitBinder("userPerformance")
+    public void pageQueryParamBinder(WebDataBinder dataBinder) {
+        dataBinder.setFieldDefaultPrefix("userPerformance.");
     }
 
 }

@@ -38,16 +38,16 @@
 
     <update id="updateById" parameterType="com.performance.pojo.UserPerformance">
         UPDATE user_performance SET
-        <if test="isDeleted != null and isDeleted != ''">
+        <if test="isDeleted != null">
             is_deleted=#{isDeleted},
         </if>
         <if test="performanceContent != null and performanceContent != ''">
             performance_content=#{performanceContent},
         </if>
-        <if test="performanceScore != null and performanceScore != ''">
+        <if test="performanceScore != null">
             performance_score=#{performanceScore},
         </if>
-        <if test="operateUserInfoId != null and operateUserInfoId != ''">
+        <if test="operateUserInfoId != null">
             operate_user_info_id=#{operateUserInfoId},
         </if>
         <if test="isLocked != null and isLocked != ''">
@@ -57,9 +57,12 @@
             operate_disposition=#{operateDisposition},
         </if>
         <if test="performanceTime != null and performanceTime != ''">
-            performance_time=#{performanceTime}
+            performance_time=#{performanceTime},
         </if>
-        WHERE performanceId=#{performanceId} AND is_deleted=0;
+        modified_time=now()
+        <where>
+            performance_id=#{performanceId} AND is_deleted=0;
+        </where>
     </update>
 
     <select id="selectById" resultMap="resultMap" parameterType="java.lang.Long">
@@ -72,7 +75,7 @@
     <update id="deleteById" parameterType="java.lang.Long">
         UPDATE user_performance SET
         is_deleted=1
-        WHERE performanceId=#{performanceId};
+        WHERE performance_id=#{performanceId};
     </update>
 
     <update id="lockPerformance" parameterType="com.performance.pojo.UserPerformance">
