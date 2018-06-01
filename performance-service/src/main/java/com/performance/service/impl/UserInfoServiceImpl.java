@@ -60,6 +60,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         HashMap<String,Object> uPParam = new HashMap<>();
         uPParam.put("performanceTime", param.getPerformanceTime());
         uPParam.put("userInfos", userInfos);
+        // TODO  添加分页参数
 
         List<UserPerformance> perforPages = userPerformanceDao.selectForPage(uPParam);
 //        List<UserPerformance> performances = userPerformanceDao.selectList(performance);
@@ -80,11 +81,13 @@ public class UserInfoServiceImpl implements UserInfoService {
             , List<UserInfo> userInfos, List<UserPerformance> performances)
             throws ErrorDataException{
         List<UserInfoPerfor> userInfoPerfors = new ArrayList<UserInfoPerfor>();
+        boolean canLoadPerformanceData = true;// 是否可以加载当前用户的审核信息
 
-        // 1.   数据若不一致性，即数据出现问题，一般不会
+        // 1.   数据若不一致性，即表示该月审核信息还没有生成，当前用户审核信息不加载
         if(userInfos.size() != performances.size()){
             _logger.error("查询数据库表user_info和user_performance数据不一致，参数{}", param);
-            throw new ErrorDataException("后台数据不一致，请联系管理员！");
+            canLoadPerformanceData = false;
+//            throw new ErrorDataException("后台数据不一致，请联系管理员！");
         }
 
         // 2.   JDK8 排序查出的数据
@@ -99,16 +102,19 @@ public class UserInfoServiceImpl implements UserInfoService {
         for(int i=0; i< infoSorted.size(); i++){
             perfor = new UserInfoPerfor();
             BeanUtils.copyProperties(infoSorted.get(i), perfor);
-            perfor.setUserPerformance(perforSorted.get(i));
-            try {
-                perfor.setPermissionToFix(permissionService.getAuthen(currUserInfo, perforSorted.get(i)));
-            } catch (AuthenException ex) {
-                _logger.error("设置审核权限信息异常:"
-                        + ex.getMessage() + "参数：当前登录用户：" + currUserInfo + "，校验审核信息："
-                        + perforSorted.get(i), ex);
-                // 校验审核出错 默认设置不可以修改
-                perfor.setPermissionToFix(false);
+            if(canLoadPerformanceData){// 当月审核信息未生成
+                perfor.setUserPerformance(perforSorted.get(i));
+                try {
+                    perfor.setPermissionToFix(permissionService.getAuthen(currUserInfo, perforSorted.get(i)));
+                } catch (AuthenException ex) {
+                    _logger.error("设置审核权限信息异常:"
+                            + ex.getMessage() + "参数：当前登录用户：" + currUserInfo + "，校验审核信息："
+                            + perforSorted.get(i), ex);
+                    // 校验审核出错 默认设置不可以修改
+                    perfor.setPermissionToFix(false);
+                }
             }
+
             userInfoPerfors.add(perfor);
         }
         return userInfoPerfors;

@@ -16,4 +16,11 @@ public interface UserPerformanceDao extends BaseDao<UserPerformance, Long> {
      * @return
      */
     List<UserPerformance> selectForPage(HashMap<String, Object> userInfos);
+
+    /**
+     * 根据条件查询
+     * @param userPerformance
+     * @return
+     */
+    UserPerformance getUserPerforByCond(UserPerformance userPerformance);
 }

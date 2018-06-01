@@ -1,5 +1,7 @@
 var formTable;
 
+
+console.log("123123");
 /**
  * dataTables 生成对象
  * @type {{initFormDataTable, packDataTableParam}}

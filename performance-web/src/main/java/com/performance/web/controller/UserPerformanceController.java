@@ -1,5 +1,6 @@
 package com.performance.web.controller;
 
+import com.performance.common.util.DateUtil;
 import com.performance.pojo.UserPerformance;
 import com.performance.pojo.constant.DispositionEnum;
 import com.performance.service.UserPerformanceService;
@@ -10,10 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -26,6 +25,28 @@ public class UserPerformanceController {
 
     @Resource
     private UserPerformanceService userPerformanceService;
+
+    /**
+     * 到修改审核信息页面
+     * @return
+     */
+    @RequestMapping(value = "/toSave", method = RequestMethod.GET)
+    public String toSave(UserPerformance userPerformance
+                         , ModelMap mm
+                         , RedirectAttributes redirectAttributes){
+        if(null == userPerformance || userPerformance.getPerformanceId() == null){
+            redirectAttributes.addAttribute("loginId", LoginSession.getUserLogin().getLoginId());
+            return "redirect:userInfo/list";
+        }
+        if(null == userPerformance.getPerformanceTime()
+                || "".equals(userPerformance.getPerformanceTime().trim())){
+            userPerformance.setPerformanceTime(DateUtil.formatNow());
+        }
+        UserPerformance uPerformance = userPerformanceService.getUserPerforByCond(userPerformance);
+        mm.addAttribute("userPerformance", uPerformance);
+        return "userPerformance/toSave";
+    }
+
 
     /**
      * 保存权限数据

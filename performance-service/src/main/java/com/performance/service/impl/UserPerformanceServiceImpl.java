@@ -39,7 +39,8 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Transactional
     public void save(UserInfo userInfo, UserPerformance userPerformance) throws AuthenException{
         // 1.如果是之前修改人修改，则直接更新
-        if(userInfo.getUserInfoId().longValue() == userPerformance.getOperateUserInfoId().longValue()){
+        if(userPerformance.getOperateUserInfoId() != null
+                && userInfo.getUserInfoId().longValue() == userPerformance.getOperateUserInfoId().longValue()){
             userPerformanceDao.updateById(userPerformance);
             _logger.info("用户修改数据{}", userPerformance);
         }
@@ -77,6 +78,11 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
 
     public void lockPerformance(UserPerformance userPerformance) {
         userPerformanceDao.lockPerformance(userPerformance);
+    }
+
+    @Override
+    public UserPerformance getUserPerforByCond(UserPerformance userPerformance) {
+        return userPerformanceDao.getUserPerforByCond(userPerformance);
     }
 
     private List<UserPerformance> getPerfoList(String performanceTime, UserInfo userInfo) {

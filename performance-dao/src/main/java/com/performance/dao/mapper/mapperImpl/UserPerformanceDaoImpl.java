@@ -27,4 +27,8 @@ public class UserPerformanceDaoImpl extends BaseDaoImpl<UserPerformance, Long> i
     public List<UserPerformance> selectForPage(HashMap<String, Object> userInfos) {
         return sqlTemplate.selectList(getNameSpace("selectForPage"), userInfos);
     }
+
+    public UserPerformance getUserPerforByCond(UserPerformance userPerformance) {
+        return sqlTemplate.selectOne(getNameSpace("getUserPerforByCond"), userPerformance);
+    }
 }

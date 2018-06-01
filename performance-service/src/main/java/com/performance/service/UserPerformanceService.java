@@ -29,4 +29,11 @@ public interface UserPerformanceService {
      * @param userPerformance
      */
     void lockPerformance(UserPerformance userPerformance);
+
+    /**
+     * 获取当前审核条件信息
+     * @param userPerformance
+     * @return
+     */
+    UserPerformance getUserPerforByCond(UserPerformance userPerformance);
 }
