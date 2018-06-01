@@ -52,7 +52,9 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>
+            <mvc:mapping path="/userLogin/*"/>
+            <mvc:mapping path="/userInfo/*"/>
+            <mvc:mapping path="/userPerformance/*"/>
             <mvc:exclude-mapping path="/test/*"/>
             <bean id="loginInterceptor" class="com.performance.web.interceptor.LoginInterceptor"/>
         </mvc:interceptor>

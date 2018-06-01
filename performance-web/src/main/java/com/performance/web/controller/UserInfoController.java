@@ -1,6 +1,5 @@
 package com.performance.web.controller;
 
-import com.performance.common.Result;
 import com.performance.common.query.UserInfoPageParam;
 import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserLogin;
@@ -58,14 +57,20 @@ public class UserInfoController {
         _logger.info("用户账户：{}保存用户信息成功：{}", LoginSession.getUserLogin(), userInfo);
         userInfoService.save(userInfo);
         redirectAttr.addAttribute("infoMsg", "修改用户信息成功");
-        return "redirect:/userInfo/list?loginId=" + LoginSession.getUserLogin().getLoginId();
+        return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
     }
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequestMapping(value = "toList", method = RequestMethod.GET)
+    public String toList(){
+        return "/userInfo/toList";
+    }
+
+    @RequestMapping(value = "/listData", produces = "application/json;charset=UTF-8")
 //                ,produces = {"text/plain", "application/json"})
     @ResponseBody
     public DataTableVO listData(DataTableParam dTParam
             , UserInfoPageParam param){
+        // TODO 校验ERROR参数
         DataTableVO vo = new DataTableVO();
         // 测试参数
         dTParam = new DataTableParam();

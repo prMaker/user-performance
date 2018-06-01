@@ -47,7 +47,7 @@ public class UserLoginController {
         if((userLogin = userLoginService.checkCanLogin(userLogin)) != null){
             _logger.info("用户登录成功：{}",userLogin);
             redirectAttr.addAttribute("loginId", userLogin.getLoginId());
-            return "redirect:/userInfo/list";
+            return "redirect:/userInfo/toList";
         } else{
             _logger.warn("用户登录失败：{}",userLogin);
             redirectAttr.addAttribute("infoMsg", "用户名或密码错误！");

@@ -34,7 +34,7 @@ var dataTableObj = (function () {
                 }
             },
             ajax: {
-                url: "/userInfo/list",
+                url: "/userInfo/listData?loginId=" + user_login_id,
                 type: "POST",
                 data:function(boxParam){
                     var tmpObj = packDataTableParam(boxParam);
@@ -126,7 +126,7 @@ var dataTableObj = (function () {
                 {
                     data: "birthday",
                     "render": function (data, type, row, meta) {
-                        return new XDate(data).toString("yyyy-MM-dd");
+                        return data;
                     }
                 },
                 {
@@ -166,13 +166,21 @@ var dataTableObj = (function () {
                 {
                     data: "userPerformance.performanceScore",
                     "render": function (data, type, row, meta) {
-                        return data;
+                        // console.log(
+                        //     "data:" + data + "   " +
+                        //     "type:" + type + "   " +
+                        //     "row:" + row + "   " +
+                        //     "meta:" + meta
+                        // );
+                        // return row["userPerformance"]["performanceScore"];
+                        return "精彩马上呈现";
                     }
                 },
                 {
                     data: "userPerformance.performanceContent",
                     "render": function (data, type, row, meta) {
-                        return data;
+                        // return row.userPerformance.performanceContent;
+                        return "精彩马上呈现";
                     }
                 },
             ],
@@ -221,5 +229,7 @@ var dataTableObj = (function () {
         "packDataTableParam" : packDataTableParam,
         "initFormDataTable" : initFormDataTable,
     };
-
 })();
+
+console.log("123123");
+dataTableObj.initFormDataTable();

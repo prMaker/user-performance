@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>列表信息</title>
+    <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/plugins/datatables/css/dataTables.bootstrap.min.css">
 </head>
 <style>
@@ -35,6 +36,8 @@
         <!-- 内容主体 -->
         <div id="screen_content"></div>
         <!-- /内容主体 -->
+
+        <div id="user-info-data-table-div"></div>
 
         <table class="table" id="user-info-data-table">
             <thead>
@@ -63,6 +66,9 @@
 <script src="/plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
 <script src="/plugins/xdate/xdate.js"></script>
+<script>
+    var user_login_id = ${sessionScope.userLogin.loginId};
+</script>
 <script src="/main/js/userInfo/list.js"></script>
 
 </body>

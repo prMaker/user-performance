@@ -204,111 +204,63 @@ function mymoduleBuildedCallback() {
 }
 
 
-var searchParam = {
-    doSearchCallback: callback,
-    moduleBuildedCallback: mymoduleBuildedCallback,
-    elements: [
-        {
-            name: "type",
-            id: "search-formType",
-            type: "select",
-            className: "w-md",
-            showName: "类型",
-            placeholder: "类型",
-            selectedValue: queryParam.type,
-            /*
-             if (data == 1) {
-             return '质控管理类';
-             } else if (data == 2) {
-             return '财务结算类';
-             } else if (data == 3) {
-             return '资质审核类';
-             } else if (data == 4) {
-             return '任务类';
-             } else if (data == 5) {
-             return '通知类';
-             } else if (data == 6){
-             return '客服类';
-             }else {
-             return '未知类';
-             }
-            * */
-            options: [
-                {
-                    value: '', name: '请选择'
-                },
-                {
-                    value: '1', name: '质控管理类'
-                },
-                {
-                    value: '2', name: '财务结算类'
-                },
-                {
-                    value: '3', name: '资质审核类'
-                },
-                {
-                    value: '4', name: '任务类'
-                },
-                {
-                    value: '5', name: '通知类'
-                },
-                {
-                    value: '6', name: '客服类'
-                },
+// var searchParam = {
+//     doSearchCallback: callback,
+//     moduleBuildedCallback: mymoduleBuildedCallback,
+//     elements: [
+//         {
+//             name: "type",
+//             id: "search-formType",
+//             type: "select",
+//             className: "w-md",
+//             showName: "类型",
+//             placeholder: "类型",
+//             selectedValue: queryParam.type,
+//             /*
+//              if (data == 1) {
+//              return '质控管理类';
+//              } else if (data == 2) {
+//              return '财务结算类';
+//              } else if (data == 3) {
+//              return '资质审核类';
+//              } else if (data == 4) {
+//              return '任务类';
+//              } else if (data == 5) {
+//              return '通知类';
+//              } else if (data == 6){
+//              return '客服类';
+//              }else {
+//              return '未知类';
+//              }
+//             * */
+//             options: [
+//                 {
+//                     value: '', name: '请选择'
+//                 },
+//                 {
+//                     value: '1', name: '质控管理类'
+//                 },
+//                 {
+//                     value: '2', name: '财务结算类'
+//                 },
+//                 {
+//                     value: '3', name: '资质审核类'
+//                 },
+//                 {
+//                     value: '4', name: '任务类'
+//                 },
+//                 {
+//                     value: '5', name: '通知类'
+//                 },
+//                 {
+//                     value: '6', name: '客服类'
+//                 },
+//
+//             ]
+//         },
+//     ]
+// };
+//
+//
+// var moduleSearchGenerator = new ModuleSearchGenerator("#search-wrapper", searchParam);
 
-            ]
-        },
-    ]
-};
-
-
-var moduleSearchGenerator = new ModuleSearchGenerator("#search-wrapper", searchParam);
-
-
-//var searchParam = {
-//    doSearchCallback: callback,
-//    elements: [
-//        {
-//            name: "formId",
-//            id: "search-formId",
-//            className: "w-md",
-//            showName: "主题ID",
-//            placeholder: "主题ID",
-//        },
-//        {
-//            name: "formName",
-//            id: "search-formName",
-//            className: "w-md",
-//            showName: "主题名称",
-//            placeholder: "主题名称",
-//        },
-//        {
-//            name: "formCreateUser",
-//            id: "search-formCreateUser",
-//            className: "w-md",
-//            showName: "创建人",
-//            placeholder: "创建人",
-//        },
-//        {
-//            name: "formSelect",
-//            id: "search-formSelect",
-//            className: "w-md",
-//            type: "select",
-//            showName: "年份",
-//            options: [
-//                {
-//                    value: '16', name: '2016'
-//                },
-//                {
-//                    value: '17', name: '2017'
-//                },
-//                {
-//                    value: '18', name: '2018'
-//                },
-//            ]
-//        },
-//    ]
-//};
-//var moduleSearchGenerator = new ModuleSearchGenerator("#search-wrapper", searchParam, {
-//    // search click return results {formId : '', formName : '', formCreateUser : ''}
-//});
