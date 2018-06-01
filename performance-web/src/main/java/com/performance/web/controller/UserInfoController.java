@@ -64,7 +64,7 @@ public class UserInfoController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
 //                ,produces = {"text/plain", "application/json"})
     @ResponseBody
-    public Result listData(DataTableParam dTParam
+    public DataTableVO listData(DataTableParam dTParam
             , UserInfoPageParam param){
         DataTableVO vo = new DataTableVO();
         // 测试参数
@@ -88,17 +88,17 @@ public class UserInfoController {
         } catch (IllegalArgumentException ex) {
             _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
                     , ex);
-            return new Result(false, ex.getMessage());
+            return vo.setError(ex.getMessage());
         } catch (IllegalStateException ex) {
             _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
                     , ex);
-            return new Result(false, ex.getMessage());
+            return vo.setError(ex.getMessage());
         } catch (ErrorDataException ex) {
             _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
                     ,ex);
-            return new Result(false, ex.getMessage());
+            return vo.setError(ex.getMessage());
         }
-        return new Result().setData(vo);
+        return vo;
     }
 
     private void checkAndSetParam(DataTableParam dTParam, UserInfoPageParam param)

@@ -50,13 +50,13 @@
         <property name="defaultEncoding" value="utf-8"/>
     </bean>
 
-    <!--<mvc:interceptors>
+    <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/test/*"/>
             <bean id="loginInterceptor" class="com.performance.web.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>-->
+    </mvc:interceptors>
 
 
 

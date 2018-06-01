@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:include page="../header.jsp"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,28 +14,49 @@
     <title>loginPage</title>
     <!-- Tell the browser to be responsive to screen width -->
 </head>
+<style>
+    .pd50{padding: 50px;}
+    .pd20{padding: 20px;}
+</style>
 <body>
 
 
-<div>
+<div class="pd50">
+
+
+    <form action="/userLogin/doLogin" method="post">
+
+        <div class="pd20">
+            <span id="infoMsg">
+                <h3>
+                    ${infoMsg}
+                </h3>
+            </span>
+        </div>
+        <table>
+            <tr>
+                <td>用户名：</td>
+                <td>
+                    <input type="text" name="loginName" id="user-login-name">
+                </td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td>
+                    <input type="password" name="password" id="user-login-password">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">登录</button>
+                </td>
+            </tr>
+        </table>
+
+
+    </form>
 
 </div>
-
-<form action="/userLogin/doLogin" method="post">
-
-    <span id="infoMsg">
-        <h3>
-            ${infoMsg}
-        </h3>
-    </span>
-    <input type="text" name="loginName" id="user-login-name">
-    <input type="password" name="password" id="user-login-password">
-    <button type="submit">登录</button>
-
-</form>
-
-<button id="saveUserInfo">UserInfo保存</button>
-<button id="userInfoList">UserInfo数据列表</button>
 
 
 <%--<a href="/login/loginIn?loginId=1">登录</a>--%>
@@ -46,7 +68,6 @@
 
 
 
-<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <%--<script src="/plugins/jQuery/jquery-3.1.1.min.js"></script>--%>
 
 <script>

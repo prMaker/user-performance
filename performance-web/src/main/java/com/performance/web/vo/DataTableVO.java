@@ -68,8 +68,9 @@ public class DataTableVO implements Serializable {
         return error;
     }
 
-    public void setError(String error) {
+    public DataTableVO setError(String error) {
         this.error = error;
+        return this;
     }
 
 
