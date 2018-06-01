@@ -22,13 +22,13 @@
     <!--方法1. -->
     <mvc:default-servlet-handler/>
 
+    <!--<mvc:resources mapping="/static/**" location="/static/"/>-->
+
     <!--静态资源-->
     <!--<mvc:resources mapping="/static/**" location="/static/">-->
-        <!--<mvc:cache-control max-age="3600" cache-public="true"/>-->
+    <!--<mvc:cache-control max-age="3600" cache-public="true"/>-->
     <!--</mvc:resources>-->
 
-    <!--<mvc:resources mapping="/styles/**"-->
-                   <!--location="/static/"/>-->
     <!--<mvc:resources mapping="/images/**"-->
                    <!--location="/static/"/>-->
     <!--<mvc:default-servlet-handler />-->
@@ -50,13 +50,13 @@
         <property name="defaultEncoding" value="utf-8"/>
     </bean>
 
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/test/*"/>
             <bean id="loginInterceptor" class="com.performance.web.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 
 
 

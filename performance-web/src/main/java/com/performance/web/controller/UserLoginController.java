@@ -2,7 +2,6 @@ package com.performance.web.controller;
 
 import com.performance.common.query.UserLoginPageParam;
 import com.performance.pojo.UserLogin;
-import com.performance.service.Po.UserLoginPo;
 import com.performance.service.UserLoginService;
 import com.performance.web.interceptor.session.LoginSession;
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Controller
@@ -31,7 +29,7 @@ public class UserLoginController {
                           ModelMap mm) {
         mm.put("infoMsg", infoMsg);
         _logger.info("登录校验异常：" + (infoMsg == null ? "" : infoMsg));
-        return "/login/toLogin";
+        return "login/toLogin";
     }
 
     /**

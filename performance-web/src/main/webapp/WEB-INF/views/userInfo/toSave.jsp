@@ -91,5 +91,6 @@
 </div>
 
 
+<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 </body>
 </html>
