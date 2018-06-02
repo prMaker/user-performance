@@ -92,16 +92,18 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Transactional
     public void batchSave(String performanceTime, UserInfo userInfo) throws Exception {
         // 单机版处理方案：
-        if(performanceTime.equals(batchSaveFlag)){
-            _logger.error("两人同时添加当前月份审核信息：当前用户：{}, 时间：{}", userInfo, performanceTime);
-            throw new Exception("其他人正在新增，请稍等刷新页面！");
+        synchronized (batchSaveFlag){
+            if(performanceTime.equals(batchSaveFlag)){
+                _logger.error("两人同时添加当前月份审核信息：当前用户：{}, 时间：{}", userInfo, performanceTime);
+                throw new Exception("其他人正在新增，请稍等刷新页面！");
+            }
+            performanceTime = batchSaveFlag;
+            _logger.error("重置审核月份信息：{}", performanceTime);
+            //TODO 集群处理方案：
+            //集群数据方案：
+            //使用redis保存key，通过zookeeper + redis分布式锁批量创建并发问题
+            userPerformanceDao.insertBatch(getPerfoList(performanceTime, userInfo));
         }
-        performanceTime = batchSaveFlag;
-        _logger.error("重置审核月份信息：{}", performanceTime);
-        //TODO 集群处理方案：
-        //集群数据方案：
-        //使用redis保存key，通过zookeeper + redis分布式锁批量创建并发问题
-        userPerformanceDao.insertBatch(getPerfoList(performanceTime, userInfo));
     }
 
     public void lockPerformance(UserPerformance userPerformance) {

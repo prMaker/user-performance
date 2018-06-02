@@ -11,19 +11,27 @@
     <title>列表信息</title>
     <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/plugins/datatables/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/datepicker/">
 </head>
 <style>
     .pd50{padding: 50px;}
     .pd20{padding: 20px;}
+    .inline{display: inline}
+    .inline-block{display: inline-block}
 </style>
 <body>
 
 <div class="pd50">
     <div id="user-info-search">
-        <div style="display: inline-block;">
-            <h2><input type="text" id="user-info-performance-time"></h2>
+        <div class="inline-block">
+            <div class="inline">
+                <span>选择绩效月份</span>
+            </div>
+            <div class="inline">
+                <span><input type="text" id="user-info-performance-time"></span>
+            </div>
+            <button id="user-info-btn-search">搜索</button>
         </div>
-        <div><button id="user-info-btn-search">搜索</button></div>
     </div>
 </div>
 
