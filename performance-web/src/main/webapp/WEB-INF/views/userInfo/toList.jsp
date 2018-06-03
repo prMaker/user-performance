@@ -9,14 +9,14 @@
 <html>
 <head>
     <title>列表信息</title>
-    <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
     <link rel="stylesheet" href="/plugins/datatables/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="/plugins/datepicker/">
 </head>
 <style>
     .pd50{padding: 50px;}
     .pd20{padding: 20px;}
-    .inline{display: inline}
+    .inline{display: inline;}
     .inline-block{display: inline-block}
 </style>
 <body>
@@ -70,8 +70,10 @@
     </div>
 </div>
 <!-- /内容区域 -->
-<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
-
+<script src="/plugins/jQuery/jquery-3.1.1.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<script src="/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
 <script src="/plugins/xdate/xdate.js"></script>

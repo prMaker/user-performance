@@ -8,6 +8,10 @@ var dataTableObj = (function () {
 
     var dataTable;
 
+    /**
+     * 初始化dataTable
+     * @returns {*|jQuery}
+     */
     function initFormDataTable() {
         var dataTable = $('#user-info-data-table').DataTable( {
             serverSide: true,
@@ -154,6 +158,11 @@ var dataTableObj = (function () {
         return dataTable;
     }
 
+    /**
+     * 组装搜索数据
+     * @param boxParam
+     * @returns {{"dTParam.draw": *, "dTParam.pageNo": number, "dTParam.pageSize", "param.performanceTime": *|{}|jQuery}}
+     */
     function packDataTableParam(boxParam){
 
         // 目前不排序 不搜索
@@ -178,9 +187,68 @@ var dataTableObj = (function () {
 
         "packDataTableParam" : packDataTableParam,
         "initFormDataTable" : initFormDataTable,
+        "dataTable" : dataTable
     };
 })();
 
+/**
+ * 时间插件
+ */
+var dataPicker = (function () {
+
+
+    /*
+    //日期插件
+        $(".form_datetime").datetimepicker({
+        format: 'yyyy-mm-dd',//显示格式
+        todayHighlight: 1,//今天高亮
+        minView: "month",//设置只显示到月份
+        startView:2,
+        forceParse: 0,
+        showMeridian: 1,
+        autoclose: 1//选择后自动关闭
+        });
+    */
+    /*
+        language:  'zh-CN',//选择语言类型
+        weekStart: 1,//设置起始周
+        todayBtn: true ,//打开底部今天按钮,false为关闭
+        autoclose: true,//选中日期后自动关闭选择器
+        todayHighlight: true,//高亮显示当前日期
+        startView: 1,//设置为小时视图 ,1 hour 1 day 2 month 3 year 4 decade(十年)
+        minView: 1,//设置最小视图为小时视图
+        format: 'yyyy-mm-dd hh:mm',//设置时间展现格式
+        forceParse: true//是否强制解析时间格式和类型
+    */
+    /*
+
+    language:  'zh-CN',
+    todayBtn:  false,
+    autoclose: true,
+    startView: 3,//默认视图为年视图
+    minView: 3,
+    format: 'yyyy-mm',
+    forceParse: true,
+    endDate:MonthTime
+
+        yearStart:2015,     //设置最小年份
+        yearEnd:2050,        //设置最大年份
+
+    */
+    $("#user-info-performance-time").datetimepicker({
+        language:  'zh-CN',//选择语言类型
+        format:"yyyy-MM",      //格式化日期
+        startView: 3,//默认视图为年视图
+        minView: 3,//设置只显示到月份
+        autoclose: true,
+        todayBtn:false,    //关闭选择今天按钮
+
+    });
+})();
+
+/**
+ * 页面控制类
+ */
 var ListObj = (function () {
 
     var ListObj = function () {
@@ -207,17 +275,16 @@ var ListObj = (function () {
      */
     ListObj.prototype.listen = function () {
 
+        //修改分数监听
+        $("#user-info-data-table").delegate(".user-performance-performance-score", "blur", updateScore);
+        //修改评价监听
+        $("#user-info-data-table").delegate(".user-performance-performance-content", "blur", updateContent);
         //搜索监听
         $("#user-info-btn-search").click(function(){
             dataTable.ajax.reload();
         });
 
-        //修改分数监听
-        $("#user-info-data-table").delegate(".user-performance-performance-score", "blur", updateScore);
-        //修改评价监听
-        $("#user-info-data-table").delegate(".user-performance-performance-content", "blur", updateContent);
-
-
+        // 公共方法//////////////////
         function updateScore() {
             console.log("监听到修改分数");
             console.log("新的值：" + $(this).val() + "旧值：" + $(this).attr("older-val"));
@@ -246,7 +313,7 @@ var ListObj = (function () {
                     }
                 }
             });
-        };
+        }
         function updateContent() {
             console.log("监听到修改分数");
             console.log("新的值：" + $(this).val() + "旧值：" + $(this).attr("older-val"));
