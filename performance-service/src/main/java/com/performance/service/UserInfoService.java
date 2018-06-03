@@ -37,4 +37,11 @@ public interface UserInfoService {
      * @return
      */
     Long getUserIPCount(UserInfoPageParam param);
+
+    /**
+     * 根据父ID 获取子ID 集合
+     * @param pid
+     * @return
+     */
+    public List<Long> getIdsByPid(Long pid);
 }

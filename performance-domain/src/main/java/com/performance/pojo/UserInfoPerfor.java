@@ -7,7 +7,7 @@ public class UserInfoPerfor extends UserInfo {
 
     private UserPerformance userPerformance;
 
-    private boolean PermissionToFix;// 是否可以修改绩效
+    private boolean permissionToFix;// 是否可以修改绩效
 
     public UserPerformance getUserPerformance() {
         return userPerformance;
@@ -18,18 +18,18 @@ public class UserInfoPerfor extends UserInfo {
     }
 
     public boolean isPermissionToFix() {
-        return PermissionToFix;
+        return permissionToFix;
     }
 
     public void setPermissionToFix(boolean permissionToFix) {
-        PermissionToFix = permissionToFix;
+        this.permissionToFix = permissionToFix;
     }
 
     @Override
     public String toString() {
         return "UserInfoPerfor{" +
                 "userPerformance=" + userPerformance +
-                ", PermissionToFix=" + PermissionToFix +
+                ", permissionToFix=" + permissionToFix +
                 ", userInfoId=" + userInfoId +
                 ", loginId=" + loginId +
                 ", idCard='" + idCard + '\'' +

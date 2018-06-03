@@ -58,7 +58,19 @@ public class UserInfoServiceImpl implements UserInfoService {
         addIdsToParam(param);
         addSortedToParam(param);
         // 2. 查表数据
-        return userInfoDao.selectForPage(param);
+        List<UserInfoPerfor> userInfoPerfors = userInfoDao.selectForPage(param);
+
+        for(int i = 0; i < userInfoPerfors.size() ; i ++ ){
+            try {
+                userInfoPerfors.get(i).setPermissionToFix(permissionService.getAuthen(currUserInfo, userInfoPerfors.get(i).getUserPerformance()));
+            } catch (AuthenException ex) {
+                _logger.error("该条数据不可以审核:" + userInfoPerfors.get(i) + "原因："
+                        + ex.getMessage() + "参数：当前登录用户：" + currUserInfo , ex);
+                userInfoPerfors.get(i).setPermissionToFix(false);
+            }
+        }
+
+        return userInfoPerfors;
 
 //        HashMap<String,Object> uPParam = new HashMap<>();
 //        uPParam.put("performanceTime", param.getPerformanceTime());
@@ -81,6 +93,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     private void addIdsToParam(UserInfoPageParam param) {
         List<Long> infoIds = new IdsSelectClass().getAllIdsByParam(param);
         param.setInfoIds(infoIds);
+    }
+
+    public List<Long> getIdsByPid(Long pid){
+        UserInfoPageParam pageParam = new UserInfoPageParam();
+        pageParam.setPid(pid);
+        return new IdsSelectClass().getAllIdsByParam(pageParam);
     }
 
     /**

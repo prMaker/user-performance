@@ -122,15 +122,14 @@ var dataTableObj = (function () {
                         var INPUT_TEMPL_SCORE = ''
 + '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
 
+                        if(!row.permissionToFix){// 没有权限修改
+                            return data;
+                        }
 
-                        if(!data){
-                            return "当月绩效信息尚未生成，请稍等！";
-                        } else {
-                            return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, data)
-                                .replace(/\{olderVal\}/g,data)
+                            return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, !!data ? data : "")
+                                .replace(/\{olderVal\}/g,!!data ? data : "")
                                 .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
                                 .replace(/\{userInfoId\}/g, row.userInfoId);
-                        }
                     },
                     "orderable": true
                 },
@@ -142,14 +141,14 @@ var dataTableObj = (function () {
                         var INPUT_TEMPL_CONTENT = '' +
 '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
 
-                        if(!data){
-                            return "当月绩效信息尚未生成，请稍等！";
-                        } else {
-                            return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, data)
-                                .replace(/\{olderVal\}/g, data)
+                        if(!row.permissionToFix){// 没有权限修改
+                            return data;
+                        }
+
+                            return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, !!data ? data : "")
+                                .replace(/\{olderVal\}/g, !!data ? data : "")
                                 .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
                                 .replace(/\{userInfoId\}/g, row.userInfoId);
-                        }
                     },
                     "orderable": false
                 },

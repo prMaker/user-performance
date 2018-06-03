@@ -41,7 +41,9 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Transactional
     public void save(UserInfo userInfo, UserPerformance newUP) throws AuthenException, DataValidateException{
         checkSaveParam(newUP);
+        permissionService.getAuthen(userInfo, newUP);//校验权限
         UserPerformance olderUP = userPerformanceDao.selectById(newUP.getPerformanceId());
+        setDataFromOlderToNewUp(olderUP, newUP);
         // 1.如果是之前修改人修改或自己首次添加，则直接更新
         if(olderUP.getOperateUserInfoId() == null
                 || olderUP.getOperateUserInfoId().longValue() == newUP.getOperateUserInfoId().longValue()){
@@ -50,7 +52,6 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
             return;
         }
         // 2.管理员修改
-        permissionService.getAuthen(userInfo, newUP);//校验权限
         if(userInfo.getUserInfoId().longValue() == Util.ADMIN_ID){
             // 如果是管理员，则直接修改原始数据，修改信息放到 日志中
             userPerformanceDao.updateById(newUP);
@@ -62,6 +63,13 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
         }
 
 
+    }
+
+    private void setDataFromOlderToNewUp(UserPerformance olderUP, UserPerformance newUP) {
+        newUP.setPerformanceTime(olderUP.getPerformanceTime());
+        newUP.setIsDeleted(IsDeletedEnum.IsNotDeleted.getCode());
+        newUP.setIsLocked(IsLockedEnum.IsNotLocked.getCode());
+        newUP.setUserInfoId(olderUP.getUserInfoId());
     }
 
     /**

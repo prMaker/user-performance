@@ -21,7 +21,7 @@
     </sql>
 
     <insert id="insert" parameterType="com.performance.pojo.UserPerformance">
-        INSERT INTO user_info (user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time)
+        INSERT INTO user_performance (user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time)
         VALUES (#{userInfoId},0,#{performanceContent},#{performanceScore}
         ,#{operateUserInfoId},now(),now(),#{isLocked},#{operateDisposition}
         ,#{performanceTime});
@@ -72,15 +72,15 @@
         WHERE performance_id = #{id}
     </select>
 
-    <update id="deleteById" parameterType="java.lang.Long">
+    <update id="deleteById" parameterType="com.performance.pojo.UserPerformance">
         UPDATE user_performance SET
-        is_deleted=1
+        is_deleted=1,modified_time=now()
         WHERE performance_id=#{performanceId};
     </update>
 
     <update id="lockPerformance" parameterType="com.performance.pojo.UserPerformance">
         UPDATE user_performance SET
-        is_locked=1
+        is_locked=1,modified_time=now()
         WHERE performance_time=#{performanceTime} AND is_deleted = 0;
     </update>
 
