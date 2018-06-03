@@ -114,7 +114,7 @@ var dataTableObj = (function () {
                     "render": function (data, type, row, meta) {
 
                         var INPUT_TEMPL_SCORE = ''
-+ '<input type="text" older-val="{olderVal}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
++ '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
 
 
                         if(!data){
@@ -122,7 +122,8 @@ var dataTableObj = (function () {
                         } else {
                             return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, data)
                                 .replace(/\{olderVal\}/g,data)
-                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId);
+                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
+                                .replace(/\{userInfoId\}/g, row.userInfoId);
                         }
                     }
                 },
@@ -132,14 +133,15 @@ var dataTableObj = (function () {
                         // return row.userPerformance.performanceContent;
                         // return "精彩马上呈现";
                         var INPUT_TEMPL_CONTENT = '' +
-'<input type="text" older-val="{olderVal}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
+'<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
 
                         if(!data){
                             return "当月绩效信息尚未生成，请稍等！";
                         } else {
                             return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, data)
                                 .replace(/\{olderVal\}/g, data)
-                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId);
+                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
+                                .replace(/\{userInfoId\}/g, row.userInfoId);
                         }
                     }
                 },
@@ -259,6 +261,7 @@ var ListObj = (function () {
             var newScore = $(this).val();
             var olderScore = $(this).attr("older-val");
             var userPerformanceId = $(this).attr("user-performance-id");
+            var userInfoId = $(this).attr("user-info-id");
             if(newScore == olderScore){
                 return;
             }
@@ -275,7 +278,7 @@ var ListObj = (function () {
                 dataType:"json",
                 success:function (data) {
                     if(data.success){
-                        $("#info-msg").text(data.msg);
+                        $("#info-msg").text("编号ID为：" + userInfoId+ "的员工绩效分数保存成功！");
                     } else {
                         $("#info-msg").text(data.msg);
                     }
@@ -288,6 +291,7 @@ var ListObj = (function () {
             var newContent = $(this).val();
             var olderContent = $(this).attr("older-val");
             var userPerformanceId = $(this).attr("user-performance-id");
+            var userInfoId = $(this).attr("user-info-id");
             if(newContent == olderContent){
                 return;
             }
@@ -305,7 +309,7 @@ var ListObj = (function () {
                 dataType:"json",
                 success:function (data) {
                     if(data.success){
-                        $("#info-msg").text(data.msg);
+                        $("#info-msg").text("编号ID为：" + userInfoId+ "的员工绩效内容保存成功！");
                     } else {
                         $("#info-msg").text(data.msg);
                     }
