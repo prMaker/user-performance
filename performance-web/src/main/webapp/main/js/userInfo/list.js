@@ -264,7 +264,14 @@ var ListObj = (function () {
             if(newScore == olderScore){
                 return;
             }
-
+            if(!newScore){
+                alert("请录入分数！");
+                return;
+            }
+            if(newScore < 0 | newScore > 100){
+                alert("请录入合理的绩效分数（绩效>0并且绩效<100）");
+                return;
+            }
             $.ajax({
                 url:"/userPerformance/doSave",
                 type:"POST",
@@ -285,13 +292,17 @@ var ListObj = (function () {
             });
         }
         function updateContent() {
-            console.log("监听到修改分数");
+            console.log("监听到修改内容");
             console.log("新的值：" + $(this).val() + "旧值：" + $(this).attr("older-val"));
             var newContent = $(this).val();
             var olderContent = $(this).attr("older-val");
             var userPerformanceId = $(this).attr("user-performance-id");
             var userInfoId = $(this).attr("user-info-id");
             if(newContent == olderContent){
+                return;
+            }
+            if(newContent.length > 10){
+                alert("录入数据超过限制！");
                 return;
             }
 

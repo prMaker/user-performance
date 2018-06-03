@@ -137,7 +137,6 @@
 
     <select id="selectForPage" parameterType="com.performance.common.query.UserInfoPageParam"
             resultMap="userPerformanceResultMap">
--- TODO  问题  目前查询的是全部数据，优化为查询本地数据
         SELECT
         <include refid="userPerformance_Base_Column_List"/>
         FROM user_info
@@ -147,11 +146,13 @@
             <if test="performanceTime != null and performanceTime != ''">
                 user_performance.performance_time = #{performanceTime}
             </if>
+            AND user_info.user_info_id IN
+            <foreach collection="infoIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
             AND user_performance.is_deleted = 0
             AND user_info.is_deleted = 0
         </where>
---         GROUP BY user_info.user_info_id
---         HAVING max(user_performance.modified_time)
         <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
             ORDER BY #{orderField},#{orderDir}
         </if>
@@ -162,11 +163,19 @@
 
     <select id="selectPageCount" resultType="java.lang.Long" parameterType="com.performance.common.query.UserInfoPageParam">
         SELECT count(1) FROM user_info
-        WHERE user_info_id
-        IN
-        <foreach collection="infoIds" item="item" separator="," index="index" open="(" close=")">
-            #{item}
-        </foreach>
+        LEFT JOIN user_performance
+        ON user_info.user_info_id = user_performance.user_info_id
+        <where>
+            <if test="performanceTime != null and performanceTime != ''">
+                user_performance.performance_time = #{performanceTime}
+            </if>
+            AND user_info.user_info_id IN
+            <foreach collection="infoIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            AND user_performance.is_deleted = 0
+            AND user_info.is_deleted = 0
+        </where>
     </select>
 
     <select id="selectCount" resultType="java.lang.Integer"
