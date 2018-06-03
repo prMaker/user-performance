@@ -154,10 +154,8 @@
             AND user_info.is_deleted = 0
         </where>
         <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
-            ORDER BY #{orderField},#{orderDir}
+            ORDER BY ${orderField} ${orderDir}
         </if>
-        ORDER BY user_info_id ASC
-
         limit #{offset},#{limit}
     </select>
 

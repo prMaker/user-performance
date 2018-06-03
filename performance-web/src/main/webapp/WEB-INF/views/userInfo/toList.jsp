@@ -83,7 +83,7 @@
 
 
 <!-- /内容区域 -->
-<script src="/plugins/jQuery/jquery-3.1.1.min.js"></script>
+<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
 <script src="/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>

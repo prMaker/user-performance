@@ -56,6 +56,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public List<UserInfoPerfor> getUserIPByParam(UserInfo currUserInfo, UserInfoPageParam param){
         // 1. 查出所有子ID 集合
         addIdsToParam(param);
+        addSortedToParam(param);
         // 2. 查表数据
         return userInfoDao.selectForPage(param);
 
@@ -65,6 +66,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 //        // TODO  添加分页参数
 //        List<UserPerformance> perforPages = userPerformanceDao.selectForPage(uPParam);
 //        return getUserInfoPerfors(currUserInfo, param, userInfos, perforPages);
+    }
+
+    private void addSortedToParam(UserInfoPageParam param) {
+        if("userPerformance.performanceScore".equals(param.getOrderField()))
+            param.setOrderField("user_performance.performance_score");
     }
 
     public Long getUserIPCount(UserInfoPageParam param) {

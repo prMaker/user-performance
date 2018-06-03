@@ -15,7 +15,7 @@ var dataTableObj = (function () {
             serverSide: true,
             lengthChange: false,
             searching: false,
-            ordering:false,
+            ordering:true,
             dom:
                 "<<tr>>" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",
@@ -49,13 +49,15 @@ var dataTableObj = (function () {
                 { data: "userInfoId" ,
                     "render": function (data, type, row, meta) {
                         return data;
-                    }
+                    },
+                    "orderable": false
                 },
 
                 { data: "userName" ,
                     "render": function (data, type, row, meta) {
                         return data;
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "sex",
@@ -65,25 +67,29 @@ var dataTableObj = (function () {
                         } else if (data == 2) {
                             return '女';
                         };
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "birthday",
                     "render": function (data, type, row, meta) {
                         return data;
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "idCard",
                     "render": function (data, type, row, meta) {
                         return data;
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "phone",
                     "render": function (data, type, row, meta) {
                         return data;
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "dispostion",
@@ -99,13 +105,15 @@ var dataTableObj = (function () {
                         } else if (data == 4) {
                             return '部门经理';
                         }
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "createdTime",
                     "render": function (data, type, row, meta) {
                         return new XDate(data).toString("yyyy-MM-dd HH:mm:ss");
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     data: "userPerformance.performanceScore",
@@ -123,7 +131,8 @@ var dataTableObj = (function () {
                                 .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
                                 .replace(/\{userInfoId\}/g, row.userInfoId);
                         }
-                    }
+                    },
+                    "orderable": true
                 },
                 {
                     data: "userPerformance.performanceContent",
@@ -141,7 +150,8 @@ var dataTableObj = (function () {
                                 .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
                                 .replace(/\{userInfoId\}/g, row.userInfoId);
                         }
-                    }
+                    },
+                    "orderable": false
                 },
             ],
             columnDefs: [
@@ -166,14 +176,14 @@ var dataTableObj = (function () {
     function packDataTableParam(boxParam){
 
         // 目前不排序 不搜索
-        //var orderField = boxParam.columns[boxParam.order[0].column].data;
-        //var orderDir = boxParam.order[0].dir;
+        var orderField = boxParam.columns[8].data;
+        var orderDir = boxParam.order[0].dir;
         var param = {
             "dataTableParam.draw": boxParam.draw,
             "dataTableParam.pageNo": boxParam.start/boxParam.length+1,
             "dataTableParam.pageSize": boxParam.length,
-            //"orderField": orderField,
-            //"orderDir": orderDir,
+            "orderField": orderField,
+            "orderDir": orderDir,
             // 封装其他参数
             "userInfoPageParam.performanceTime" : $("#user-info-performance-time").val(),
             //"formId": $.trim($("#formId").val()),
@@ -210,6 +220,8 @@ var dataPicker = (function () {
 
     // 初始化当前时间
     $("#user-info-check-performance-time").val(DateFormat.format(new Date(), "yyyy-MM"));
+    var nowDate = DateFormat.format(new Date(), "yyyyMM");
+    $("#user-info-performance-time").val(nowDate);
 
 })();
 
