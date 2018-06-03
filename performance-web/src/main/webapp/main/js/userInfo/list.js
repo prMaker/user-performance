@@ -6,8 +6,6 @@
  */
 var dataTableObj = (function () {
 
-    var dataTable;
-
     /**
      * 初始化dataTable
      * @returns {*|jQuery}
@@ -190,8 +188,7 @@ var dataTableObj = (function () {
     return {
 
         "packDataTableParam" : packDataTableParam,
-        "initFormDataTable" : initFormDataTable,
-        "dataTable" : dataTable
+        "initFormDataTable" : initFormDataTable
     };
 })();
 
@@ -229,7 +226,7 @@ var ListObj = (function () {
      * 初始化
      */
     ListObj.prototype.init = function () {
-        dataTableObj.initFormDataTable();
+        this.dataTable = dataTableObj.initFormDataTable();
         this.setOption();
     };
 
@@ -244,6 +241,7 @@ var ListObj = (function () {
      * 添加监听事件
      */
     ListObj.prototype.listen = function () {
+        var _this = this;
 
         //修改分数监听
         $("#user-info-data-table").delegate(".user-performance-performance-score", "blur", updateScore);
@@ -251,7 +249,8 @@ var ListObj = (function () {
         $("#user-info-data-table").delegate(".user-performance-performance-content", "blur", updateContent);
         //搜索监听
         $("#user-info-btn-search").click(function(){
-            dataTableObj.dataTable.ajax.reload();
+            console.log("开始搜索！");
+            _this.dataTable.ajax.reload();
         });
 
         // 公共方法//////////////////

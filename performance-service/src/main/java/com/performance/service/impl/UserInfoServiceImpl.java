@@ -67,6 +67,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 //        return getUserInfoPerfors(currUserInfo, param, userInfos, perforPages);
     }
 
+    public Long getUserIPCount(UserInfoPageParam param) {
+        addIdsToParam(param);
+        return userInfoDao.selectPageCount(param);
+    }
+
     private void addIdsToParam(UserInfoPageParam param) {
         List<Long> infoIds = new IdsSelectClass().getAllIdsByParam(param);
         param.setInfoIds(infoIds);
@@ -125,11 +130,6 @@ public class UserInfoServiceImpl implements UserInfoService {
             userInfoPerfors.add(perfor);
         }
         return userInfoPerfors;
-    }
-
-    public Long getUserIPCount(UserInfoPageParam param) {
-        addIdsToParam(param);
-        return userInfoDao.selectPageCount(param);
     }
 
     /**

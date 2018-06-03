@@ -36,7 +36,7 @@
         <result property="modifiedTime" column="modified_time"/>
         <result property="createdUserInfoId" column="created_user_info_id"/>
         <result property="modifiedUserInfoId" column="modified_user_info_id"/>
-        <association property="userPerformance" javaType="com.performance.pojo.UserPerformance">
+        <association property="userPerformance" autoMapping="false" javaType="com.performance.pojo.UserPerformance">
             <id property="performanceId" column="performance_id"/>
             <result property="userInfoId" column="user_info_id"/>
             <result property="isDeleted" column="is_deleted"/>
@@ -147,8 +147,11 @@
             <if test="performanceTime != null and performanceTime != ''">
                 user_performance.performance_time = #{performanceTime}
             </if>
-            AND user_performance.is_deleted = 0 AND user_info.is_deleted = 0
+            AND user_performance.is_deleted = 0
+            AND user_info.is_deleted = 0
         </where>
+--         GROUP BY user_info.user_info_id
+--         HAVING max(user_performance.modified_time)
         <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
             ORDER BY #{orderField},#{orderDir}
         </if>
@@ -177,6 +180,7 @@
         <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
             #{item}
         </foreach>
+        AND is_deleted=0;
     </select>
 
 </mapper>
