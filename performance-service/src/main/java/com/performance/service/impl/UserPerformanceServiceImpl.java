@@ -47,6 +47,7 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
                 || olderUP.getOperateUserInfoId().longValue() == newUP.getOperateUserInfoId().longValue()){
             userPerformanceDao.updateById(newUP);
             _logger.info("用户修改数据{}", newUP);
+            return;
         }
         // 2.管理员修改
         permissionService.getAuthen(userInfo, newUP);//校验权限
