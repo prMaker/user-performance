@@ -6,11 +6,12 @@
  */
 var dataTableObj = (function () {
 
+    var dataIsLocked = false;
     /**
      * 初始化dataTable
      * @returns {*|jQuery}
      */
-    function initFormDataTable() {
+    function initFormDataTable(drawCallback) {
         var dataTable = $('#user-info-data-table').DataTable( {
             serverSide: true,
             lengthChange: false,
@@ -122,6 +123,12 @@ var dataTableObj = (function () {
                         var INPUT_TEMPL_SCORE = ''
 + '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
 
+                        /* NOTICE 不合适  暂时放这里*/
+                        if(row.userPerformance.isLocked == 1){
+                            console.log("修为改锁定");
+                            dataIsLocked = true;
+                        }
+
                         if(!row.permissionToFix){// 没有权限修改
                             return data;
                         }
@@ -161,7 +168,9 @@ var dataTableObj = (function () {
                 }
             ],
             drawCallback: function(settings) {
-                // $(".checkall").attr("checked", false);
+                if(!!drawCallback){
+                    drawCallback(dataIsLocked);
+                }
             }
         } );
         return dataTable;
@@ -195,9 +204,9 @@ var dataTableObj = (function () {
     }
 
     return {
-
         "packDataTableParam" : packDataTableParam,
-        "initFormDataTable" : initFormDataTable
+        "initFormDataTable" : initFormDataTable,
+        "dataIsLocked" : dataIsLocked
     };
 })();
 
@@ -237,7 +246,14 @@ var ListObj = (function () {
      * 初始化
      */
     ListObj.prototype.init = function () {
-        this.dataTable = dataTableObj.initFormDataTable();
+        var _this = this;
+        this.dataTable = dataTableObj.initFormDataTable(dataTableCallback);
+        function dataTableCallback(dataIsLocked) {
+            console.log("锁定状态：" + _this.dataTable.dataIsLocked);
+            if(dataIsLocked){
+                $("#user-info-lock-div").empty();
+            }
+        }
         this.setOption();
     };
 
@@ -263,6 +279,28 @@ var ListObj = (function () {
             console.log("开始搜索！");
             _this.dataTable.ajax.reload();
         });
+        //锁定数据监听
+        $("#user-info-lock").click(function () {
+            var user_info_id = $(this).attr("user-info-id");
+            console.log("user_info_id:" + user_info_id);
+            $.ajax({
+                url:"/userPerformance/lockPerformance",
+                type:"POST",
+                async: true,
+                data:{
+                    performanceTime:$("#user-info-performance-time").val(),
+                    loginId:user_login_id
+                },
+                dataType:"json",
+                success: function (data) {
+                    if(data.success){
+                        $("#info-msg").text("锁定数据成功！");
+                    } else {
+                        $("#info-msg").text(data.msg);
+                    }
+                }
+            });
+        });
 
         // 公共方法//////////////////
         function updateScore() {
@@ -279,9 +317,11 @@ var ListObj = (function () {
                 alert("请录入分数！");
                 return;
             }
-            if(newScore < 0 | newScore > 100){
-                alert("请录入合理的绩效分数（绩效>0并且绩效<100）");
-                return;
+            if(newScore){
+                if(!(/-?([1-9][0-9]{0,2},[0])?/.test(newScore))){
+                    alert("请录入合理的绩效分数（绩效>0并且绩效<100）");
+                    return;
+                }
             }
             $.ajax({
                 url:"/userPerformance/doSave",

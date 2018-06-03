@@ -19,6 +19,7 @@
     .pd20{padding: 20px;}
     .inline{display: inline;}
     .inline-block{display: inline-block}
+    .pd-lr20{padding: 0px 20px 0px 20px}
 </style>
 <body>
 
@@ -39,6 +40,11 @@
                                 <input type="hidden" id="user-info-performance-time">
                             </div>
                             <button id="user-info-btn-search">搜索</button>
+                            <c:if test="${sessionScope.userInfo.dispostion == 4}">
+                                <div class="inline-block pd-lr20" id="user-info-lock-div">
+                                    <button id="user-info-lock">锁定数据</button>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
 

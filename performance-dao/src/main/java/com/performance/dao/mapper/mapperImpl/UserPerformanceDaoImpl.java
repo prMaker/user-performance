@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository("userPerformanceDao")
 public class UserPerformanceDaoImpl extends BaseDaoImpl<UserPerformance, Long> implements UserPerformanceDao {
@@ -20,8 +21,8 @@ public class UserPerformanceDaoImpl extends BaseDaoImpl<UserPerformance, Long> i
         return sqlTemplate.update(getNameSpace("deleteById"), performance);
     }
 
-    public int lockPerformance(UserPerformance performance) {
-        return sqlTemplate.update(getNameSpace("lockPerformance"), performance);
+    public int lockPerformance(Map<String, Object> param) {
+        return sqlTemplate.update(getNameSpace("lockPerformance"), param);
     }
 
     public List<UserPerformance> selectForPage(HashMap<String, Object> userInfos) {

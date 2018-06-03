@@ -5,10 +5,16 @@ import com.performance.pojo.UserPerformance;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface UserPerformanceDao extends BaseDao<UserPerformance, Long> {
 
-    int lockPerformance(UserPerformance performance);
+    /**
+     * 锁定数据
+     * @param param
+     * @return
+     */
+    int lockPerformance(Map<String, Object> param);
 
     /**
      * 根据 userInfos中的id查找对应UserPerformance

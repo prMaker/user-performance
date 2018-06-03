@@ -9,6 +9,7 @@ import com.performance.pojo.UserPerformance;
 import com.performance.pojo.constant.IsDeletedEnum;
 import com.performance.pojo.constant.IsLockedEnum;
 import com.performance.service.PermissionService;
+import com.performance.service.UserInfoService;
 import com.performance.service.UserPerformanceService;
 import com.performance.service.exec.AuthenException;
 import org.slf4j.Logger;
@@ -16,12 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service("userPerformanceService")
 public class UserPerformanceServiceImpl implements UserPerformanceService {
@@ -33,6 +31,8 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     private PermissionService permissionService;
     @Resource
     private UserInfoDao userInfoDao;
+    @Resource
+    private UserInfoService userInfoService;
     @Value("adminId")// 管理员账户信息ID
     private String adminId;
     // 并发新增绩效信息锁定
@@ -115,8 +115,15 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
         }
     }
 
-    public void lockPerformance(UserPerformance userPerformance) {
-        userPerformanceDao.lockPerformance(userPerformance);
+    public void lockPerformance(UserPerformance userPerformance, UserInfo localUserInfo) {
+        List<Long> ids = userInfoService.getIdsByPid(localUserInfo.getUserInfoId());
+        Map<String, Object> param = new HashMap<>();
+        param.put("ids", ids);
+        param.put("userPerformance", userPerformance);
+        int res = userPerformanceDao.lockPerformance(param);
+        if (res != ids.size()) {
+            throw new RuntimeException("锁定数据异常！");
+        }
     }
 
     @Override

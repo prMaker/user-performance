@@ -46,23 +46,23 @@ public class PermissionServiceImpl implements PermissionService {
     public boolean getAuthen(UserInfo localUserInfo, UserPerformance performance) throws AuthenException{
         _logger.info("校验用户审核权限：登录用户：{}，要审核的数据：{}", localUserInfo, performance);
         UserPerformance performan = userPerformanceDao.selectById(performance.getPerformanceId());
-        // 0. 是自己修改 则可以修改：
-        if(localUserInfo.getUserInfoId().intValue() == performan.getOperateUserInfoId().intValue()){
-            return true;
-        }
-        // 1. 未查到 这条数据已经删除，说明其他人已经改了， 返回给用户重新修改尝试,同时也无法修改
-        if(null == performan) throw new AuthenException("该数据已经被修改！请刷新页面重试！");
-        // 2. 如果是管理员用户，则可以直接修改
+        // 1. 如果是管理员用户，则可以直接修改
 //        _logger.debug("配置的adminID 为："  + adminId == null ? "" : adminId );
         if(localUserInfo.getUserInfoId().longValue() == Util.ADMIN_ID){
             _logger.error("当前管理员用户修改审核数据修改前：{}，修改后数据：{}", performan, performance);
             return true;
         }
-        // 3.如果数据已经锁定 则不可以修改
+        // 2.如果数据已经锁定 则不可以修改
         if(performan.getIsLocked().intValue() == IsLockedEnum.IsLocked.getCode()){
             throw new AuthenException("该数据已经锁定，请找管理员重新修改数据");
         }
-        // 4. 查当前用户是否是当前审核人的上层管理者，如果是，则可以修改
+        // 3. 未查到 这条数据已经删除，说明其他人已经改了， 返回给用户重新修改尝试,同时也无法修改
+        if(null == performan) throw new AuthenException("该数据已经被修改！请刷新页面重试！");
+        // 4. 是自己修改 则可以修改：
+        if(localUserInfo.getUserInfoId().intValue() == performan.getOperateUserInfoId().intValue()){
+            return true;
+        }
+        // 5. 查当前用户是否是当前审核人的上层管理者，如果是，则可以修改
         IsHighPosition(localUserInfo, performan);
         return true;
     }

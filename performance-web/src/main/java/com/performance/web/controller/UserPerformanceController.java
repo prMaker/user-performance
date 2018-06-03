@@ -103,7 +103,7 @@ public class UserPerformanceController {
      * @param performanceTime
      * @return
      */
-    @RequestMapping(value = "/lockPerformance", method = RequestMethod.GET)
+    @RequestMapping(value = "/lockPerformance", method = RequestMethod.POST)
     @ResponseBody
     public Result lockPerformance(@RequestParam String performanceTime){
         if(StringUtils.isBlank(performanceTime)){
@@ -115,7 +115,7 @@ public class UserPerformanceController {
         _logger.error("用户:{}锁定审核数据月份：{}", LoginSession.getUserInfo(), performanceTime);
         UserPerformance performance = new UserPerformance();
         performance.setPerformanceTime(performanceTime);
-        userPerformanceService.lockPerformance(performance);
+        userPerformanceService.lockPerformance(performance, LoginSession.getUserInfo());
         return new Result();
     }
 

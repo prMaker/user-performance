@@ -78,10 +78,17 @@
         WHERE performance_id=#{performanceId};
     </update>
 
-    <update id="lockPerformance" parameterType="com.performance.pojo.UserPerformance">
+    <update id="lockPerformance" parameterType="java.util.Map">
         UPDATE user_performance SET
         is_locked=1,modified_time=now()
-        WHERE performance_time=#{performanceTime} AND is_deleted = 0;
+        <where>
+            performance_time=#{userPerformance.performanceTime}
+            AND is_deleted = 0
+            AND user_info_id IN
+            <foreach collection="ids" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </where>
     </update>
 
     <select id="selectForPage" resultMap="resultMap"

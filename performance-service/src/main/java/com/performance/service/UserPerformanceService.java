@@ -27,8 +27,9 @@ public interface UserPerformanceService {
     /**
      * 审核后锁定数据
      * @param userPerformance
+     * @param localUserInfo
      */
-    void lockPerformance(UserPerformance userPerformance);
+    void lockPerformance(UserPerformance userPerformance, UserInfo localUserInfo);
 
     /**
      * 获取当前审核条件信息
