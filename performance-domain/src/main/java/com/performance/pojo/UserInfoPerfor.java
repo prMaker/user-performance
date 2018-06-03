@@ -1,4 +1,4 @@
-package com.performance.service.Po;
+package com.performance.pojo;
 
 import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserPerformance;

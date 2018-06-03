@@ -169,17 +169,19 @@ var dataTableObj = (function () {
         //var orderField = boxParam.columns[boxParam.order[0].column].data;
         //var orderDir = boxParam.order[0].dir;
         var param = {
-            "dTParam.draw": boxParam.draw,
-            "dTParam.pageNo": boxParam.start/boxParam.length+1,
-            "dTParam.pageSize": boxParam.length,
+            "dataTableParam.draw": boxParam.draw,
+            "dataTableParam.pageNo": boxParam.start/boxParam.length+1,
+            "dataTableParam.pageSize": boxParam.length,
             //"orderField": orderField,
             //"orderDir": orderDir,
             // 封装其他参数
-            "param.performanceTime" : $("#user-info-performance-time").val(),
+            "userInfoPageParam.performanceTime" : $("#user-info-performance-time").val(),
             //"formId": $.trim($("#formId").val()),
             //"formName": $.trim($("#formName").val()),
             //"formCreateUser": $.trim($("#formCreateUser").val())
         };
+        console.log(boxParam);
+        console.log(param);
         return param;
     }
 

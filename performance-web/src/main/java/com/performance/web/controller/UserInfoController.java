@@ -3,7 +3,7 @@ package com.performance.web.controller;
 import com.performance.common.query.UserInfoPageParam;
 import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserLogin;
-import com.performance.service.Po.UserInfoPerfor;
+import com.performance.pojo.UserInfoPerfor;
 import com.performance.service.UserInfoService;
 import com.performance.service.UserLoginService;
 import com.performance.service.exec.ErrorDataException;
@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -61,32 +62,27 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "toList", method = RequestMethod.GET)
-    public String toList(){
+    public String toList(Model model){
+        model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
         return "/userInfo/toList";
     }
 
-    @RequestMapping(value = "/listData", produces = "application/json;charset=UTF-8")
-//                ,produces = {"text/plain", "application/json"})
+    @RequestMapping(value = "/listData", method = RequestMethod.POST
+            , produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public DataTableVO listData(DataTableParam dTParam
-            , UserInfoPageParam param){
+    public DataTableVO listData(DataTableParam dataTableParam
+            , UserInfoPageParam userInfoPageParam){
         // TODO 校验ERROR参数
         DataTableVO vo = new DataTableVO();
-        // 测试参数
-        dTParam = new DataTableParam();
-        dTParam.setDraw(1);
-        dTParam.setPageNo(1);
-        dTParam.setPageSize(10);
-        // 完毕
 
         try {
-            checkAndSetParam(dTParam, param);
+            checkAndSetParam(dataTableParam, userInfoPageParam);
             _logger.info("用户：{}查询用户信息：{}", LoginSession.getUserInfo());
-            List<UserInfoPerfor> userInfoPerfors = userInfoService.getUserIPByParam(LoginSession.getUserInfo(), param);
-            Long count = userInfoService.getUserIPCount(param);
+            List<UserInfoPerfor> userInfoPerfors = userInfoService.getUserIPByParam(LoginSession.getUserInfo(), userInfoPageParam);
+            Long count = userInfoService.getUserIPCount(userInfoPageParam);
 
             vo.setData(userInfoPerfors);
-            vo.setDraw(dTParam.getDraw());
+            vo.setDraw(dataTableParam.getDraw());
             vo.setRecordsTotal(count);
             vo.setRecordsFiltered(count);
 
@@ -98,23 +94,18 @@ public class UserInfoController {
             _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
                     , ex);
             return vo.setError(ex.getMessage());
-        } catch (ErrorDataException ex) {
-            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
-                    ,ex);
-            return vo.setError(ex.getMessage());
         }
         return vo;
     }
 
-    private void checkAndSetParam(DataTableParam dTParam, UserInfoPageParam param)
+    private void checkAndSetParam(DataTableParam dataTableParam, UserInfoPageParam param)
             throws IllegalArgumentException, IllegalStateException{
-        Assert.notNull(dTParam);
+        Assert.notNull(dataTableParam);
         if(null == LoginSession.getUserInfo()){
             _logger.error("用户账号：{}查看用户信息失败：没有记录用户信息", LoginSession.getUserLogin());
             throw new IllegalStateException("只有完善用户信息后才能查看当前月份用户信息列表!");
         }
         param = param == null ? new UserInfoPageParam() : param;
-//        Assert.notNull(param);
         if(StringUtils.isBlank(param.getPerformanceTime())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
             param.setPerformanceTime(sdf.format(new Date()));
@@ -122,8 +113,8 @@ public class UserInfoController {
 //        dataTableParam.setOrderDir("");
 //        dataTableParam.setOrderField("");
 
-        param.setPageNum(dTParam.getPageNo());
-        param.setPageSize(dTParam.getPageSize());
+        param.setPageNum(dataTableParam.getPageNo());
+        param.setPageSize(dataTableParam.getPageSize());
 //        param.setOrderDir(dataTableParam.getOrderDir());
 //        param.setOrderField(dataTableParam.getOrderField());
         param.setPid(LoginSession.getUserInfo().getUserInfoId());
@@ -131,8 +122,19 @@ public class UserInfoController {
     }
 
     @InitBinder("userInfo")
-    public void pageQueryParamBinder(WebDataBinder dataBinder) {
+    public void userInfoBinder(WebDataBinder dataBinder) {
         dataBinder.setFieldDefaultPrefix("userInfo.");
+    }
+
+    @InitBinder("dataTableParam")
+    public void dataTableParamBinder(WebDataBinder dataBinder) {
+        dataBinder.setFieldDefaultPrefix("dataTableParam.");
+    }
+
+
+    @InitBinder("userInfoPageParam")
+    public void paramBinder(WebDataBinder dataBinder) {
+        dataBinder.setFieldDefaultPrefix("userInfoPageParam.");
     }
 
 }

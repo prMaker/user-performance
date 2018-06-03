@@ -18,8 +18,46 @@
         <result property="modifiedUserInfoId" column="modified_user_info_id"/>
     </resultMap>
 
+    <resultMap id="userPerformanceResultMap" type="com.performance.pojo.UserInfoPerfor">
+        <id property="loginId" column="login_id"/>
+        <result property="userInfoId" column="user_info_id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="loginName" column="login_name"/>
+        <result property="password" column="password"/>
+        <result property="idCard" column="id_card"/>
+        <result property="userName" column="user_name"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="phone" column="phone"/>
+        <result property="pid" column="pid"/>
+        <result property="dispostion" column="dispostion"/>
+        <result property="loginState" column="login_state"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="createdUserInfoId" column="created_user_info_id"/>
+        <result property="modifiedUserInfoId" column="modified_user_info_id"/>
+        <association property="userPerformance" javaType="com.performance.pojo.UserPerformance">
+            <id property="performanceId" column="performance_id"/>
+            <result property="userInfoId" column="user_info_id"/>
+            <result property="isDeleted" column="is_deleted"/>
+            <result property="performanceContent" column="performance_content"/>
+            <result property="performanceScore" column="performance_score"/>
+            <result property="operateUserInfoId" column="operate_user_info_id"/>
+            <result property="createdTime" column="created_time"/>
+            <result property="modifiedTime" column="modified_time"/>
+            <result property="isLocked" column="is_locked"/>
+            <result property="operateDisposition" column="operate_disposition"/>
+            <result property="performanceTime" column="performance_time"/>
+        </association>
+    </resultMap>
+
     <sql id="Base_Column_List">
         user_info_id,login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id
+    </sql>
+
+    <sql id="userPerformance_Base_Column_List">
+        user_info.user_info_id,login_id,id_card,user_name,birthday,sex,phone,user_info.is_deleted,pid,dispostion,user_info.created_time,user_info.modified_time,created_user_info_id,modified_user_info_id,
+        performance_id,performance_content,performance_score,operate_user_info_id,user_performance.created_time,user_performance.modified_time,is_locked,operate_disposition,performance_time
     </sql>
 
     <insert id="insert" parameterType="com.performance.pojo.UserInfo">
@@ -98,63 +136,47 @@
     </select>
 
     <select id="selectForPage" parameterType="com.performance.common.query.UserInfoPageParam"
-            resultMap="resultMap">
-
+            resultMap="userPerformanceResultMap">
+-- TODO  问题  目前查询的是全部数据，优化为查询本地数据
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="userPerformance_Base_Column_List"/>
         FROM user_info
+        LEFT JOIN user_performance
+        ON user_info.user_info_id = user_performance.user_info_id
         <where>
-            pid in
-            (
-                SELECT user_info_id FROM user_info WHERE pid in
-                    (SELECT user_info_id FROM user_info  WHERE pid=1 UNION SELECT 1)
-            )
-            AND is_deleted=0
+            <if test="performanceTime != null and performanceTime != ''">
+                user_performance.performance_time = #{performanceTime}
+            </if>
+            AND user_performance.is_deleted = 0 AND user_info.is_deleted = 0
         </where>
-
-
---
---         /**
---         * 排序字段
---         */
---         private String orderField;
---         /**
---         * 排序方向
---         */
---         private String orderDir;
         <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
             ORDER BY #{orderField},#{orderDir}
         </if>
+        ORDER BY user_info_id ASC
 
         limit #{offset},#{limit}
+    </select>
 
-
-        <!--
-            SELECT
-            <include refid="Base_Column_List"/>
-            FROM user_info
-            WHERE
-                pid in
-                (
-                    (
-                        SELECT user_info_id FROM user_info
-                        WHERE pid in
-                        (SELECT user_info_id FROM user_info
-                        WHERE pid=#{pid})
-                    )
-                  UNION
-                        (SELECT user_info_id FROM user_info
-                        WHERE pid=#{pid})
-                  UNION
-                        SELECT #{pid}
-                )
-        -->
+    <select id="selectPageCount" resultType="java.lang.Long" parameterType="com.performance.common.query.UserInfoPageParam">
+        SELECT count(1) FROM user_info
+        WHERE user_info_id
+        IN
+        <foreach collection="infoIds" item="item" separator="," index="index" open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 
     <select id="selectCount" resultType="java.lang.Integer"
             parameterType="com.performance.pojo.UserInfo">
         SELECT count(1) FROM user_info
         WHERE is_deleted=0;
+    </select>
+
+    <select id="selectForIdsByParam" parameterType="java.util.List" resultType="java.lang.Long">
+        SELECT user_info_id FROM  user_info WHERE pid in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
     </select>
 
 </mapper>

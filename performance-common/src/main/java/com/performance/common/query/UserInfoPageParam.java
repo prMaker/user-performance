@@ -1,5 +1,7 @@
 package com.performance.common.query;
 
+import java.util.List;
+
 public class UserInfoPageParam extends PageParam {
     /**
      * 审核时间
@@ -17,6 +19,11 @@ public class UserInfoPageParam extends PageParam {
      * 父Id
      */
     private Long pid;
+
+    /**
+     * id集合
+     */
+    private List<Long> infoIds;
 
 
     public String getPerformanceTime() {
@@ -52,15 +59,25 @@ public class UserInfoPageParam extends PageParam {
         return pid;
     }
 
+    public List<Long> getInfoIds() {
+        return infoIds;
+    }
+
+    public void setInfoIds(List<Long> infoIds) {
+        this.infoIds = infoIds;
+    }
+
+
     @Override
     public String toString() {
         return "UserInfoPageParam{" +
-                "pageNum=" + pageNum +
-                ", pageSize=" + pageSize +
-                ", performanceTime='" + performanceTime + '\'' +
+                "performanceTime='" + performanceTime + '\'' +
                 ", orderField='" + orderField + '\'' +
                 ", orderDir='" + orderDir + '\'' +
                 ", pid=" + pid +
+                ", infoIds=" + infoIds +
+                ", pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
                 '}';
     }
 }

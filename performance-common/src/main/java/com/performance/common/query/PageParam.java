@@ -78,7 +78,7 @@ public class PageParam {
             this.pageSize = 20;
         } else {
             this.pageSize = pageSize;
-            this.setOffset(this.pageSize * this.pageNum + 1);
+            this.setOffset(this.pageSize * (this.pageNum -1) + 1);
             this.setLimit(this.pageSize);
         }
     }

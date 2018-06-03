@@ -2,7 +2,7 @@ package com.performance.service;
 
 import com.performance.common.query.UserInfoPageParam;
 import com.performance.pojo.UserInfo;
-import com.performance.service.Po.UserInfoPerfor;
+import com.performance.pojo.UserInfoPerfor;
 import com.performance.service.exec.ErrorDataException;
 
 import java.util.List;
@@ -29,8 +29,7 @@ public interface UserInfoService {
      * @return
      * @throws ErrorDataException 查询数据库信息出错时抛出
      */
-    List<UserInfoPerfor> getUserIPByParam(UserInfo userInfo, UserInfoPageParam param)
-    throws ErrorDataException;
+    List<UserInfoPerfor> getUserIPByParam(UserInfo userInfo, UserInfoPageParam param);
 
     /**
      * 获取条件下总数
