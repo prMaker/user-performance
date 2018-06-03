@@ -139,3 +139,7 @@ $('#yearDate [data-time="end"]').datetimepicker({
     var endTime = e.date;
     $('#yearDate [data-time="start"]').datetimepicker("setEndDate",endTime);
 }).val(YearDate);
+
+
+// 下拉后是当前时间
+$("#user-info-check-performance-time").datetimepicker("setStartDate", DateFormat.format(new Date(), "yyyy-MM-dd"));

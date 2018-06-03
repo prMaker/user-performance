@@ -28,7 +28,8 @@
                 <span>选择绩效月份</span>
             </div>
             <div class="inline">
-                <span><input type="text" id="user-info-performance-time"></span>
+                <span><input type="text" id="user-info-check-performance-time"></span>
+                <input type="hidden" id="user-info-performance-time">
             </div>
             <button id="user-info-btn-search">搜索</button>
         </div>
@@ -77,6 +78,7 @@
 <script src="/plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
 <script src="/plugins/xdate/xdate.js"></script>
+<script src="/plugins/dateFormat/dateformat.js"></script>
 <script>
     var user_login_id = ${sessionScope.userLogin.loginId};
 </script>
