@@ -63,6 +63,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     public Long getCountByCreatedId(Long loginId) {
         UserLogin userLogin = new UserLogin();
         userLogin.setLoginId(loginId);
+//    TODO    同 userInfo 一样 需要递归查询出所有ID 集合  然后算总数
         return userLoginDao.selectCount(userLogin);
     }
 
