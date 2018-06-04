@@ -39,17 +39,13 @@ public class UserInfoController {
     // 先创建用户登录，在用户信息设置
     @RequestMapping(value = "/toSave",method = RequestMethod.GET)
     public String toSave(){
-//        userInfoService.getUserInfoById(LoginSession.getUserInfo().getUserInfoId());
+        UserInfo userInfo = userInfoService.getUserInfoById(LoginSession.getUserLogin().getUserInfoId());
         return "/userInfo/toSave";
     }
 
     @RequestMapping(value = "/doSave",method = RequestMethod.POST)
     public String doSave(@ModelAttribute("userInfo") UserInfo userInfo,
                          RedirectAttributes redirectAttr){
-//        if(null == userInfo){
-//            redirectAttr.addAttribute("", "");
-//            return "/userInfo/toSave";
-//        }
         Assert.notNull(userInfo);
         UserLogin createdLogin = userLoginService.getUserLoginById(
                 LoginSession.getUserLogin().getCreatedUserId());
@@ -63,6 +59,7 @@ public class UserInfoController {
     public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
+
         return "/userInfo/toList";
     }
 

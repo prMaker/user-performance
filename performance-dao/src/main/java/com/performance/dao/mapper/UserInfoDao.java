@@ -34,4 +34,11 @@ public interface UserInfoDao extends BaseDao<UserInfo,Long>{
      * @return
      */
     List<Long> selectForIdsByParam(List<Long> list);
+
+    /**
+     * 根据 loginID 找
+     * @param loginId
+     * @return
+     */
+    UserInfo selectByLoginId(Long loginId);
 }

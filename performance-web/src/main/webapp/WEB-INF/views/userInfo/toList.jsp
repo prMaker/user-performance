@@ -35,7 +35,7 @@
                             </span>
                     </div>
                     <div class="inline-block">
-                        <a href="/userInfo/toSave?loginId=${sessionScope.userInfo.loginId}">新增个人信息</a>
+                        <a href="/userInfo/toSave?loginId=${sessionScope.userLogin.loginId}">新增个人信息</a>
                     </div>
                 </c:if>
 

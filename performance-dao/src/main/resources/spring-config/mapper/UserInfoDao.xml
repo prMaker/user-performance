@@ -191,4 +191,11 @@
         AND is_deleted=0;
     </select>
 
+    <select id="selectByLoginId" parameterType="java.lang.Long" resultType="com.performance.pojo.UserInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_performance
+        WHERE login_id = #{loginId}
+    </select>
+
 </mapper>

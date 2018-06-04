@@ -47,4 +47,8 @@ public class UserInfoDaoImpl extends BaseDaoImpl<UserInfo,Long> implements UserI
     public List<Long> selectForIdsByParam(List<Long> list) {
         return sqlTemplate.selectList(getNameSpace(SELECT_FOR_IDS_BY_PARAM), list);
     }
+
+    public UserInfo selectByLoginId(Long loginId) {
+        return sqlTemplate.selectOne(getNameSpace("selectByLoginId"), loginId);
+    }
 }

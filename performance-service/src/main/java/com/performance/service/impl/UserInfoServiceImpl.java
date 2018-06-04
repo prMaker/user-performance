@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -39,7 +40,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     private PermissionService permissionService;
 
     public UserInfo getUserInfoById(Long userInfoId) throws IllegalArgumentException {
-        return userInfoDao.selectById(userInfoId);
+        return null == userInfoId ? new UserInfo() : userInfoDao.selectById(userInfoId);
     }
 
     @Transactional
@@ -50,11 +51,13 @@ public class UserInfoServiceImpl implements UserInfoService {
             userInfo.setModifiedUserInfoId(createdLogin.getUserInfoId());
             userInfo.setDispostion(currUserLogin.getDispostion());
             userInfo.setIsDeleted(IsDeletedEnum.IsNotDeleted.getCode());
+            userInfo.setPid(createdLogin.getUserInfoId());
 
             // FIXME 查看id是否已经拿到,未拿到重新获取
             userInfoDao.insert(userInfo);
+            UserInfo in = userInfoDao.selectByLoginId(userInfo.getLoginId());
             UserLogin userLogin = userLoginDao.selectById(userInfo.getLoginId());
-            userLogin.setUserInfoId(userInfo.getUserInfoId());
+            userLogin.setUserInfoId(in.getUserInfoId());
             userLoginDao.updateById(userLogin);
         } else {
             userInfoDao.updateById(userInfo);
@@ -64,6 +67,9 @@ public class UserInfoServiceImpl implements UserInfoService {
     public List<UserInfoPerfor> getUserIPByParam(UserInfo currUserInfo, UserInfoPageParam param){
         // 1. 查出所有子ID 集合
         addIdsToParam(param);
+        if(param.getInfoIds().size() == 0){
+            return new ArrayList<>();
+        }
         addSortedToParam(param);
         // 2. 查表数据
         List<UserInfoPerfor> userInfoPerfors = userInfoDao.selectForPage(param);
@@ -95,6 +101,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     public Long getUserIPCount(UserInfoPageParam param) {
         addIdsToParam(param);
+        if(param.getInfoIds().size() == 0){
+            return 0L;
+        }
         return userInfoDao.selectPageCount(param);
     }
 
