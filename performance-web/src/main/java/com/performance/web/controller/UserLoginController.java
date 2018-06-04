@@ -94,7 +94,9 @@ public class UserLoginController {
         UserLoginPageParam pageParam = new UserLoginPageParam();
         pageParam.setCreatedUserId(LoginSession.getUserLogin().getLoginId());
         List<UserLogin> logins = userLoginService.getForPage(pageParam);
-        Integer count = userLoginService.getCountByCreatedId(LoginSession.getUserLogin().getLoginId());
+        Long count = userLoginService.getCountByCreatedId(LoginSession.getUserLogin().getLoginId());
+        modelMap.addAttribute("logins" , logins);
+        modelMap.addAttribute("count" , count);
         return "login/list";
     }
 

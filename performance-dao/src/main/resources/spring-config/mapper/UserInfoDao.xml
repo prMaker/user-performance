@@ -83,7 +83,8 @@
         <if test="sex != null">sex=#{sex},</if>
         <if test="phone != null">phone=#{phone},</if>
         <if test="isDeleted != null">is_deleted=#{isDeleted},</if>
-        <if test="pid != null">pid=#{pid},</if>
+--  NOTICE 父ID 拒绝修改 原因 会修改管理员的父ID 导致递归死循环问题 修改前 做好管理员信息修改处理
+        <!--<if test="pid != null">pid=pid,</if>-->
         <if test="dispostion != null">dispostion=#{dispostion},</if>
         <if test="modifiedUserInfoId != null">modified_user_info_id=#{modifiedUserInfoId},</if>
         modified_time=now()

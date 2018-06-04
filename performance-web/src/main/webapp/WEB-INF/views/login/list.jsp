@@ -12,10 +12,20 @@
 </head>
 <body>
 
+<div class="pd50">
+
+    <a href="/userInfo/toList?loginId=${sessionScope.userLogin.loginId}">
+        员工列表
+    </a>
+
+</div>
+
 <h3>
     ${infoMsg}
 </h3>
-
+${count}
+----------------------------
+${logins}
 
 <script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 </body>

@@ -4,7 +4,6 @@ import com.performance.common.query.UserLoginPageParam;
 import com.performance.dao.mapper.UserInfoDao;
 import com.performance.dao.mapper.UserLoginDao;
 import com.performance.pojo.UserLogin;
-import com.performance.pojo.constant.IsDeletedEnum;
 import com.performance.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +60,10 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     @Override
-    public Integer getCountByCreatedId(Long loginId) {
-        return null;
+    public Long getCountByCreatedId(Long loginId) {
+        UserLogin userLogin = new UserLogin();
+        userLogin.setLoginId(loginId);
+        return userLoginDao.selectCount(userLogin);
     }
 
 

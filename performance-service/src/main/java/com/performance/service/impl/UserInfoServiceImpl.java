@@ -22,7 +22,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,13 +43,22 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Transactional
-    public void save(UserInfo userInfo) {
+    public void saveOrUpdate(UserInfo userInfo, UserLogin createdLogin, UserLogin currUserLogin) {
         // 同步保存 userLogin中的userInfoId信息
-        userInfo.setIsDeleted(IsDeletedEnum.IsNotDeleted.getCode());
-        userInfoDao.insert(userInfo);// FIXME 查看id是否已经拿到,未拿到重新获取
-        UserLogin userLogin = userLoginDao.selectById(userInfo.getLoginId());
-        userLogin.setUserInfoId(userInfo.getUserInfoId());
-        userLoginDao.updateById(userLogin);
+        if(null == userInfo.getUserInfoId()){
+            userInfo.setCreatedUserInfoId(createdLogin.getUserInfoId());
+            userInfo.setModifiedUserInfoId(createdLogin.getUserInfoId());
+            userInfo.setDispostion(currUserLogin.getDispostion());
+            userInfo.setIsDeleted(IsDeletedEnum.IsNotDeleted.getCode());
+
+            // FIXME 查看id是否已经拿到,未拿到重新获取
+            userInfoDao.insert(userInfo);
+            UserLogin userLogin = userLoginDao.selectById(userInfo.getLoginId());
+            userLogin.setUserInfoId(userInfo.getUserInfoId());
+            userLoginDao.updateById(userLogin);
+        } else {
+            userInfoDao.updateById(userInfo);
+        }
     }
 
     public List<UserInfoPerfor> getUserIPByParam(UserInfo currUserInfo, UserInfoPageParam param){
@@ -177,6 +185,11 @@ public class UserInfoServiceImpl implements UserInfoService {
             return ids;
         }
 
+        /**
+         * NOTICE 所有递归方法  对应数据库信息确定完毕才能使用
+         * @param pids
+         * @return
+         */
         private List<Long> getCircleIds(List<Long> pids) {
             List<Long> infoIds = userInfoDao.selectForIdsByParam(pids);
             if(CollectionUtils.isEmpty(infoIds)){

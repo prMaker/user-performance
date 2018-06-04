@@ -24,6 +24,11 @@ public class UserLoginPageParam extends PageParam {
      */
     private Long createdUserId;
 
+    /**
+     * 修改用户Id
+     */
+    private Long modifiedUserId;
+
     public String getOrderField() {
         return orderField;
     }
@@ -46,5 +51,27 @@ public class UserLoginPageParam extends PageParam {
 
     public void setCreatedUserId(Long createdUserId) {
         this.createdUserId = createdUserId;
+    }
+
+    public Long getModifiedUserId() {
+        return modifiedUserId;
+    }
+
+    public void setModifiedUserId(Long modifiedUserId) {
+        this.modifiedUserId = modifiedUserId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserLoginPageParam{" +
+                "pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                ", orderField='" + orderField + '\'' +
+                ", orderDir='" + orderDir + '\'' +
+                ", createdUserId=" + createdUserId +
+                ", modifiedUserId=" + modifiedUserId +
+                ", pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                '}';
     }
 }

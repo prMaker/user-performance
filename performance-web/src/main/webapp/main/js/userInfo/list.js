@@ -17,6 +17,7 @@ var dataTableObj = (function () {
             lengthChange: false,
             searching: false,
             ordering:true,
+            /* TODO 添加默认排序设置*/
             dom:
                 "<<tr>>" +
                 "<'row'<'col-sm-6'i><'col-sm-6'p>>",

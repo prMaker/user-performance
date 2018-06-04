@@ -15,8 +15,8 @@ public class UserLogin {
     protected String createdUser;
     protected String modifiedUser;
     //TODO 是否添加
-    protected Long createdUserId;// 创建人用户ID
-    protected Long modifiedUserId;// 修改人用户ID
+    protected Long createdUserId;// userLoginId
+    protected Long modifiedUserId;// userLoginId
 
     public Long getLoginId() {
         return loginId;

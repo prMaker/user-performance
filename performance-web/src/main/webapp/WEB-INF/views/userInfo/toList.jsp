@@ -7,12 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@include file="../header.jsp"%>
 <html>
 <head>
     <title>列表信息</title>
-    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
-    <link rel="stylesheet" href="/plugins/datatables/css/dataTables.bootstrap.min.css">
 </head>
 <style>
     .pd50{padding: 50px;}
@@ -24,12 +22,28 @@
 <body>
 
     <div class="pd50">
+
+        <a href="/userLogin/toLogin">注销登录</a>
+        <a href="/userLogin/toSave?loginId=${sessionScope.userInfo.userInfoId}">注册新用户</a>
+        <a href="/userLogin/list?loginId=${sessionScope.userInfo.userInfoId}">用户列表</a>
+
+        <%--新用户--%>
                 <c:if test="${noUserInfo}">
+                    <div class="inline-block">
                             <span>
                                 只有更新完个人信息才能查看此项功能！
                             </span>
+                    </div>
+                    <div class="inline-block">
+                        <a href="/userInfo/toSave?loginId=${sessionScope.userInfo.loginId}">新增个人信息</a>
+                    </div>
                 </c:if>
+
+        <%--老用户--%>
                 <c:if test="${!noUserInfo}">
+                    <div>
+                        <a href="/userInfo/toSave?loginId=${sessionScope.userInfo.loginId}">修改个人信息</a>
+                    </div>
                     <div id="user-info-search">
                         <div class="inline-block">
                             <div class="inline">
@@ -55,7 +69,7 @@
                         <div class="app-content-body fade-in-up">
 
                             <div>
-                                <h3><span id="info-msg"></span></h3>
+                                <h3><span id="info-msg">${infoMsg}</span></h3>
                             </div>
 
                             <div id="screen_content">
@@ -89,14 +103,6 @@
 
 
 <!-- /内容区域 -->
-<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
-<script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script src="/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
-<script src="/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script src="/plugins/datatables/js/jquery.dataTables.min.js"></script>
-<script src="/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
-<script src="/plugins/xdate/xdate.js"></script>
-<script src="/plugins/dateFormat/dateformat.js"></script>
 <script>
     var user_login_id = ${sessionScope.userLogin.loginId};
 </script>

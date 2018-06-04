@@ -5,10 +5,12 @@
   Time: 15:10
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="../header.jsp"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>新增用户信息</title>
+    <title>用户基本信息</title>
 </head>
 <style>
     .padding_20{padding: 50px 50px 50px 50px }
@@ -33,6 +35,7 @@
             protected Long createdUserInfoId;
             protected Long modifiedUserInfoId;
         --%>
+            <input type="hidden" name="userInfoId" value="${sessionScope.userInfo.userInfoId}">
             <input type="hidden" name="loginId" value="${sessionScope.userLogin.loginId}">
             <input type="hidden" name="pid" value="${sessionScope.userInfo.userInfoId}">
             <input type="hidden" name="createdUserInfoId" value="${sessionScope.userInfo.userInfoId}">
@@ -40,7 +43,7 @@
         <table>
             <thead>
                 <th>
-                    <td colspan="2" align="center">新增用户基本信息</td>
+                    <td colspan="2" align="center">用户基本信息</td>
                 </th>
             </thead>
             <%--
@@ -54,30 +57,29 @@
             <tbody>
             <tr>
                 <td>身份证号：</td>
-                <td><input type="text" name="userInfo.idCard"></td>
+                <td><input type="text" name="userInfo.idCard" value="${sessionScope.userInfo.idCard}"></td>
             </tr>
             <tr>
                 <td>用户姓名</td>
-                <td><input type="text" name="userInfo.userName"></td>
+                <td><input type="text" name="userInfo.userName" value="${sessionScope.userInfo.userName}"></td>
             </tr>
             <tr>
                 <td>用户生日</td>
                 <td>
-                    <%--TODO 生日插件--%>
-                    <input type="text" name="birthday">
+                    <input type="text" id="user-info-birthday" name="birthday" value="${sessionScope.userInfo.birthday}">
                 </td>
             </tr>
             <tr>
                 <td>用户性别</td>
                 <td>
-                    <input type="radio" value="1" name="userInfo.sex"> 男
-                    <input type="radio" value="0" name="userInfo.sex"> 女
+                    <input type="radio" value="1" <c:if test="${sessionScope.userInfo.sex == 1}">checked</c:if> name="userInfo.sex"> 男
+                    <input type="radio" value="0" <c:if test="${sessionScope.userInfo.sex == 0}">checked</c:if> name="userInfo.sex"> 女
                 </td>
             </tr>
             <tr>
                 <td>用户电话</td>
                 <td>
-                    <input type="text" name="userInfo.phone">
+                    <input type="text" name="userInfo.phone" value="${sessionScope.userInfo.phone}">
                 </td>
             </tr>
             <tr>
@@ -91,6 +93,7 @@
 </div>
 
 
-<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+
+
 </body>
 </html>

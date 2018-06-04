@@ -70,20 +70,34 @@
         </where>
     </select>
 
-    <select id="selectForPage" parameterType="com.performance.common.query.UserLoginPageParam">
+    <select id="selectForPage" parameterType="com.performance.common.query.UserLoginPageParam" resultMap="resultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_login
         <where>
-            created_user_id = #{createdUserId}
-            OR modified_user_id = #{modifiedUserId}
-            AND is_deleted = 0;
+            <if test="createdUserId != null">
+                created_user_id = #{createdUserId}
+            </if>
+            <if test="modifiedUserId != null">
+                OR modified_user_id = #{modifiedUserId}
+            </if>
+            AND is_deleted = 0
         </where>
 
         <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
             ORDER BY #{orderField},#{orderDir}
         </if>
         limit #{offset},#{limit}
+    </select>
+
+    <select id="selectCount" parameterType="com.performance.pojo.UserPerformance" resultType="java.lang.Long">
+        SELECT count(1) FROM user_login
+        <where>
+            <if test="loginId != null">
+                created_user_id = #{loginId}
+            </if>
+            AND is_deleted = 0
+        </where>
     </select>
 
 </mapper>

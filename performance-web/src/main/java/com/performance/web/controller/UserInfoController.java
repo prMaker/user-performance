@@ -39,6 +39,7 @@ public class UserInfoController {
     // 先创建用户登录，在用户信息设置
     @RequestMapping(value = "/toSave",method = RequestMethod.GET)
     public String toSave(){
+//        userInfoService.getUserInfoById(LoginSession.getUserInfo().getUserInfoId());
         return "/userInfo/toSave";
     }
 
@@ -51,19 +52,17 @@ public class UserInfoController {
 //        }
         Assert.notNull(userInfo);
         UserLogin createdLogin = userLoginService.getUserLoginById(
-                LoginSession.getUserLogin().getLoginId());
-        userInfo.setCreatedUserInfoId(createdLogin.getUserInfoId());
-        userInfo.setModifiedUserInfoId(createdLogin.getUserInfoId());
-        userInfo.setDispostion(LoginSession.getUserLogin().getDispostion());
+                LoginSession.getUserLogin().getCreatedUserId());
         _logger.info("用户账户：{}保存用户信息成功：{}", LoginSession.getUserLogin(), userInfo);
-        userInfoService.save(userInfo);
+        userInfoService.saveOrUpdate(userInfo, createdLogin, LoginSession.getUserLogin());
         redirectAttr.addAttribute("infoMsg", "修改用户信息成功");
         return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
     }
 
     @RequestMapping(value = "toList", method = RequestMethod.GET)
-    public String toList(Model model){
+    public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
+        model.addAttribute("infoMsg", infoMsg);
         return "/userInfo/toList";
     }
 

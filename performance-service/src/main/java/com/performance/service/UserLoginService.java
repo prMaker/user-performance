@@ -36,5 +36,5 @@ public interface UserLoginService {
      * @param loginId
      * @return
      */
-    Integer getCountByCreatedId(Long loginId);
+    Long getCountByCreatedId(Long loginId);
 }

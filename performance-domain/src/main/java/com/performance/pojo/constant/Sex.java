@@ -2,7 +2,7 @@ package com.performance.pojo.constant;
 
 public enum Sex{
         MAN(1, "男"),
-        WOMAN(2, "女");
+        WOMAN(0, "女");
 
         private int code;
         private String desc;
