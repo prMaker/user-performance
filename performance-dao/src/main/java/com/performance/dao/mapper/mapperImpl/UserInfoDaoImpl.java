@@ -53,6 +53,6 @@ public class UserInfoDaoImpl extends BaseDaoImpl<UserInfo,Long> implements UserI
     }
 
     public List<Long> selectChildNOPerFor(UserInfoPageParam pageParam) {
-        return sqlTemplate.selectOne(getNameSpace("selectChildNOPerFor"), pageParam);
+        return sqlTemplate.selectList(getNameSpace("selectChildNOPerFor"), pageParam);
     }
 }

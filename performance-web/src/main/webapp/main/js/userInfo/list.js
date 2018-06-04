@@ -320,14 +320,16 @@ var ListObj = (function () {
             });
         }
         function performanceAdd() {
-            $.ajax({
-                url:"/userPerformance/setCurrPerformance",
-                data:{performanceTime: $("#user-info-performance-time").val()},
-                dataType:"json",
-                async:true,
-                success:function (data) {
-                }
-            });
+            window.location.href = "/userPerformance/setCurrPerformance?loginId=" + user_login_id +
+                "&performanceTime=" + $("#user-info-performance-time").val();
+            // $.ajax({
+            //     url:"/userPerformance/setCurrPerformance",
+            //     data:{performanceTime: $("#user-info-performance-time").val()},
+            //     dataType:"json",
+            //     async:true,
+            //     success:function (data) {
+            //     }
+            // });
         }
         function lockPerformance() {
             var user_info_id = $(this).attr("user-info-id");

@@ -121,7 +121,7 @@ public class UserPerformanceController {
 
 
     private String getUserInfoList(RedirectAttributes redirectAttr) {
-        redirectAttr.addAttribute("userLoginId", LoginSession.getUserLogin().getLoginId());
+//        redirectAttr.addAttribute("userLoginId", LoginSession.getUserLogin().getLoginId());
         return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
     }
 

@@ -32,7 +32,10 @@
         (user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.userInfoId},#{item.isDeleted},#{item.performanceContent},#{item.performanceScore},#{item.operateUserInfoId},#{item.createdTime},#{item.modifiedTime},#{item.isLocked},#{item.operateDisposition},#{item.performanceTime})
+            (#{item.userInfoId},#{item.isDeleted},#{item.performanceContent},
+            #{item.performanceScore},#{item.operateUserInfoId},now(),
+            now(),#{item.isLocked},#{item.operateDisposition},
+            #{item.performanceTime})
         </foreach>
     </insert>
 

@@ -37,7 +37,7 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Value("adminId")// 管理员账户信息ID
     private String adminId;
     // 并发新增绩效信息锁定
-    private volatile String batchSaveFlag;
+    private Object lock = new Object();
 
     @Transactional
     public void save(UserInfo userInfo, UserPerformance newUP) throws AuthenException, DataValidateException{
@@ -102,21 +102,22 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     @Transactional
     public void batchSave(String performanceTime, UserInfo currUserInfo) throws Exception {
         // 单机版处理方案：
-        synchronized (batchSaveFlag){
+        synchronized (lock){
 //            if(performanceTime.equals(batchSaveFlag)){
 //                _logger.error("两人同时添加当前月份审核信息：当前用户：{}, 时间：{}", currUserInfo, performanceTime);
 //                throw new Exception("其他人正在新增，请稍等刷新页面！");
 //            }
             UserInfoPageParam pageParam = new UserInfoPageParam();
-            pageParam.setPid(currUserInfo.getUserInfoId());
+            pageParam.setInfoIds(userInfoService.getIdsByPid(currUserInfo.getUserInfoId()));
             pageParam.setPerformanceTime(performanceTime);
+            _logger.error("审核人：{}，审核月份信息：{}", currUserInfo, performanceTime);
             List<Long> ids = userInfoDao.selectChildNOPerFor(pageParam);
-            performanceTime = batchSaveFlag;
-            _logger.error("重置审核月份信息：{}", performanceTime);
+            if(ids != null && ids.size() != 0){
+                userPerformanceDao.insertBatch(getPerfoList(performanceTime, ids));
+            }
             //TODO 集群处理方案：
             //集群数据方案：
             //使用redis保存key，通过zookeeper + redis分布式锁批量创建并发问题
-            userPerformanceDao.insertBatch(getPerfoList(performanceTime, currUserInfo));
         }
     }
 
@@ -141,30 +142,28 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
         return userPerformanceDao.selectCountByInfoIDs(childInfos);
     }
 
-    private List<UserPerformance> getPerfoList(String performanceTime, UserInfo currUserInfo) {
-        int size = userInfoDao.selectCount(new UserInfo()).intValue();
-        //List<UserPerformance> performances = size < 100000 ? new ArrayList<UserPerformance>(size) : new LinkedList<UserPerformance>();
-        return size < 10000 ? getPerforList(size, currUserInfo, performanceTime) : getAsynList(currUserInfo, performanceTime);
+    private List<UserPerformance> getPerfoList(String performanceTime, List<Long> noMakeInfos) {
+//        return noMakeInfos.size() < 10000 ? getPerforList(noMakeInfos.size(), noMakeInfos, performanceTime) : getAsynList(noMakeInfos, performanceTime);
+        return getPerforList(noMakeInfos.size(), noMakeInfos, performanceTime);
     }
 
-    private List<UserPerformance> getPerforList(int size, UserInfo userInfo, String performanceTime) {
+    private List<UserPerformance> getPerforList(int size, List<Long> noMakeInfos, String performanceTime) {
         List<UserPerformance> performances = new ArrayList<UserPerformance>(size);
-//        分批次  查出数据
-        List<UserInfo> userInfos = userInfoDao.selectList(new UserInfo());
         UserPerformance performance;
-        for(int i = 0; i < userInfos.size(); i++){
+        for(int i = 0; i < noMakeInfos.size(); i++){
             performance = new UserPerformance();
-            performance.setUserInfoId(userInfos.get(i).getUserInfoId());
+            performance.setUserInfoId(noMakeInfos.get(i));
             performance.setIsDeleted(IsDeletedEnum.IsNotDeleted.getCode());
             performance.setIsLocked(IsLockedEnum.IsNotLocked.getCode());
             performance.setPerformanceTime(performanceTime);
+            performance.setPerformanceScore(100);
 
             performances.add(performance);
         }
         return performances;
     }
 
-    private List<UserPerformance> getAsynList( UserInfo userInfo, String performanceTime) {
+    private List<UserPerformance> getAsynList(List<Long> userInfo, String performanceTime) {
         // TODO 未实现  使用带返回值  线程池 异步快速实现
         List<UserPerformance> performances = new LinkedList<UserPerformance>();
         return performances;

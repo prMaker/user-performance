@@ -1,7 +1,6 @@
 package com.performance.service.impl;
 
 import com.performance.common.Util;
-import com.performance.common.query.UserInfoPageParam;
 import com.performance.dao.mapper.UserInfoDao;
 import com.performance.dao.mapper.UserPerformanceDao;
 import com.performance.pojo.UserInfo;
@@ -16,9 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service("permissionService")
 public class PermissionServiceImpl implements PermissionService {
@@ -44,37 +41,39 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     public boolean getAuthen(UserInfo localUserInfo, UserPerformance performance) throws AuthenException{
-        // 0. 如果该条审核数据还没有生成，则返回可以修改
+        // 1. 如果该条审核数据还没有生成，则返回可以修改
         if(null == performance || performance.getPerformanceId() == null){
             return true;
         }
         _logger.info("校验用户审核权限：登录用户：{}，要审核的数据：{}", localUserInfo, performance);
         UserPerformance performan = userPerformanceDao.selectById(performance.getPerformanceId());
-        // 1. 如果是管理员用户，则可以直接修改
+        // 2. 如果是管理员用户，则可以直接修改
 //        _logger.debug("配置的adminID 为："  + adminId == null ? "" : adminId );
         if(localUserInfo.getUserInfoId().longValue() == Util.ADMIN_ID){
             _logger.error("当前管理员用户修改审核数据修改前：{}，修改后数据：{}", performan, performance);
             return true;
         }
-        // 2.如果数据已经锁定 则不可以修改
+        // 3.如果数据已经锁定 则不可以修改
         if(performan.getIsLocked().intValue() == IsLockedEnum.IsLocked.getCode()){
             throw new AuthenException("该数据已经锁定，请找管理员重新修改数据");
         }
-        // 3. 未查到 这条数据已经删除，说明其他人已经改了， 返回给用户重新修改尝试,同时也无法修改
+        // 4. 未查到 这条数据已经删除，说明其他人已经改了， 返回给用户重新修改尝试,同时也无法修改
         if(null == performan) throw new AuthenException("该数据已经被修改！请刷新页面重试！");
-        // 4. 是自己修改 则可以修改：
-        if(localUserInfo.getUserInfoId().intValue() == performan.getOperateUserInfoId().intValue()){
+
+        // 5. 该条数据已经生成 但尚未审核，并且该登录人是当前人的上级  则可以审核
+        if(null == performan.getOperateUserInfoId() || IsHighPosition(localUserInfo, performan)){
             return true;
         }
-        // 5. 查当前用户是否是当前审核人的上层管理者，如果是，则可以修改
-        IsHighPosition(localUserInfo, performan);
-        return true;
+        /*其他情况*/
+        _logger.error("其他情况下不可以修改审核数据");
+        throw new AuthenException("目前不是该人上级！不可以修改审核数据");
     }
 
-    private void IsHighPosition(UserInfo localUserInfo, UserPerformance performan) throws AuthenException{
+    private boolean IsHighPosition(UserInfo localUserInfo, UserPerformance performan) throws AuthenException{
         List<Long> ids =  userInfoService.getIdsByPid(localUserInfo.getUserInfoId());// 正常应该拿一个比一个
         if(!ids.contains(performan.getOperateUserInfoId())){
             throw new AuthenException("没有权限修改上级绩效修改之后的的数据！");
         }
+        return true;
     }
 }

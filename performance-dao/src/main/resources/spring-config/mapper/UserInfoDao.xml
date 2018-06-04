@@ -208,8 +208,24 @@
         WHERE login_id = #{loginId}
     </select>
 
-    <select id="selectChildOfPid" resultType="java.lang.Long" parameterType="com.performance.common.query.UserInfoPageParam">
-
+    <select id="selectChildNOPerFor" resultType="java.lang.Long"
+            parameterType="com.performance.common.query.UserInfoPageParam">
+        SELECT user_info.user_info_id FROM user_info
+        LEFT JOIN user_performance ON user_info.user_info_id = user_performance.user_info_id
+        <where>
+            user_performance.user_info_id IS NULL
+            <if test="performanceTime != null and performanceTime != ''">
+                AND
+                (
+                    user_performance.performance_time = #{performanceTime}
+                    OR user_performance.performance_time IS NULL
+                )
+            </if>
+            AND user_info.user_info_id IN
+            <foreach collection="infoIds" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
     </select>
 
 </mapper>
