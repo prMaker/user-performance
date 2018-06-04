@@ -41,8 +41,14 @@ public class UserInfoController {
 
     // 先创建用户登录，在用户信息设置
     @RequestMapping(value = "/toSave",method = RequestMethod.GET)
-    public String toSave(){
-        UserInfo userInfo = userInfoService.getUserInfoById(LoginSession.getUserLogin().getUserInfoId());
+    public String toSave(Model model){
+        if(LoginSession.getUserInfo() == null){
+            model.addAttribute("save", true);
+        } else {
+            UserInfo info = userInfoService.getUserInfoById(LoginSession.getUserInfo().getUserInfoId());
+            model.addAttribute("update", true);
+            model.addAttribute("userInfo", info);
+        }
         return "/userInfo/toSave";
     }
 
@@ -62,13 +68,15 @@ public class UserInfoController {
     public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
+        if(null == LoginSession.getUserInfo()){
+            return "/userInfo/toList";
+        }
         List<Long> childInfos = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
         Long perforCount = userPerformanceService.selectCountByInfoIDs(childInfos);
         if(childInfos.size() > perforCount){
             model.addAttribute("performToAdd", true);
         }
 //        model.addAttribute("childInfoSize", childInfos.size());
-
         return "/userInfo/toList";
     }
 

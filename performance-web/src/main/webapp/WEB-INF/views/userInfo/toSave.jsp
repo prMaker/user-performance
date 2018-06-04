@@ -20,7 +20,7 @@
 
 <c:choose>
     <%--新增--%>
-    <c:when test="${sessionScope.userInfo.userInfoId == null}">
+    <c:when test="${save}">
         <div class="padding_20">
             <form action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
                     <%--
@@ -93,7 +93,7 @@
             </form>
         </div>
     </c:when>
-    <c:otherwise>
+    <c:when test="${update}">
         <%-- 编辑 --%>
 
 
@@ -151,7 +151,7 @@
 
 
 
-    </c:otherwise>
+    </c:when>
 </c:choose>
 
 

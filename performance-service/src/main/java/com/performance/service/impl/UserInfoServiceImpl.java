@@ -13,6 +13,8 @@ import com.performance.pojo.UserInfoPerfor;
 import com.performance.service.UserInfoService;
 import com.performance.service.exec.AuthenException;
 import com.performance.service.exec.ErrorDataException;
+import com.performance.service.handler.AppContextFactory;
+import com.performance.service.impl.handler.IdsSelectClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -56,7 +58,10 @@ public class UserInfoServiceImpl implements UserInfoService {
             // FIXME 查看id是否已经拿到,未拿到重新获取
             userInfoDao.insert(userInfo);
             UserInfo in = userInfoDao.selectByLoginId(userInfo.getLoginId());
-            UserLogin userLogin = userLoginDao.selectById(userInfo.getLoginId());
+//            UserLogin userLogin = userLoginDao.selectById(userInfo.getLoginId());
+//            userLogin.setUserInfoId(in.getUserInfoId());
+            UserLogin userLogin = new UserLogin();
+            userLogin.setLoginId(createdLogin.getLoginId());
             userLogin.setUserInfoId(in.getUserInfoId());
             userLoginDao.updateById(userLogin);
         } else {
@@ -108,14 +113,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     private void addIdsToParam(UserInfoPageParam param) {
-        List<Long> infoIds = new IdsSelectClass().getAllIdsByParam(param);
+        List<Long> infoIds = (AppContextFactory.getApplicationContextNotNull()
+                .getBean("idsSelectClass", IdsSelectClass.class)).getAllIdsByParam(param);
         param.setInfoIds(infoIds);
     }
 
     public List<Long> getIdsByPid(Long pid){
         UserInfoPageParam pageParam = new UserInfoPageParam();
         pageParam.setPid(pid);
-        return new IdsSelectClass().getAllIdsByParam(pageParam);
+        return (AppContextFactory.getApplicationContextNotNull()
+                .getBean("idsSelectClass", IdsSelectClass.class)).getAllIdsByParam(pageParam);
     }
 
     /**
@@ -173,40 +180,4 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoPerfors;
     }
 
-    /**
-     * 递归获取所有PID 集合
-     */
-    public class IdsSelectClass{
-        private List<Long> ids = new LinkedList<>();
-
-        public List<Long> getIds() {
-            return ids;
-        }
-
-        public void setIds(List<Long> ids) {
-            this.ids = ids;
-        }
-
-        public List<Long> getAllIdsByParam(UserInfoPageParam param) {
-            ids.add(param.getPid());
-            List<Long> pids = new ArrayList<>();
-            pids.add(param.getPid());
-            getCircleIds(pids);
-            return ids;
-        }
-
-        /**
-         * NOTICE 所有递归方法  对应数据库信息确定完毕才能使用
-         * @param pids
-         * @return
-         */
-        private List<Long> getCircleIds(List<Long> pids) {
-            List<Long> infoIds = userInfoDao.selectForIdsByParam(pids);
-            if(CollectionUtils.isEmpty(infoIds)){
-                return null;
-            }
-            ids.addAll(infoIds);
-            return getCircleIds(infoIds);
-        }
-    }
 }
