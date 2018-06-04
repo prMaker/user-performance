@@ -74,7 +74,7 @@
                         <div class="app-content-body fade-in-up">
 
                             <div>
-                                <h3><span id="info-msg">${infoMsg}</span></h3>
+                                <h3><span id="info-msg">${null eq infoMsg ? '' : infoMsg}</span></h3>
                             </div>
 
                             <div id="screen_content">
