@@ -84,13 +84,14 @@
                                         <th>编号</th>
                                         <th>用户姓名</th>
                                         <th>用户性别</th>
-                                        <th>用户生日</th>
+                                        <%--<th>用户生日</th>--%>
                                         <th>用户身份证号</th>
                                         <th>用户电话</th>
                                         <th>用户职位</th>
                                         <th>用户创建时间</th>
                                         <th>用户当月评分</th>
                                         <th>用户当月绩效评价</th>
+                                        <th>操作</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -110,7 +111,7 @@
 <!-- /内容区域 -->
 <script>
     var user_login_id = ${sessionScope.userLogin.loginId};
-    var child_info_size = ${childInfoSize};
+    var performToAdd = ${null eq performToAdd ? false : performToAdd};
 </script>
 <script src="/main/js/userInfo/list.js"></script>
 </body>

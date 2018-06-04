@@ -29,4 +29,11 @@ public interface UserPerformanceDao extends BaseDao<UserPerformance, Long> {
      * @return
      */
     UserPerformance getUserPerforByCond(UserPerformance userPerformance);
+
+    /**
+     * 根据INFO_IDS集合查询performance中的数量
+     * @param childInfos
+     * @return
+     */
+    Long selectCountByInfoIDs(List<Long> childInfos);
 }

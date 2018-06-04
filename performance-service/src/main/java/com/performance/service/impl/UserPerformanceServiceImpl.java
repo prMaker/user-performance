@@ -136,6 +136,11 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
         return userPerformanceDao.getUserPerforByCond(userPerformance);
     }
 
+    @Override
+    public Long selectCountByInfoIDs(List<Long> childInfos) {
+        return userPerformanceDao.selectCountByInfoIDs(childInfos);
+    }
+
     private List<UserPerformance> getPerfoList(String performanceTime, UserInfo currUserInfo) {
         int size = userInfoDao.selectCount(new UserInfo()).intValue();
         //List<UserPerformance> performances = size < 100000 ? new ArrayList<UserPerformance>(size) : new LinkedList<UserPerformance>();

@@ -6,6 +6,7 @@ import com.performance.pojo.UserLogin;
 import com.performance.pojo.UserInfoPerfor;
 import com.performance.service.UserInfoService;
 import com.performance.service.UserLoginService;
+import com.performance.service.UserPerformanceService;
 import com.performance.service.exec.ErrorDataException;
 import com.performance.web.interceptor.session.LoginSession;
 import com.performance.web.vo.DataTableParam;
@@ -35,6 +36,8 @@ public class UserInfoController {
     private UserInfoService userInfoService;
     @Resource
     private UserLoginService userLoginService;
+    @Resource
+    private UserPerformanceService userPerformanceService;
 
     // 先创建用户登录，在用户信息设置
     @RequestMapping(value = "/toSave",method = RequestMethod.GET)
@@ -59,8 +62,12 @@ public class UserInfoController {
     public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
-        List<Long> childInfoSize = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
-        model.addAttribute("childInfoSize", childInfoSize.size());
+        List<Long> childInfos = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
+        Long perforCount = userPerformanceService.selectCountByInfoIDs(childInfos);
+        if(childInfos.size() > perforCount){
+            model.addAttribute("performToAdd", true);
+        }
+//        model.addAttribute("childInfoSize", childInfos.size());
 
         return "/userInfo/toList";
     }

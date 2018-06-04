@@ -66,19 +66,19 @@ var dataTableObj = (function () {
                     "render": function (data, type, row, meta) {
                         if (data == 1) {
                             return '男';
-                        } else if (data == 2) {
+                        } else if (data == 0) {
                             return '女';
                         };
                     },
                     "orderable": false
                 },
-                {
-                    data: "birthday",
-                    "render": function (data, type, row, meta) {
-                        return data;
-                    },
-                    "orderable": false
-                },
+                // {
+                //     data: "birthday",
+                //     "render": function (data, type, row, meta) {
+                //         return data;
+                //     },
+                //     "orderable": false
+                // },
                 {
                     data: "idCard",
                     "render": function (data, type, row, meta) {
@@ -128,8 +128,8 @@ var dataTableObj = (function () {
                         }
 
                         /*----------------------------*/
-                        /* NOTICE 不合适  暂时放这里*/
-                        if(row.userPerformance.isLocked == 1){
+                        /* NOTICE 不合适（但由于锁定是由异步数据是否支持决定，所以只能放此）  暂时放这里*/
+                        if(row.userPerformance.isLocked == 1 || dataIsLocked){
                             dataIsLocked = true;
                         }
                         /*-----------------------------*/
@@ -145,6 +145,7 @@ var dataTableObj = (function () {
                     data: "userPerformance.performanceContent",
                     "render": function (data, type, row, meta) {
                         if(!row.userPerformance || !row.userPerformance.performanceId) {// 没有生成审核数据
+                            row.makePerformance = true;
                             return "尚未生成审核初始化数据！";
                         }
                         if(!row.permissionToFix){// 没有权限修改
@@ -158,6 +159,16 @@ var dataTableObj = (function () {
                     },
                     "orderable": false
                 },
+                {
+                    data: "action",
+                    "render" : function (data, type, row, meta) {
+                        if(row.makePerformance){
+                            var INPUT_TEMPL_MAKE_PER = '<a href="javascript:;" user-info-id="{userInfoId}" class="makePerformance">初始化绩效</a>';
+                            return INPUT_TEMPL_MAKE_PER.replace(/\{userInfoId\}/g, row.userInfoId);
+                        }
+                    },
+                    "orderable": false
+                }
             ],
             columnDefs: [
                 {
@@ -183,7 +194,7 @@ var dataTableObj = (function () {
     function packDataTableParam(boxParam){
 
         // 目前不排序 不搜索
-        var orderField = boxParam.columns[8].data;
+        var orderField = boxParam.columns[7].data;
         var orderDir = boxParam.order[0].dir;
         var param = {
             "dataTableParam.draw": boxParam.draw,
@@ -246,17 +257,24 @@ var ListObj = (function () {
      */
     ListObj.prototype.init = function () {
         var _this = this;
+        // 表格初始化
         this.dataTable = dataTableObj.initFormDataTable(dataTableCallback);
+        // 操作按钮初始化
+        initOperations();
+        this.setOption();
+
+        // 公共方法
         function dataTableCallback(dataIsLocked) {
             console.log("锁定状态：" + _this.dataTable.dataIsLocked);
             if(dataIsLocked){// 锁定按钮置空
                 $("#user-info-lock-div").empty();
             }
-            if(_this.dataTable.context[0]._iRecordsTotal < child_info_size){
+        }
+        function initOperations() {
+            if(performToAdd){// 批量添加用户审核信息
                 $("#user-performance-add-div").show();
             }
         }
-        this.setOption();
     };
 
     /**
@@ -280,13 +298,27 @@ var ListObj = (function () {
         $("#user-info-lock").click(lockPerformance);
         //添加审核数据
         $("#user-performance-add").click(performanceAdd);
+        //生成审核数据
+        $("#user-info-data-table").delegate(".makePerformance", "click", makePerformance);
         //搜索监听
         $("#user-info-btn-search").click(function(){
             console.log("开始搜索！");
             _this.dataTable.ajax.reload();
         });
 
-        // 公共方法//////////////////
+        // 公共方法////////////////// TODO 生成单个审核数据
+        function makePerformance() {
+            var userInfoId = $(this).attr("user-info-id");
+            $.ajax({
+                url:"/",
+                type:"POST",
+                dataType:"json",
+                data:{},
+                async:true,
+                success:function () {
+                }
+            });
+        }
         function performanceAdd() {
             $.ajax({
                 url:"/userPerformance/setCurrPerformance",

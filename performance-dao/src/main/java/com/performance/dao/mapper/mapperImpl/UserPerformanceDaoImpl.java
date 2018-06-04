@@ -32,4 +32,8 @@ public class UserPerformanceDaoImpl extends BaseDaoImpl<UserPerformance, Long> i
     public UserPerformance getUserPerforByCond(UserPerformance userPerformance) {
         return sqlTemplate.selectOne(getNameSpace("getUserPerforByCond"), userPerformance);
     }
+
+    public Long selectCountByInfoIDs(List<Long> list) {
+        return sqlTemplate.selectOne(getNameSpace("selectCountByInfoIDs"), list);
+    }
 }

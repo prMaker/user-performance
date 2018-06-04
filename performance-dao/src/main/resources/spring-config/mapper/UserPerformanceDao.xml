@@ -129,4 +129,16 @@
 
     </select>
 
+
+    <select id="selectCountByInfoIDs" parameterType="java.util.List" resultType="java.lang.Long">
+        SELECT count(1) FROM user_performance
+        <where>
+            user_info_id IN
+            <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+            AND is_deleted = 0
+        </where>
+    </select>
+
 </mapper>

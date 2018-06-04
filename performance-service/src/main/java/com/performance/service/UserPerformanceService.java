@@ -3,6 +3,8 @@ package com.performance.service;
 import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserPerformance;
 
+import java.util.List;
+
 public interface UserPerformanceService {
 
     /**
@@ -37,4 +39,11 @@ public interface UserPerformanceService {
      * @return
      */
     UserPerformance getUserPerforByCond(UserPerformance userPerformance);
+
+    /**
+     * 根据INFO_IDS 集合获取userPerformance中的数据数量
+     * @param childInfos
+     * @return
+     */
+    Long selectCountByInfoIDs(List<Long> childInfos);
 }
