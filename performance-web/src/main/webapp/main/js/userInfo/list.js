@@ -6,7 +6,7 @@
  */
 var dataTableObj = (function () {
 
-    var dataIsLocked = false;
+    var dataIsLocked = false;// 确认所有数据已经锁定
     /**
      * 初始化dataTable
      * @returns {*|jQuery}
@@ -120,43 +120,41 @@ var dataTableObj = (function () {
                 {
                     data: "userPerformance.performanceScore",
                     "render": function (data, type, row, meta) {
-
-                        var INPUT_TEMPL_SCORE = ''
-+ '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
-
-                        /* NOTICE 不合适  暂时放这里*/
-                        if(row.userPerformance.isLocked == 1){
-                            console.log("修为改锁定");
-                            dataIsLocked = true;
+                        if(!row.userPerformance || !row.userPerformance.performanceId) {// 没有生成审核数据
+                            return "尚未生成审核初始化数据！";
                         }
-
                         if(!row.permissionToFix){// 没有权限修改
                             return data;
                         }
 
-                            return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, !!data ? data : "")
-                                .replace(/\{olderVal\}/g,!!data ? data : "")
-                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
-                                .replace(/\{userInfoId\}/g, row.userInfoId);
+                        /*----------------------------*/
+                        /* NOTICE 不合适  暂时放这里*/
+                        if(row.userPerformance.isLocked == 1){
+                            dataIsLocked = true;
+                        }
+                        /*-----------------------------*/
+                        var INPUT_TEMPL_SCORE = '' + '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
+                        return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, !!data ? data : "")
+                            .replace(/\{olderVal\}/g,!!data ? data : "")
+                            .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
+                            .replace(/\{userInfoId\}/g, row.userInfoId);
                     },
                     "orderable": true
                 },
                 {
                     data: "userPerformance.performanceContent",
                     "render": function (data, type, row, meta) {
-                        // return row.userPerformance.performanceContent;
-                        // return "精彩马上呈现";
-                        var INPUT_TEMPL_CONTENT = '' +
-'<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
-
+                        if(!row.userPerformance || !row.userPerformance.performanceId) {// 没有生成审核数据
+                            return "尚未生成审核初始化数据！";
+                        }
                         if(!row.permissionToFix){// 没有权限修改
                             return data;
                         }
-
-                            return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, !!data ? data : "")
-                                .replace(/\{olderVal\}/g, !!data ? data : "")
-                                .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
-                                .replace(/\{userInfoId\}/g, row.userInfoId);
+                        var INPUT_TEMPL_CONTENT = '' +  '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
+                        return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, !!data ? data : "")
+                            .replace(/\{olderVal\}/g, !!data ? data : "")
+                            .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
+                            .replace(/\{userInfoId\}/g, row.userInfoId);
                     },
                     "orderable": false
                 },
@@ -251,8 +249,11 @@ var ListObj = (function () {
         this.dataTable = dataTableObj.initFormDataTable(dataTableCallback);
         function dataTableCallback(dataIsLocked) {
             console.log("锁定状态：" + _this.dataTable.dataIsLocked);
-            if(dataIsLocked){
+            if(dataIsLocked){// 锁定按钮置空
                 $("#user-info-lock-div").empty();
+            }
+            if(_this.dataTable.context[0]._iRecordsTotal < child_info_size){
+                $("#user-performance-add-div").show();
             }
         }
         this.setOption();
@@ -275,13 +276,28 @@ var ListObj = (function () {
         $("#user-info-data-table").delegate(".user-performance-performance-score", "blur", updateScore);
         //修改评价监听
         $("#user-info-data-table").delegate(".user-performance-performance-content", "blur", updateContent);
+        //锁定数据监听
+        $("#user-info-lock").click(lockPerformance);
+        //添加审核数据
+        $("#user-performance-add").click(performanceAdd);
         //搜索监听
         $("#user-info-btn-search").click(function(){
             console.log("开始搜索！");
             _this.dataTable.ajax.reload();
         });
-        //锁定数据监听
-        $("#user-info-lock").click(function () {
+
+        // 公共方法//////////////////
+        function performanceAdd() {
+            $.ajax({
+                url:"/userPerformance/setCurrPerformance",
+                data:{performanceTime: $("#user-info-performance-time").val()},
+                dataType:"json",
+                async:true,
+                success:function (data) {
+                }
+            });
+        }
+        function lockPerformance() {
             var user_info_id = $(this).attr("user-info-id");
             console.log("user_info_id:" + user_info_id);
             $.ajax({
@@ -301,9 +317,7 @@ var ListObj = (function () {
                     }
                 }
             });
-        });
-
-        // 公共方法//////////////////
+        }
         function updateScore() {
             console.log("监听到修改分数");
             console.log("新的值：" + $(this).val() + "旧值：" + $(this).attr("older-val"));

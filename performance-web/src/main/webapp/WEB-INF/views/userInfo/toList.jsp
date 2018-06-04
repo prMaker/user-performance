@@ -61,6 +61,9 @@
                                     <button id="user-info-lock">锁定数据</button>
                                 </div>
                             </c:if>
+                            <div class="inline" id="user-performance-add-div" style="display: none;">
+                                <button id="user-performance-add">添加用户审核数据</button>
+                            </div>
                         </div>
                     </div>
 
@@ -107,6 +110,7 @@
 <!-- /内容区域 -->
 <script>
     var user_login_id = ${sessionScope.userLogin.loginId};
+    var child_info_size = ${childInfoSize};
 </script>
 <script src="/main/js/userInfo/list.js"></script>
 </body>

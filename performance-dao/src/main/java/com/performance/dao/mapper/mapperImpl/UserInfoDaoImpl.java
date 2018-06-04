@@ -51,4 +51,8 @@ public class UserInfoDaoImpl extends BaseDaoImpl<UserInfo,Long> implements UserI
     public UserInfo selectByLoginId(Long loginId) {
         return sqlTemplate.selectOne(getNameSpace("selectByLoginId"), loginId);
     }
+
+    public List<Long> selectChildNOPerFor(UserInfoPageParam pageParam) {
+        return sqlTemplate.selectOne(getNameSpace("selectChildNOPerFor"), pageParam);
+    }
 }

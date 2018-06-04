@@ -20,9 +20,9 @@ public interface UserPerformanceService {
      * 1.如果数据量大，可以使用带返回值  线程池实现快速生成
      * 2.存在数据事务问题
      * @param performanceTime
-     * @param userInfo
+     * @param currUserInfo
      */
-    void batchSave(String performanceTime, UserInfo userInfo) throws Exception;
+    void batchSave(String performanceTime, UserInfo currUserInfo) throws Exception;
 
     /**
      * 审核后锁定数据

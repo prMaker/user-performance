@@ -2,6 +2,7 @@ package com.performance.service.impl;
 
 import com.performance.common.Util;
 import com.performance.common.exec.DataValidateException;
+import com.performance.common.query.UserInfoPageParam;
 import com.performance.dao.mapper.UserInfoDao;
 import com.performance.dao.mapper.UserPerformanceDao;
 import com.performance.pojo.UserInfo;
@@ -99,19 +100,23 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     }
 
     @Transactional
-    public void batchSave(String performanceTime, UserInfo userInfo) throws Exception {
+    public void batchSave(String performanceTime, UserInfo currUserInfo) throws Exception {
         // 单机版处理方案：
         synchronized (batchSaveFlag){
-            if(performanceTime.equals(batchSaveFlag)){
-                _logger.error("两人同时添加当前月份审核信息：当前用户：{}, 时间：{}", userInfo, performanceTime);
-                throw new Exception("其他人正在新增，请稍等刷新页面！");
-            }
+//            if(performanceTime.equals(batchSaveFlag)){
+//                _logger.error("两人同时添加当前月份审核信息：当前用户：{}, 时间：{}", currUserInfo, performanceTime);
+//                throw new Exception("其他人正在新增，请稍等刷新页面！");
+//            }
+            UserInfoPageParam pageParam = new UserInfoPageParam();
+            pageParam.setPid(currUserInfo.getUserInfoId());
+            pageParam.setPerformanceTime(performanceTime);
+            List<Long> ids = userInfoDao.selectChildNOPerFor(pageParam);
             performanceTime = batchSaveFlag;
             _logger.error("重置审核月份信息：{}", performanceTime);
             //TODO 集群处理方案：
             //集群数据方案：
             //使用redis保存key，通过zookeeper + redis分布式锁批量创建并发问题
-            userPerformanceDao.insertBatch(getPerfoList(performanceTime, userInfo));
+            userPerformanceDao.insertBatch(getPerfoList(performanceTime, currUserInfo));
         }
     }
 
@@ -131,14 +136,15 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
         return userPerformanceDao.getUserPerforByCond(userPerformance);
     }
 
-    private List<UserPerformance> getPerfoList(String performanceTime, UserInfo userInfo) {
+    private List<UserPerformance> getPerfoList(String performanceTime, UserInfo currUserInfo) {
         int size = userInfoDao.selectCount(new UserInfo()).intValue();
         //List<UserPerformance> performances = size < 100000 ? new ArrayList<UserPerformance>(size) : new LinkedList<UserPerformance>();
-        return size < 10000 ? getPerforList(size, userInfo, performanceTime) : getAsynList(userInfo, performanceTime);
+        return size < 10000 ? getPerforList(size, currUserInfo, performanceTime) : getAsynList(currUserInfo, performanceTime);
     }
 
     private List<UserPerformance> getPerforList(int size, UserInfo userInfo, String performanceTime) {
         List<UserPerformance> performances = new ArrayList<UserPerformance>(size);
+//        分批次  查出数据
         List<UserInfo> userInfos = userInfoDao.selectList(new UserInfo());
         UserPerformance performance;
         for(int i = 0; i < userInfos.size(); i++){

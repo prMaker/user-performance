@@ -55,10 +55,12 @@ public class UserInfoController {
         return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
     }
 
-    @RequestMapping(value = "toList", method = RequestMethod.GET)
+    @RequestMapping(value = "/toList", method = RequestMethod.GET)
     public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
+        List<Long> childInfoSize = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
+        model.addAttribute("childInfoSize", childInfoSize.size());
 
         return "/userInfo/toList";
     }

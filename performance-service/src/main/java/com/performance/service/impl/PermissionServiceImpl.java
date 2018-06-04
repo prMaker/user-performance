@@ -44,6 +44,10 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     public boolean getAuthen(UserInfo localUserInfo, UserPerformance performance) throws AuthenException{
+        // 0. 如果该条审核数据还没有生成，则返回可以修改
+        if(null == performance || performance.getPerformanceId() == null){
+            return true;
+        }
         _logger.info("校验用户审核权限：登录用户：{}，要审核的数据：{}", localUserInfo, performance);
         UserPerformance performan = userPerformanceDao.selectById(performance.getPerformanceId());
         // 1. 如果是管理员用户，则可以直接修改
