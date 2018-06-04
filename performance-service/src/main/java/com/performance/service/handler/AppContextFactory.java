@@ -3,11 +3,13 @@ package com.performance.service.handler;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
+@Component("appContextFactory")
 public class AppContextFactory implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
-    private static Object lock = new Object();
+    private final static Object lock = new Object();
 
     @Override
     public void setApplicationContext(ApplicationContext appContext) throws BeansException {

@@ -54,7 +54,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             _logger.error("登录id:" + request.getParameter("userInfoId") + "登录校验异常！", e);
             return false;
         }
-        _logger.info("用户id:{}已经登录", request.getParameter("userLoginId"));
+        _logger.info("用户id:{}已经登录", userLogin.getLoginId());
         LoginSession.setUserInfo(userInfo);
         LoginSession.setUserLogin(userLogin);
         return true;

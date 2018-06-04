@@ -57,12 +57,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
             // FIXME 查看id是否已经拿到,未拿到重新获取
             userInfoDao.insert(userInfo);
-            UserInfo in = userInfoDao.selectByLoginId(userInfo.getLoginId());
-//            UserLogin userLogin = userLoginDao.selectById(userInfo.getLoginId());
-//            userLogin.setUserInfoId(in.getUserInfoId());
             UserLogin userLogin = new UserLogin();
-            userLogin.setLoginId(createdLogin.getLoginId());
-            userLogin.setUserInfoId(in.getUserInfoId());
+            userLogin.setLoginId(currUserLogin.getLoginId());
+            userLogin.setUserInfoId(userInfo.getUserInfoId());
             userLoginDao.updateById(userLogin);
         } else {
             userInfoDao.updateById(userInfo);

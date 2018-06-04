@@ -62,7 +62,7 @@
         ,user_performance.performance_id,user_performance.user_info_id,user_performance.is_deleted ,user_performance.performance_content,user_performance.performance_score,user_performance.operate_user_info_id, user_performance.created_time,user_performance.modified_time,user_performance.is_locked,user_performance.operate_disposition,user_performance.performance_time
     </sql>
 
-    <insert id="insert" parameterType="com.performance.pojo.UserInfo">
+    <insert id="insert" parameterType="com.performance.pojo.UserInfo" useGeneratedKeys="true" keyProperty="userInfoId">
         INSERT INTO user_info (login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id)
         VALUES (#{loginId},#{idCard},#{userName},#{birthday}
         ,#{sex},#{phone},0,#{pid},#{dispostion},#{createdTime},#{modifiedTime}

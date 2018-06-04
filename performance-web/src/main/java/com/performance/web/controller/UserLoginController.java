@@ -28,7 +28,7 @@ public class UserLoginController {
     public String toLogin(@RequestParam(required = false) String infoMsg,
                           ModelMap mm) {
         mm.put("infoMsg", infoMsg);
-        _logger.info("登录校验异常：" + (infoMsg == null ? "" : infoMsg));
+        _logger.info("登录校验：" + (infoMsg == null ? "" : infoMsg));
         return "login/toLogin";
     }
 
