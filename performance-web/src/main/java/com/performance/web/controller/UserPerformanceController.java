@@ -115,7 +115,12 @@ public class UserPerformanceController {
         _logger.error("用户:{}锁定审核数据月份：{}", LoginSession.getUserInfo(), performanceTime);
         UserPerformance performance = new UserPerformance();
         performance.setPerformanceTime(performanceTime);
-        userPerformanceService.lockPerformance(performance, LoginSession.getUserInfo());
+        try{
+            userPerformanceService.lockPerformance(performance, LoginSession.getUserInfo());
+        }catch (RuntimeException e) {
+            _logger.error("锁定数据异常：currOperate：{}，performanceTime:{}", LoginSession.getUserInfo(), performanceTime);
+            return new Result(false, e.getMessage());
+        }
         return new Result();
     }
 

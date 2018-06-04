@@ -121,6 +121,7 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
         }
     }
 
+    @Transactional
     public void lockPerformance(UserPerformance userPerformance, UserInfo localUserInfo) {
         List<Long> ids = userInfoService.getIdsByPid(localUserInfo.getUserInfoId());
         Map<String, Object> param = new HashMap<>();
