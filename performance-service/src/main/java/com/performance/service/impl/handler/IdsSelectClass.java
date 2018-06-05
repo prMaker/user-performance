@@ -32,7 +32,6 @@ public class IdsSelectClass{
     }
 
     public List<Long> getAllIdsByParam(UserInfoPageParam param) {
-        ids.add(param.getPid());
         List<Long> pids = new ArrayList<>();
         pids.add(param.getPid());
         getCircleIds(pids);

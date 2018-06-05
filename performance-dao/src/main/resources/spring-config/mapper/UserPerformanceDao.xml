@@ -117,15 +117,17 @@
             resultType="com.performance.pojo.UserPerformance"
             parameterType="com.performance.pojo.UserPerformance">
         SELECT
-        SELECT
         <include refid="Base_Column_List"/>
         FROM user_performance
         <where>
-            <if test="performanceId != null and performanceId != ''">
+            <if test="performanceId != null">
                 performance_id=#{performanceId}
             </if>
             <if test="performanceTime != null and performanceTime != ''">
                 AND performance_time=#{performanceTime}
+            </if>
+            <if test="userInfoId != null">
+                AND user_info_id = #{userInfoId}
             </if>
             AND is_deleted = 0;
         </where>

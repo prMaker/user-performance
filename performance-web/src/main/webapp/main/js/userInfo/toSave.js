@@ -66,17 +66,7 @@ $("#do-save-form").validate({
         }
     },
     submitHandler:function(form){
-        // $("#do-save-form").submit();
-
-        $.post($("#do-save-form").attr("action"),$(form).serialize()).done(function(data){
-            console.log("完成！");
-            if(data == "success") {
-                $("#newModal").modal('hide');
-                dataTable.ajax.reload();
-            }
-        }).fail(function(){
-            alert("服务器异常");
-        });
+        $("#do-save-form").submit();
     }
 });
 

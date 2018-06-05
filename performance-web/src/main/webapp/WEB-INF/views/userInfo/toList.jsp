@@ -69,6 +69,12 @@
                                 <button id="user-performance-add">添加用户审核数据</button>
                             </div>
                         </div>
+
+                        <div id="performance-container">
+                            <span id="performance-content">
+                            </span>
+                        </div>
+
                     </div>
 
                     <!-- 内容区域 -->

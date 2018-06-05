@@ -161,8 +161,9 @@ var dataTableObj = (function () {
                     data: "action",
                     "render" : function (data, type, row, meta) {
                         if(row.makePerformance){
-                            var INPUT_TEMPL_MAKE_PER = '<a href="javascript:;" user-info-id="{userInfoId}" class="makePerformance">初始化绩效</a>';
-                            return INPUT_TEMPL_MAKE_PER.replace(/\{userInfoId\}/g, row.userInfoId);
+                            // var INPUT_TEMPL_MAKE_PER = '<a href="javascript:;" user-info-id="{userInfoId}" class="makePerformance">初始化绩效</a>';
+                            // return INPUT_TEMPL_MAKE_PER.replace(/\{userInfoId\}/g, row.userInfoId);
+                            return "";
                         }
                     },
                     "orderable": false
@@ -254,28 +255,65 @@ var ListObj = (function () {
         var _this = this;
         // 表格初始化
         this.dataTable = dataTableObj.initFormDataTable(dataTableCallback);
+        this.searchDataReload = searchDataReload;
+        this.searchDataReload();
         this.setOption();
 
-        // 公共方法
-        function dataTableCallback(dataIsLocked) {
-            if(dataIsLocked){// 锁定按钮置空
-                $("#user-info-lock-div").empty();
+        function searchDataReload() {
+            /*获取是否显示添加绩效按钮*/
+            var searchDate = $("#user-info-performance-time").val();
+            var date = new Date(Date.parse(searchDate));
+            /*如果搜索时间大于当前时间 则直接去掉添加绩效审核内容*/
+            if(DateFormat.compareDate(date, new Date()) <= 0){
+                $("#user-performance-add-div").hide();
+            } else {
+                $.ajax({
+                    url:"/userInfo/performanceToAdd",
+                    type:"post",
+                    dataType:"json",
+                    data:{
+                        performanceTime:searchDate,
+                        loginId:user_login_id
+                    },
+                    success:function (data) {
+                        console.log("返回结果：" + data);
+                        if(data.success && data.data){
+                            $("#user-performance-add-div").show();
+                        }
+                    }
+                });
             }
+            /*获取显示绩效信息数据*/
             $.ajax({
-                url:"/userInfo/performanceToAdd",
+                url:"/userInfo/getUserPerformance",
                 type:"post",
                 dataType:"json",
                 data:{
                     performanceTime:$("#user-info-performance-time").val(),
                     loginId:user_login_id
                 },
-                success:function (data) {
-                    console.log("返回结果：" + data);
-                    if(data.success && data.data){
-                        $("#user-performance-add-div").show();
+                success:function (res) {
+                    console.log("返回结果：" + res);
+                    if(res.success && !!res.data){
+                        var PERFORMANCE_TEMPL = ""
+                            + '您的绩效信息为：<br>'
+                            + '绩效分数：{performanceScore}<br>'
+                            + '绩效内容：{performanceContent}<br>';
+                        $("#performance-content")
+                            .html(PERFORMANCE_TEMPL.replace(/\{performanceScore\}/g, res.data.performanceScore)
+                            .replace(/\{performanceContent\}/g
+                                , !!res.data.performanceContent ? res.data.performanceContent : ''));
+                    } else {
+                        $("#performance-content").html("您的绩效尚未生成");
                     }
                 }
             });
+        }
+        // 公共方法
+        function dataTableCallback(dataIsLocked) {
+            if(dataIsLocked){// 锁定按钮置空
+                $("#user-info-lock-div").empty();
+            }
         }
     };
 
@@ -283,7 +321,12 @@ var ListObj = (function () {
      * 设置参数
      */
     ListObj.prototype.setOption = function () {
+        this.render();
+    };
+
+    ListObj.prototype.render = function () {
         this.listen();
+
     };
 
     /**
@@ -305,6 +348,7 @@ var ListObj = (function () {
         //搜索监听
         $("#user-info-btn-search").click(function(){
             _this.dataTable.ajax.reload();
+            _this.searchDataReload();
         });
 
         // 公共方法////////////////// TODO 生成单个审核数据

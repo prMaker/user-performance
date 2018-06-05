@@ -5,6 +5,7 @@ import com.performance.common.query.UserInfoPageParam;
 import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserLogin;
 import com.performance.pojo.UserInfoPerfor;
+import com.performance.pojo.UserPerformance;
 import com.performance.service.UserInfoService;
 import com.performance.service.UserLoginService;
 import com.performance.service.UserPerformanceService;
@@ -68,10 +69,24 @@ public class UserInfoController {
     public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginContext.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
-        if(null == LoginContext.getUserInfo()){
-            return "/userInfo/toList";
-        }
+        // 添加
         return "/userInfo/toList";
+    }
+
+    @RequestMapping(value = "/getUserPerformance", method = RequestMethod.POST)
+    @ResponseBody
+    public Result getUserPerformance(String performanceTime){
+        Assert.notNull(performanceTime);
+        UserPerformance perfor =
+                userPerformanceService.getUserPerforByCond(getUPByTime(performanceTime));
+        return new Result(null != perfor , "", perfor);
+    }
+
+    private UserPerformance getUPByTime(String performanceTime) {
+        UserPerformance userPerformance = new UserPerformance();
+        userPerformance.setPerformanceTime(performanceTime);
+        userPerformance.setUserInfoId(LoginContext.getUserInfo().getUserInfoId());
+        return userPerformance;
     }
 
     @RequestMapping(value = "/listData", method = RequestMethod.POST

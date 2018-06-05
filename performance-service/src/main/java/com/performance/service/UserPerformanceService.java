@@ -43,7 +43,7 @@ public interface UserPerformanceService {
     /**
      * 根据INFO_IDS 集合获取userPerformance中的数据数量
      * @param childInfos
-     * @param perfromanceTime
+     * @param performanceTime
      * @return
      */
     Long selectCountByInfoIDs(List<Long> childInfos, String performanceTime);
