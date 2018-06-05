@@ -21,7 +21,7 @@
 <c:choose>
     <%--新增--%>
     <c:when test="${save}">
-        <div class="padding_20">
+        <div class="padding_20 pd50">
             <form id="do-save-form" action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
 
                 <input type="hidden" name="loginId" value="${sessionScope.userLogin.loginId}">
@@ -80,7 +80,7 @@
     <c:when test="${update}">
         <%-- 编辑 --%>
 
-
+    <div class="pd50">
             <form id="do-save-form" action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
 
         <input type="hidden" name="userInfoId" value="${sessionScope.userInfo.userInfoId}">
@@ -131,6 +131,7 @@
             </tbody>
         </table>
         </form>
+    </div>
 
 
 
