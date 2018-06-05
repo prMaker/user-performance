@@ -17,9 +17,6 @@ public class UserPerformanceDaoImpl extends BaseDaoImpl<UserPerformance, Long> i
         return NAMESPACE + statement;
     }
 
-    public int deleteById(UserPerformance performance) {
-        return sqlTemplate.update(getNameSpace("deleteById"), performance);
-    }
 
     public int lockPerformance(Map<String, Object> param) {
         return sqlTemplate.update(getNameSpace("lockPerformance"), param);

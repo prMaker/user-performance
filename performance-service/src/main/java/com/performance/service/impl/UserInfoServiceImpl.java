@@ -21,12 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,6 +126,20 @@ public class UserInfoServiceImpl implements UserInfoService {
         pageParam.setPid(pid);
         return (AppContextFactory.getApplicationContextNotNull()
                 .getBean("idsSelectClass", IdsSelectClass.class)).getAllIdsByParam(pageParam);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteById(UserInfo userInfo) {
+        int res = userInfoDao.deleteById(userInfo.getUserInfoId());
+        int resLogin = 0;
+        if(res > 0){
+            resLogin = userLoginDao.deleteById(userInfo.getLoginId());
+            if(resLogin < 0){
+                throw new RuntimeException("删除失败");
+            }
+        }
+        return res > 0 && resLogin > 0;
     }
 
     /**

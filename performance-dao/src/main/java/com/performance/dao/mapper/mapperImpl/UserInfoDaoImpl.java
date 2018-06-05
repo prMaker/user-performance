@@ -24,10 +24,6 @@ public class UserInfoDaoImpl extends BaseDaoImpl<UserInfo,Long> implements UserI
         return NAMESPACE + statement;
     }
 
-    public int deleteById(UserInfo userInfo) {
-        return 0;
-    }
-
     public List<UserInfo> selectAllChild(Long userInfoId) {
         return sqlTemplate.selectList(getNameSpace(SELECT_ALL_CHILD), userInfoId);
     }

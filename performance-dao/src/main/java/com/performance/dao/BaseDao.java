@@ -30,10 +30,10 @@ public interface BaseDao<T, ID extends Serializable> {
     /**
      * 根据主键删除一个实体
      *
-     * @param t
+     * @param id
      * @return 影响条数
      */
-    int deleteById(T t);
+    int deleteById(ID id);
 
     /**
      * 根据主键查询一个实体

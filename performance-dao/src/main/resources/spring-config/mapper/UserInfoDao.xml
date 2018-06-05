@@ -225,4 +225,9 @@
         </where>
     </select>
 
+    <update id="deleteById" parameterType="java.lang.Long">
+        UPDATE user_info SET is_deleted=1
+        WHERE user_info.user_info_id = #{id}
+    </update>
+
 </mapper>

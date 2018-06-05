@@ -75,10 +75,10 @@
         WHERE performance_id = #{id}
     </select>
 
-    <update id="deleteById" parameterType="com.performance.pojo.UserPerformance">
+    <update id="deleteById" parameterType="java.lang.Long">
         UPDATE user_performance SET
         is_deleted=1,modified_time=now()
-        WHERE performance_id=#{performanceId};
+        WHERE performance_id=#{id};
     </update>
 
     <update id="lockPerformance" parameterType="java.util.Map">

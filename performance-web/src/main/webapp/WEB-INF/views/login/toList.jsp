@@ -22,13 +22,11 @@
 
 <div id="body-container" class="m50">
 
-    <c:if test="${!seeList}">
-        <div class="info-container inline-block">
-            <h3>
-                <span>${infoMsg}</span>
-            </h3>
-        </div>
-    </c:if>
+    <div class="info-container inline-block">
+        <h3>
+            <span id="info-msg">${infoMsg}</span>
+        </h3>
+    </div>
 
     <c:if test="${seeList}">
         <div id="table-container">
@@ -52,6 +50,7 @@
             </table>
         </div>
     </c:if>
+
 
 </div>
 

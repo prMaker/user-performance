@@ -100,4 +100,10 @@
         </where>
     </select>
 
+    <update id="deleteById" parameterType="java.lang.Long">
+        UPDATE user_login
+        SET is_deleted = 1
+        WHERE login_id = #{id}
+    </update>
+
 </mapper>

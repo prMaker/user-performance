@@ -35,8 +35,4 @@ public class UserLoginDaoImpl extends BaseDaoImpl<UserLogin, Long> implements Us
     public List<UserLogin> getForPage(UserLoginPageParam pageParam) {
         return sqlTemplate.selectList(getNameSpace(SELECT_FOR_PAGE), pageParam);
     }
-
-    public int deleteById(UserLogin userLogin) {
-        return 0;
-    }
 }

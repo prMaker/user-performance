@@ -47,4 +47,11 @@ public interface UserInfoService {
      * @return
      */
     public List<Long> getIdsByPid(Long pid);
+
+    /**
+     * 根据id删除
+     * @param userInfo
+     * @return
+     */
+    boolean deleteById(UserInfo userInfo);
 }

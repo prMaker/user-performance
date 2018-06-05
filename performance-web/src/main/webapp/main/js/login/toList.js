@@ -49,7 +49,7 @@ var dataTableObj = (function () {
                     "render": function (data, type, row, meta) {
                         return data;
                     },
-                    "orderable": false
+                    "orderable": true
                 },
                 { data: "idCard" ,
                     "render": function (data, type, row, meta) {
@@ -116,10 +116,8 @@ var dataTableObj = (function () {
                 {
                     data: "action",
                     "render" : function (data, type, row, meta) {
-                        if(row.makePerformance){
-                            var INPUT_TEMPL_MAKE_PER = '<a href="javascript:;" user-info-id="{userInfoId}" class="makePerformance">初始化绩效</a>';
-                            return INPUT_TEMPL_MAKE_PER.replace(/\{userInfoId\}/g, row.userInfoId);
-                        }
+                        var DELETE_TEMPLATE = '<a href="javascript:;" class="user-info-remove" user-info-id="{userInfoId}">删除用户</a>';
+                        return DELETE_TEMPLATE.replace(/\{userInfoId\}/g, row.userInfoId);
                     },
                     "orderable": false
                 }
@@ -181,6 +179,31 @@ ListObj.prototype = {
         this.listen();
     },
     listen: function () {
+        var _this = this;
+        // 删除用户监听
+        $("#table-container").delegate(".user-info-remove", "click", removeUserInfo);
+
+        function removeUserInfo() {
+            var userInfoId = $(this).attr("user-info-id");
+            $.ajax({
+                url:"/userInfo/delete",
+                type:"POST",
+                dataType:"json",
+                async:true,
+                data:{
+                    "userInfoId":userInfoId,
+                    "loginId":user_login_id
+                },
+                success: function (data) {
+                    if(data.success){
+                        $("#info-msg").text(data.msg + " 用户ID: " + userInfoId);
+                        _this.dataTable.ajax.reload();
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
     }
 };
 

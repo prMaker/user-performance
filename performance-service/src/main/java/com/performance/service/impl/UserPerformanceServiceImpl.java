@@ -59,7 +59,7 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
             _logger.error("当前管理员用户修改审核数据成功！修改之后的数据为：{}", newUP);
         } else {// 3.上级的上级修改  则直接新增数据，同时软删除之前用户信息
             userPerformanceDao.insert(newUP);
-            userPerformanceDao.deleteById(newUP);
+            userPerformanceDao.deleteById(newUP.getPerformanceId());
             _logger.info("用户{}审核数据{}", userInfo, newUP);
         }
 

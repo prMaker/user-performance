@@ -137,6 +137,15 @@ public class UserInfoController {
         return new Result(res,"", res);
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result delete(Long userInfoId){
+        Assert.notNull(userInfoId);
+        UserInfo userInfo = userInfoService.getUserInfoById(userInfoId);
+        boolean res = userInfoService.deleteById(userInfo);
+        return new Result(res, res ? "删除成功！" : "删除失败！");
+    }
+
     @InitBinder("userInfo")
     public void userInfoBinder(WebDataBinder dataBinder) {
         dataBinder.setFieldDefaultPrefix("userInfo.");
