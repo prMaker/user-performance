@@ -50,7 +50,7 @@ var dataTableObj = (function () {
                     "render": function (data, type, row, meta) {
                         return data;
                     },
-                    "orderable": true
+                    "orderable": false
                 },
 
                 { data: "userName" ,
