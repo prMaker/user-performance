@@ -103,7 +103,7 @@ public class UserLoginController {
     @RequestMapping(value = "/toList", method = RequestMethod.GET)
     public String toList(Model model){
         if(null == LoginContext.getUserInfo()){
-            _logger.info("没有创建个人信息无法看到员工列表用户账号信息：" + LoginContext.getUserLogin());
+            _logger.info("没有创建个人信息无法看到员工登录列表用户账号信息：" + LoginContext.getUserLogin());
             model.addAttribute("infoMsg", "没有创建个人信息无法看到员工列表");
             model.addAttribute("seeList", false);
             return "login/toList";
@@ -112,18 +112,23 @@ public class UserLoginController {
         return "login/toList";
     }
 
-    @RequestMapping(value = "/listData", method = RequestMethod.POST)
+    @RequestMapping(value = "/toLoginList", method = RequestMethod.GET)
+    public String toLoginList(){
+        return "login/toLoginList";
+    }
+
+    @RequestMapping(value = "/listData", method = RequestMethod.GET)
     @ResponseBody
-    public DataTableVO listData(@RequestParam("dataTableParam") DataTableParam dTParam
-            , @RequestParam("userLoginPageParam") UserLoginPageParam uLPageParam){
+    public DataTableVO listData(DataTableParam dataTableParam
+            ,  UserLoginPageParam userLoginPageParam){
         DataTableVO vo = new DataTableVO();
-        Assert.notNull(dTParam);
-        Assert.notNull(uLPageParam);
-        vo.setDraw(dTParam.getDraw());
-        packDTToUserLoginParam(dTParam, uLPageParam);
-        uLPageParam.setCreatedUserId(LoginContext.getUserInfo().getUserInfoId());
-        _logger.info("获取数据列表：dTParam:{},uLPageParam:{}", dTParam, uLPageParam);
-        List<UserLogin> logins = userLoginService.getForPage(uLPageParam);
+        Assert.notNull(dataTableParam);
+//        Assert.notNull(userLoginPageParam);
+        vo.setDraw(dataTableParam.getDraw());
+        packDTToUserLoginParam(dataTableParam, userLoginPageParam);
+        userLoginPageParam.setCreatedUserId(LoginContext.getUserInfo().getUserInfoId());
+        _logger.info("获取数据列表：dTParam:{},uLPageParam:{}", dataTableParam, userLoginPageParam);
+        List<UserLogin> logins = userLoginService.getForPage(userLoginPageParam);
         Long count = userLoginService.getCountByCreatedId(LoginContext.getUserLogin().getLoginId());
         vo.setData(logins);
         vo.setRecordsFiltered(count);

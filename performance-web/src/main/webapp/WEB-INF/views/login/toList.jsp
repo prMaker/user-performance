@@ -18,6 +18,9 @@
     <a href="/userInfo/toList?loginId=${sessionScope.userLogin.loginId}">
         员工绩效列表
     </a>
+    <a href="/userLogin/toLoginList?loginId=${sessionScope.userLogin.loginId}">
+        员工登录信息表
+    </a>
 </div>
 
 <div id="body-container" class="m50">

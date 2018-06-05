@@ -63,6 +63,9 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     private void olderFieldHandler(UserLoginPageParam pageParam) {
         String pageOrderF = pageParam.getOrderField();
+        if(pageOrderF == null){
+            return;
+        }
         switch (pageOrderF) {
             case "dispostion" : pageParam.setOrderField("dispostion");break;
             case "userInfoId" : pageParam.setOrderField("user_info_id");break;
