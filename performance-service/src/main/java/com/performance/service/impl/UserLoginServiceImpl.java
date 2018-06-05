@@ -56,7 +56,18 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Override
     public List<UserLogin> getForPage(UserLoginPageParam pageParam) {
+        olderFieldHandler(pageParam);
         return userLoginDao.getForPage(pageParam);
+    }
+
+    private void olderFieldHandler(UserLoginPageParam pageParam) {
+        String pageOrderF = pageParam.getOrderField();
+        switch (pageOrderF) {
+            case "dispostion" : pageParam.setOrderField("dispostion");break;
+            case "userInfoId" : pageParam.setOrderField("user_info_id");break;
+            case "sex" : pageParam.setOrderField("sex");break;
+            default:_logger.error("不支持该字段的排序：" + pageParam.getOrderField());
+        }
     }
 
     @Override

@@ -27,6 +27,11 @@ public class UserLoginDaoImpl extends BaseDaoImpl<UserLogin, Long> implements Us
         return sqlTemplate.selectOne(getNameSpace(SELECT_BY_CONDITION), userLogin);
     }
 
+    /**
+     * NOTICE 测试  使用接口来设置参数能否查到对应的page数据
+     * @param pageParam
+     * @return
+     */
     public List<UserLogin> getForPage(UserLoginPageParam pageParam) {
         return sqlTemplate.selectList(getNameSpace(SELECT_FOR_PAGE), pageParam);
     }

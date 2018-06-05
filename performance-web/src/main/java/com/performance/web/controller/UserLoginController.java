@@ -4,10 +4,12 @@ import com.performance.common.query.UserLoginPageParam;
 import com.performance.pojo.UserLogin;
 import com.performance.service.UserLoginService;
 import com.performance.web.interceptor.session.LoginContext;
+import com.performance.web.vo.DataTableParam;
 import com.performance.web.vo.DataTableVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
@@ -86,27 +88,41 @@ public class UserLoginController {
     }
 
     @RequestMapping(value = "/toList", method = RequestMethod.GET)
-    public String toList(ModelMap modelMap){
+    public String toList(Model model){
         if(null == LoginContext.getUserInfo()){
             _logger.info("没有创建个人信息无法看到员工列表用户账号信息：" + LoginContext.getUserLogin());
-            modelMap.put("infoMsg", "没有创建个人信息无法看到员工列表");
+            model.addAttribute("infoMsg", "没有创建个人信息无法看到员工列表");
+            model.addAttribute("seeList", false);
             return "login/toList";
         }
-        UserLoginPageParam pageParam = new UserLoginPageParam();
-        pageParam.setCreatedUserId(LoginContext.getUserLogin().getLoginId());
-        List<UserLogin> logins = userLoginService.getForPage(pageParam);
-        Long count = userLoginService.getCountByCreatedId(LoginContext.getUserLogin().getLoginId());
-        modelMap.addAttribute("logins" , logins);
-        modelMap.addAttribute("count" , count);
+        model.addAttribute("seeList", true);
         return "login/toList";
     }
 
     @RequestMapping(value = "/listData", method = RequestMethod.POST)
     @ResponseBody
-    public DataTableVO listData(){
+    public DataTableVO listData(@RequestParam("dataTableParam") DataTableParam dTParam
+            , @RequestParam("userLoginPageParam") UserLoginPageParam uLPageParam){
         DataTableVO vo = new DataTableVO();
-        
+        Assert.notNull(dTParam);
+        Assert.notNull(uLPageParam);
+        vo.setDraw(dTParam.getDraw());
+        packDTToUserLoginParam(dTParam, uLPageParam);
+        uLPageParam.setCreatedUserId(LoginContext.getUserInfo().getUserInfoId());
+        _logger.info("获取数据列表：dTParam:{},uLPageParam:{}", dTParam, uLPageParam);
+        List<UserLogin> logins = userLoginService.getForPage(uLPageParam);
+        Long count = userLoginService.getCountByCreatedId(LoginContext.getUserLogin().getLoginId());
+        vo.setData(logins);
+        vo.setRecordsFiltered(count);
+        vo.setRecordsTotal(count);
         return vo;
+    }
+
+    private void packDTToUserLoginParam(DataTableParam dTParam, UserLoginPageParam uLPageParam) {
+        uLPageParam.setPageNum(dTParam.getPageNo());
+        uLPageParam.setPageSize(dTParam.getPageSize());
+        uLPageParam.setOrderDir(dTParam.getOrderDir());
+        uLPageParam.setOrderField(dTParam.getOrderField());
     }
 
     @InitBinder("userLogin")
@@ -114,4 +130,13 @@ public class UserLoginController {
         dataBinder.setFieldDefaultPrefix("userLogin.");
     }
 
+    @InitBinder("dataTableParam")
+    public void dataTableParamBinder(WebDataBinder dataBinder) {
+        dataBinder.setFieldDefaultPrefix("dataTableParam.");
+    }
+
+    @InitBinder("userLoginPageParam")
+    public void userLoginPageParamBinder(WebDataBinder dataBinder) {
+        dataBinder.setFieldDefaultPrefix("userLoginPageParam.");
+    }
 }

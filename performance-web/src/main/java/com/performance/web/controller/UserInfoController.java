@@ -122,8 +122,8 @@ public class UserInfoController {
 
         param.setPageNum(dataTableParam.getPageNo());
         param.setPageSize(dataTableParam.getPageSize());
-//        param.setOrderDir(dataTableParam.getOrderDir());
-//        param.setOrderField(dataTableParam.getOrderField());
+        param.setOrderDir(dataTableParam.getOrderDir());
+        param.setOrderField(dataTableParam.getOrderField());
         param.setPid(LoginContext.getUserInfo().getUserInfoId());
 //        Assert.notNull(param.getPerformanceTime(), "审核时间不能为空！");
     }

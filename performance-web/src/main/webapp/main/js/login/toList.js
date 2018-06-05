@@ -51,8 +51,21 @@ var dataTableObj = (function () {
                     },
                     "orderable": false
                 },
-
-                { data: "userName" ,
+                { data: "idCard" ,
+                    "render": function (data, type, row, meta) {
+                        return data;
+                    },
+                    "orderable": false
+                },
+                {
+                    data: "userName",
+                    "render": function (data, type, row, meta) {
+                        return data;
+                    },
+                    "orderable": false
+                },
+                {
+                    data: "birthday",
                     "render": function (data, type, row, meta) {
                         return data;
                     },
@@ -66,20 +79,6 @@ var dataTableObj = (function () {
                         } else if (data == 0) {
                             return '女';
                         };
-                    },
-                    "orderable": false
-                },
-                // {
-                //     data: "birthday",
-                //     "render": function (data, type, row, meta) {
-                //         return data;
-                //     },
-                //     "orderable": false
-                // },
-                {
-                    data: "idCard",
-                    "render": function (data, type, row, meta) {
-                        return data;
                     },
                     "orderable": false
                 },
@@ -115,48 +114,6 @@ var dataTableObj = (function () {
                     "orderable": false
                 },
                 {
-                    data: "userPerformance.performanceScore",
-                    "render": function (data, type, row, meta) {
-                        if(!row.userPerformance || !row.userPerformance.performanceId) {// 没有生成审核数据
-                            return "尚未生成审核初始化数据！";
-                        }
-                        if(!row.permissionToFix){// 没有权限修改
-                            return data;
-                        }
-
-                        /*----------------------------*/
-                        /* NOTICE 不合适（但由于锁定是由异步数据是否支持决定，所以只能放此）  暂时放这里*/
-                        if(row.userPerformance.isLocked == 1 || dataIsLocked){
-                            dataIsLocked = true;
-                        }
-                        /*-----------------------------*/
-                        var INPUT_TEMPL_SCORE = '' + '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-score" id="user-performance-performance-score" value="{performanceScore}">';
-                        return INPUT_TEMPL_SCORE.replace(/\{performanceScore\}/g, !!data ? data : "")
-                            .replace(/\{olderVal\}/g,!!data ? data : "")
-                            .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
-                            .replace(/\{userInfoId\}/g, row.userInfoId);
-                    },
-                    "orderable": true
-                },
-                {
-                    data: "userPerformance.performanceContent",
-                    "render": function (data, type, row, meta) {
-                        if(!row.userPerformance || !row.userPerformance.performanceId) {// 没有生成审核数据
-                            row.makePerformance = true;
-                            return "尚未生成审核初始化数据！";
-                        }
-                        if(!row.permissionToFix){// 没有权限修改
-                            return data;
-                        }
-                        var INPUT_TEMPL_CONTENT = '' +  '<input type="text" older-val="{olderVal}" user-info-id="{userInfoId}" user-performance-id="{userPerformanceId}" class="user-performance-performance-content" id="user-performance-performance-content" value="{performanceContent}">';
-                        return INPUT_TEMPL_CONTENT.replace(/\{performanceContent\}/g, !!data ? data : "")
-                            .replace(/\{olderVal\}/g, !!data ? data : "")
-                            .replace(/\{userPerformanceId\}/g, row.userPerformance.performanceId)
-                            .replace(/\{userInfoId\}/g, row.userInfoId);
-                    },
-                    "orderable": false
-                },
-                {
                     data: "action",
                     "render" : function (data, type, row, meta) {
                         if(row.makePerformance){
@@ -186,21 +143,17 @@ var dataTableObj = (function () {
     /**
      * 组装搜索数据
      * @param boxParam
-     * @returns {{"dTParam.draw": *, "dTParam.pageNo": number, "dTParam.pageSize", "param.performanceTime": *|{}|jQuery}}
+     * @returns {{"dataTableParam.draw": *, "dataTableParam.pageNo": number, "dataTableParam.pageSize", orderField: string, orderDir, "userInfoPageParam.performanceTime": *|{}|jQuery}}
      */
     function packDataTableParam(boxParam){
-
-        // 目前不排序 不搜索
-        var orderField = boxParam.columns[7].data;
-        var orderDir = boxParam.order[0].dir;
         var param = {
             "dataTableParam.draw": boxParam.draw,
             "dataTableParam.pageNo": boxParam.start/boxParam.length+1,
             "dataTableParam.pageSize": boxParam.length,
-            "orderField": orderField,
-            "orderDir": orderDir,
-            // 封装其他参数
-            "userInfoPageParam.performanceTime" : $("#user-info-performance-time").val(),
+            "dataTableParam.orderField": boxParam.columns[0].data,
+            "dataTableParam.orderDir": boxParam.order[0].dir,
+            // 封装其他搜索参数
+            "userLoginPageParam.performanceTime" : $("#user-info-performance-time").val(),
         };
         console.log(boxParam);
         console.log(param);
@@ -209,7 +162,26 @@ var dataTableObj = (function () {
 
     return {
         "packDataTableParam" : packDataTableParam,
-        "initFormDataTable" : initFormDataTable,
-        "dataIsLocked" : dataIsLocked
+        "initFormDataTable" : initFormDataTable
     };
 })();
+
+
+var ListObj = function () {
+    this.init();
+};
+
+ListObj.prototype = {
+    init: function () {
+        console.log("init ListObj!");
+        this.dataTable = dataTableObj.initFormDataTable();
+        this.setOption();
+    },
+    setOption: function () {
+        this.listen();
+    },
+    listen: function () {
+    }
+};
+
+var listObj = new ListObj();

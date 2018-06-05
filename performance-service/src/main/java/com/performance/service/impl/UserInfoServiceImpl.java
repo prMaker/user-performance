@@ -15,6 +15,7 @@ import com.performance.service.exec.AuthenException;
 import com.performance.service.exec.ErrorDataException;
 import com.performance.service.handler.AppContextFactory;
 import com.performance.service.impl.handler.IdsSelectClass;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -97,8 +98,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     private void addSortedToParam(UserInfoPageParam param) {
-        if("userPerformance.performanceScore".equals(param.getOrderField()))
-            param.setOrderField("user_performance.performance_score");
+        if(StringUtils.isBlank(param.getOrderField())){
+            return;
+        }
+        switch (param.getOrderField()){
+            case "userInfoId": param.setOrderField("user_info.user_info_id");break;
+            case "userPerformance.performanceScore" : param.setOrderField("user_performance.performance_score");break;
+//            case "createdTime": param.setOrderField("user_info.created_time");break;
+//            case "dispostion": param.setOrderField("user_info.dispostion");break;
+            default:param.setOrderField(null);
+        }
     }
 
     public Long getUserIPCount(UserInfoPageParam param) {

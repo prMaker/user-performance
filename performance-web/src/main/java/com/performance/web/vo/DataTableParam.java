@@ -69,4 +69,15 @@ public class DataTableParam implements Serializable {
     public void setOrderDir(String orderDir) {
         this.orderDir = orderDir;
     }
+
+    @Override
+    public String toString() {
+        return "DataTableParam{" +
+                "draw=" + draw +
+                ", pageNo=" + pageNo +
+                ", pageSize=" + pageSize +
+                ", orderField='" + orderField + '\'' +
+                ", orderDir='" + orderDir + '\'' +
+                '}';
+    }
 }
