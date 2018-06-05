@@ -42,8 +42,6 @@ var dataTableObj = (function () {
                 type: "POST",
                 data:function(boxParam){
                     var tmpObj = packDataTableParam(boxParam);
-
-
                     return tmpObj;
                 }
             },
@@ -306,7 +304,6 @@ var ListObj = (function () {
         $("#user-info-data-table").delegate(".makePerformance", "click", makePerformance);
         //搜索监听
         $("#user-info-btn-search").click(function(){
-            console.log("开始搜索！");
             _this.dataTable.ajax.reload();
         });
 
@@ -324,16 +321,22 @@ var ListObj = (function () {
             });
         }
         function performanceAdd() {
-            window.location.href = "/userPerformance/setCurrPerformance?loginId=" + user_login_id +
-                "&performanceTime=" + $("#user-info-performance-time").val();
-            // $.ajax({
-            //     url:"/userPerformance/setCurrPerformance",
-            //     data:{performanceTime: $("#user-info-performance-time").val()},
-            //     dataType:"json",
-            //     async:true,
-            //     success:function (data) {
-            //     }
-            // });
+            $.ajax({
+                url:"/userPerformance/setCurrPerformance",
+                type:"GET",
+                dataType:"json",
+                async:false,
+                data:{
+                    performanceTime: $("#user-info-performance-time").val(),
+                    loginId:user_login_id
+                },
+                success:function (data) {
+                    if(!!data && data.success){
+                        _this.dataTable.ajax.reload();
+                        $("#user-performance-add-div").hide();
+                    }
+                }
+            });
         }
         function lockPerformance() {
             var user_info_id = $(this).attr("user-info-id");
@@ -350,6 +353,7 @@ var ListObj = (function () {
                 success: function (data) {
                     if(data.success){
                         $("#info-msg").text("锁定数据成功！");
+                        _this.dataTable.ajax.reload();
                     } else {
                         $("#info-msg").text(data.msg);
                     }

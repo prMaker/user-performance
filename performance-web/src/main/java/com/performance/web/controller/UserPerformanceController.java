@@ -83,19 +83,20 @@ public class UserPerformanceController {
      * @return
      */
     @RequestMapping(value = "/setCurrPerformance", method = RequestMethod.GET)
-    public String setCurrPerformance(@RequestParam String performanceTime , RedirectAttributes redirectAttr){
+    @ResponseBody
+    public Result setCurrPerformance(@RequestParam String performanceTime , RedirectAttributes redirectAttr){
         if(StringUtils.isBlank(performanceTime)) {
-            return getUserInfoList(redirectAttr);
+            return new Result(false, "参数异常");
         }
         _logger.info("当前用户设置该月审核信息：{}，月份：{}", LoginSession.getUserInfo(), performanceTime);
         try {
             userPerformanceService.batchSave(performanceTime, LoginSession.getUserInfo());
         } catch (Exception e) {
             _logger.error("出现并发新增绩效信息：当前并发新增人ID；{}", LoginSession.getUserLogin().getLoginId());
-            redirectAttr.addAttribute("infoMsg", e.getMessage());
             e.printStackTrace();
+            return  new Result(false, e.getMessage());
         }
-        return getUserInfoList(redirectAttr);
+        return new Result(true, "操作成功！");
     }
 
     /**
