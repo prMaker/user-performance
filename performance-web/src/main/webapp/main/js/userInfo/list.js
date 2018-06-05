@@ -366,11 +366,13 @@ var ListObj = (function () {
                 alert("请录入分数！");
                 return;
             }
-            if(newScore){
-                if(!(/-?([1-9][0-9]{0,2},[0])?/.test(newScore))){
-                    alert("请录入合理的绩效分数（绩效>0并且绩效<100）");
-                    return;
-                }
+            if(!(/^(-)?[0-9]+?/.test(newScore))){
+                alert("请录入合适的分数！");
+                return;
+            }
+            if(newScore>100 || newScore < -100){
+                alert("请录入合理的绩效分数（绩效>0并且绩效<100）！");
+                return;
             }
             $.ajax({
                 url:"/userPerformance/doSave",
