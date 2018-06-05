@@ -14,6 +14,11 @@ public class Result {
         this.msg = msg;
     }
 
+    public Result(boolean success, String msg, Object data){
+        this(success, msg);
+        this.data = data;
+    }
+
     public boolean isSuccess() {
         return success;
     }

@@ -1,5 +1,6 @@
 package com.performance.web.controller;
 
+import com.performance.common.Result;
 import com.performance.common.query.UserInfoPageParam;
 import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserLogin;
@@ -71,12 +72,6 @@ public class UserInfoController {
         if(null == LoginSession.getUserInfo()){
             return "/userInfo/toList";
         }
-        List<Long> childInfos = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
-        Long perforCount = userPerformanceService.selectCountByInfoIDs(childInfos);
-        if(childInfos.size() > perforCount){
-            model.addAttribute("performToAdd", true);
-        }
-//        model.addAttribute("childInfoSize", childInfos.size());
         return "/userInfo/toList";
     }
 
@@ -132,6 +127,15 @@ public class UserInfoController {
 //        param.setOrderField(dataTableParam.getOrderField());
         param.setPid(LoginSession.getUserInfo().getUserInfoId());
 //        Assert.notNull(param.getPerformanceTime(), "审核时间不能为空！");
+    }
+
+    @RequestMapping(value = "/performanceToAdd", method = RequestMethod.POST)
+    @ResponseBody
+    public Result performanceToAdd(String performanceTime){
+        List<Long> childInfos = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
+        Long perforCount = userPerformanceService.selectCountByInfoIDs(childInfos, performanceTime);
+        boolean res = childInfos.size() > perforCount;
+        return new Result(res,"", res);
     }
 
     @InitBinder("userInfo")

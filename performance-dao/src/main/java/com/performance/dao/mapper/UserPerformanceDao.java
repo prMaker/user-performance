@@ -33,7 +33,8 @@ public interface UserPerformanceDao extends BaseDao<UserPerformance, Long> {
     /**
      * 根据INFO_IDS集合查询performance中的数量
      * @param childInfos
+     * @param performanceTime
      * @return
      */
-    Long selectCountByInfoIDs(List<Long> childInfos);
+    Long selectCountByInfoIDs(List<Long> childInfos, String performanceTime);
 }

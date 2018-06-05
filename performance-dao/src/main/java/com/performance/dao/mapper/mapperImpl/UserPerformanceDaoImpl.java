@@ -33,7 +33,10 @@ public class UserPerformanceDaoImpl extends BaseDaoImpl<UserPerformance, Long> i
         return sqlTemplate.selectOne(getNameSpace("getUserPerforByCond"), userPerformance);
     }
 
-    public Long selectCountByInfoIDs(List<Long> list) {
-        return sqlTemplate.selectOne(getNameSpace("selectCountByInfoIDs"), list);
+    public Long selectCountByInfoIDs(List<Long> list, String performanceTime) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("list", list);
+        param.put("performanceTime", performanceTime);
+        return sqlTemplate.selectOne(getNameSpace("selectCountByInfoIDs"), param);
     }
 }

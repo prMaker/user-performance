@@ -42,7 +42,7 @@ var dataTableObj = (function () {
                 type: "POST",
                 data:function(boxParam){
                     var tmpObj = packDataTableParam(boxParam);
-                    // var _data = KingUtil.addTimeStamp(tmpObj);  添加时间戳
+
 
                     return tmpObj;
                 }
@@ -204,9 +204,6 @@ var dataTableObj = (function () {
             "orderDir": orderDir,
             // 封装其他参数
             "userInfoPageParam.performanceTime" : $("#user-info-performance-time").val(),
-            //"formId": $.trim($("#formId").val()),
-            //"formName": $.trim($("#formName").val()),
-            //"formCreateUser": $.trim($("#formCreateUser").val())
         };
         console.log(boxParam);
         console.log(param);
@@ -259,21 +256,28 @@ var ListObj = (function () {
         var _this = this;
         // 表格初始化
         this.dataTable = dataTableObj.initFormDataTable(dataTableCallback);
-        // 操作按钮初始化
-        initOperations();
         this.setOption();
 
         // 公共方法
         function dataTableCallback(dataIsLocked) {
-            console.log("锁定状态：" + _this.dataTable.dataIsLocked);
             if(dataIsLocked){// 锁定按钮置空
                 $("#user-info-lock-div").empty();
             }
-        }
-        function initOperations() {
-            if(performToAdd){// 批量添加用户审核信息
-                $("#user-performance-add-div").show();
-            }
+            $.ajax({
+                url:"/userInfo/performanceToAdd",
+                type:"post",
+                dataType:"json",
+                data:{
+                    performanceTime:$("#user-info-performance-time").val(),
+                    loginId:user_login_id
+                },
+                success:function (data) {
+                    console.log("返回结果：" + data);
+                    if(data.success && data.data){
+                        $("#user-performance-add-div").show();
+                    }
+                }
+            });
         }
     };
 

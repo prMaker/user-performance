@@ -139,8 +139,8 @@ public class UserPerformanceServiceImpl implements UserPerformanceService {
     }
 
     @Override
-    public Long selectCountByInfoIDs(List<Long> childInfos) {
-        return userPerformanceDao.selectCountByInfoIDs(childInfos);
+    public Long selectCountByInfoIDs(List<Long> childInfos, String performanceTime) {
+        return userPerformanceDao.selectCountByInfoIDs(childInfos, performanceTime);
     }
 
     private List<UserPerformance> getPerfoList(String performanceTime, List<Long> noMakeInfos) {
