@@ -58,18 +58,6 @@
 
 </div>
 
-
-<%--<a href="/login/loginIn?loginId=1">登录</a>--%>
-
-
-<!-- jQuery 2.2.0 -->
-
-
-
-
-
-<%--<script src="/plugins/jQuery/jquery-3.1.1.min.js"></script>--%>
-
 <script>
     (function(){
 
@@ -101,18 +89,6 @@
             submitHandler:function(form){
                 $("#do-login-form").submit();
             }
-        });
-
-
-
-
-        $("#userInfoList").click(function () {
-            console.log("点击时间");
-        });
-
-        console.log("123123");
-        $(function () {
-            console.log("12332");
         });
 
         $("#saveUserInfo").delegate("click",function () {

@@ -27,6 +27,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Transactional
     public void save(UserLogin userLogin) {
+        // TODO 先查数据，确认没有该用户名，此时再添加用户
         userLoginDao.insert(userLogin);
         _logger.info("新增登录用户数据成功：{}", userLogin);
     }

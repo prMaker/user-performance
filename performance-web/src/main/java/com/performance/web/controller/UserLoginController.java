@@ -1,5 +1,6 @@
 package com.performance.web.controller;
 
+import com.performance.common.Result;
 import com.performance.common.query.UserLoginPageParam;
 import com.performance.pojo.UserLogin;
 import com.performance.service.UserLoginService;
@@ -64,15 +65,9 @@ public class UserLoginController {
     }
 
     @RequestMapping(value = "/doSave", method = RequestMethod.POST)
-    public String doSave(@ModelAttribute UserLogin userLogin,
+    public String doSave(UserLogin userLogin,
                          RedirectAttributes redirectAttr){
-//        if(null == userLogin){
-//            redirectAttr.addAttribute("errMsg", "请求参数异常");
-//            return "handler/error";
-//        }
         Assert.notNull(userLogin);
-        // 由于根据url加参数验证登录状态 这里自动装配上了此处设置为null
-        userLogin.setLoginId(null);
         packUserLAndInfoParam(userLogin);
         _logger.info("userLoginName：{}新建用户：{}", LoginContext.getUserLogin().getLoginName(), userLogin);
         userLoginService.save(userLogin);
@@ -80,7 +75,25 @@ public class UserLoginController {
         return "redirect:/userLogin/list?loginId=" + LoginContext.getUserLogin().getLoginId();
     }
 
+    /**
+     * 校验用户名是否重复
+     * @param loginName
+     * @return
+     */
+    @RequestMapping(value = "/checkUserNameIsRepeat", method = RequestMethod.POST)
+    public Result checkUserNameIsRepeat(String loginName){
+        Assert.notNull(loginName);
+        UserLogin login = new UserLogin();
+        login.setLoginName(loginName.trim());
+        UserLogin userLogin = userLoginService.getUserLoginByCond(login);
+        return new Result(null == userLogin, null == userLogin ? "已存在该用户名" : "");
+    }
+
     private void packUserLAndInfoParam(UserLogin userLogin) {
+
+        // 由于根据url加参数验证登录状态 这里自动装配上了此处设置为null
+        userLogin.setLoginId(null);
+        userLogin.setLoginName(userLogin.getLoginName().trim());
         userLogin.setCreatedUser(LoginContext.getUserLogin().getLoginName());
         userLogin.setCreatedUserId(LoginContext.getUserLogin().getLoginId());
         userLogin.setModifiedUser(LoginContext.getUserLogin().getLoginName());

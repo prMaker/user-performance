@@ -19,21 +19,6 @@
 <body>
 
 <div class="padding_20">
-        <%--
-        protected Long loginId;
-        protected Long userInfoId;
-        protected Integer isDeleted;
-        protected String loginName;
-        protected String password;
-        protected Integer dispostion;
-        protected Timestamp createdTime;
-        protected Timestamp modifiedTime;
-        protected String createdUser;
-        protected String modifiedUser;
-        //TODO 是否添加
-        protected Long createdUserId;// 创建人用户ID
-        protected Long modifiedUserId;// 修改人用户ID
-        --%>
         <table>
             <thead>
             <th>
@@ -42,23 +27,28 @@
             </thead>
             <tbody>
                 <form id="do-save-form" action="/userLogin/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
-                    <%--
-                protected String loginName;
-                protected String password;
-                protected Integer dispostion;
-                    --%>
+
                     <tr>
                         <td>登录用户名：</td>
-                        <td><input type="text" id="user-login-login-name" name="userLogin.loginName"></td>
+                        <td>
+                            <input type="text" id="user-login-login-name" name="userLogin.loginName">
+                            <span id="loginName-errMsg"></span>
+                        </td>
                     </tr>
                     <tr>
                         <td>登录密码：</td>
-                        <td><input type="password" id="user-login-password" name="userLogin.password"></td>
+                        <td>
+                            <input type="password" id="user-login-password" name="userLogin.password">
+                            <span id="password-errMsg"></span>
+                        </td>
                     </tr>
 
                     <tr>
                         <td>确认登录密码：</td>
-                        <td><input type="password" name="repeatPassword" id="user-login-repeat-password"></td>
+                        <td>
+                            <input type="password" name="repeatPassword" id="user-login-repeat-password">
+                            <span id="repeatPassword-errMsg"></span>
+                        </td>
                     </tr>
 
                     <tr>
@@ -79,7 +69,7 @@
                                     <option value="1">普通员工</option>
                                 </c:if>
                             </select>
-                            <span class="text-danger" id="dispostion-error"></span>
+                            <span class="text-danger" id="dispostion-errMsg"></span>
                         </td>
                     </tr>
                     <tr>
@@ -94,50 +84,6 @@
             </tbody>
         </table>
 </div>
-<%--<script src="/main/js/login/toSave.js"></script>--%>
-<script>
-    (function(){
-        $("#save-btn").click(function () {
-
-
-
-
-
-
-
-            ////////////个人写的保存校验  不完整///////////////////
-            var loginName = $("#user-login-login-name").val();
-            var passWord = $("#user-login-password").val();
-            var repeatPassWord = $("#user-login-repeat-password").val();
-            var disposition = $("#user-info-disposition").val();
-            if(!checkparam()){
-                return;
-            }
-            $("#do-save-form").submit();
-            function checkparam() {
-                if(!loginName){
-                    alert("登陆名必填！");
-                    return false;
-                }
-                if(!passWord){
-                    alert("密码必填！");
-                    return false;
-                }
-                if(passWord !== repeatPassWord){
-                    alert("密码必须相等！");
-                    return false;
-                }
-                if(!disposition){
-                    alert("请选择职位！");
-                    return false;
-                }
-                return true;
-            }
-        });
-
-
-    })();
-</script>
-
+<script src="/main/js/login/toSave.js"></script>
 </body>
 </html>
