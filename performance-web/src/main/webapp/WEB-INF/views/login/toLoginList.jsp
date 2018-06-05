@@ -12,23 +12,6 @@
     <title>员工信息列表</title>
 </head>
 <body>
-<%--
-
-
-    protected Long loginId;
-    protected Long userInfoId;
-    protected Integer isDeleted;
-    protected String loginName;
-    protected String password;
-    protected Integer dispostion;
-    protected Timestamp createdTime;
-    protected Timestamp modifiedTime;
-    protected String createdUser;
-    protected String modifiedUser;
-    //TODO 是否添加
-    protected Long createdUserId;// userLoginId
-    protected Long modifiedUserId;// userLoginId
---%>
 
 <div class="pd50">
     <a href="/userInfo/toList?loginId=${sessionScope.userLogin.loginId}">
