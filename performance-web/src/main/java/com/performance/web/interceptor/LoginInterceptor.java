@@ -4,7 +4,7 @@ import com.performance.pojo.UserInfo;
 import com.performance.pojo.UserLogin;
 import com.performance.service.UserInfoService;
 import com.performance.service.UserLoginService;
-import com.performance.web.interceptor.session.LoginSession;
+import com.performance.web.interceptor.session.LoginContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +55,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         _logger.info("用户id:{}已经登录", userLogin.getLoginId());
-        LoginSession.setUserInfo(userInfo);
-        LoginSession.setUserLogin(userLogin);
+        LoginContext.setUserInfo(userInfo);
+        LoginContext.setUserLogin(userLogin);
         return true;
     }
 
@@ -67,6 +67,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        LoginSession.remove();
+        LoginContext.remove();
     }
 }

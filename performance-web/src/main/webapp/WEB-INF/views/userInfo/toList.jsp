@@ -29,7 +29,7 @@
         <c:if test="${sessionScope.userInfo.dispostion > 1}">
             <a href="/userLogin/toSave?loginId=${sessionScope.userInfo.loginId}">注册新用户</a>
         </c:if>
-        <a href="/userLogin/list?loginId=${sessionScope.userInfo.loginId}">用户列表</a>
+        <a href="/userLogin/toList?loginId=${sessionScope.userInfo.loginId}">用户列表</a>
         <a href="/userLogin/toLogin">注销登录</a>
 
         <%--新用户--%>

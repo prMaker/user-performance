@@ -6,7 +6,7 @@ import com.performance.pojo.UserPerformance;
 import com.performance.pojo.constant.DispositionEnum;
 import com.performance.service.UserPerformanceService;
 import com.performance.service.exec.AuthenException;
-import com.performance.web.interceptor.session.LoginSession;
+import com.performance.web.interceptor.session.LoginContext;
 import com.performance.common.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class UserPerformanceController {
                          , ModelMap mm
                          , RedirectAttributes redirectAttributes){
         if(null == userPerformance || userPerformance.getPerformanceId() == null){
-            redirectAttributes.addAttribute("loginId", LoginSession.getUserLogin().getLoginId());
+            redirectAttributes.addAttribute("loginId", LoginContext.getUserLogin().getLoginId());
             return "redirect:userInfo/list";
         }
         if(null == userPerformance.getPerformanceTime()
@@ -61,12 +61,12 @@ public class UserPerformanceController {
         if(null == userPerformance){
             return new Result(false, "请求参数异常！");
         }
-        userPerformance.setOperateUserInfoId(LoginSession.getUserInfo().getUserInfoId());
-        userPerformance.setOperateDisposition(LoginSession.getUserInfo().getDispostion());
+        userPerformance.setOperateUserInfoId(LoginContext.getUserInfo().getUserInfoId());
+        userPerformance.setOperateDisposition(LoginContext.getUserInfo().getDispostion());
 
         try {
-            _logger.info("用户{}审核数据：{}", LoginSession.getUserInfo(), userPerformance);
-            userPerformanceService.save(LoginSession.getUserInfo(), userPerformance);
+            _logger.info("用户{}审核数据：{}", LoginContext.getUserInfo(), userPerformance);
+            userPerformanceService.save(LoginContext.getUserInfo(), userPerformance);
         } catch (AuthenException ex) {
             return new Result(false, ex.getMessage());
         } catch (DataValidateException ex) {
@@ -88,11 +88,11 @@ public class UserPerformanceController {
         if(StringUtils.isBlank(performanceTime)) {
             return new Result(false, "参数异常");
         }
-        _logger.info("当前用户设置该月审核信息：{}，月份：{}", LoginSession.getUserInfo(), performanceTime);
+        _logger.info("当前用户设置该月审核信息：{}，月份：{}", LoginContext.getUserInfo(), performanceTime);
         try {
-            userPerformanceService.batchSave(performanceTime, LoginSession.getUserInfo());
+            userPerformanceService.batchSave(performanceTime, LoginContext.getUserInfo());
         } catch (Exception e) {
-            _logger.error("出现并发新增绩效信息：当前并发新增人ID；{}", LoginSession.getUserLogin().getLoginId());
+            _logger.error("出现并发新增绩效信息：当前并发新增人ID；{}", LoginContext.getUserLogin().getLoginId());
             e.printStackTrace();
             return  new Result(false, e.getMessage());
         }
@@ -110,16 +110,16 @@ public class UserPerformanceController {
         if(StringUtils.isBlank(performanceTime)){
             return new Result(false, "请求参数异常，没有当前月份信息！");
         }
-        if(LoginSession.getUserInfo().getDispostion().intValue() != DispositionEnum.FourLevel.getCode()){
+        if(LoginContext.getUserInfo().getDispostion().intValue() != DispositionEnum.FourLevel.getCode()){
             return new Result(false, "只有经理可以审核数据，您没有权限！");
         }
-        _logger.error("用户:{}锁定审核数据月份：{}", LoginSession.getUserInfo(), performanceTime);
+        _logger.error("用户:{}锁定审核数据月份：{}", LoginContext.getUserInfo(), performanceTime);
         UserPerformance performance = new UserPerformance();
         performance.setPerformanceTime(performanceTime);
         try{
-            userPerformanceService.lockPerformance(performance, LoginSession.getUserInfo());
+            userPerformanceService.lockPerformance(performance, LoginContext.getUserInfo());
         }catch (RuntimeException e) {
-            _logger.error("锁定数据异常：currOperate：{}，performanceTime:{}", LoginSession.getUserInfo(), performanceTime);
+            _logger.error("锁定数据异常：currOperate：{}，performanceTime:{}", LoginContext.getUserInfo(), performanceTime);
             return new Result(false, e.getMessage());
         }
         return new Result();
@@ -127,8 +127,8 @@ public class UserPerformanceController {
 
 
     private String getUserInfoList(RedirectAttributes redirectAttr) {
-//        redirectAttr.addAttribute("userLoginId", LoginSession.getUserLogin().getLoginId());
-        return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
+//        redirectAttr.addAttribute("userLoginId", LoginContext.getUserLogin().getLoginId());
+        return "redirect:/userInfo/toList?loginId=" + LoginContext.getUserLogin().getLoginId();
     }
 
     @InitBinder("userPerformance")

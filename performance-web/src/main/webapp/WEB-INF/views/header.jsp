@@ -7,11 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" href="/main/css/common.css"/>
-
 <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
 <link rel="stylesheet" href="/plugins/datatables/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="/main/css/common.css"/>
 
 
 

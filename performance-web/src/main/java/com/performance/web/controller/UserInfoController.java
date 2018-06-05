@@ -8,8 +8,7 @@ import com.performance.pojo.UserInfoPerfor;
 import com.performance.service.UserInfoService;
 import com.performance.service.UserLoginService;
 import com.performance.service.UserPerformanceService;
-import com.performance.service.exec.ErrorDataException;
-import com.performance.web.interceptor.session.LoginSession;
+import com.performance.web.interceptor.session.LoginContext;
 import com.performance.web.vo.DataTableParam;
 import com.performance.web.vo.DataTableVO;
 import org.apache.commons.lang3.StringUtils;
@@ -43,10 +42,10 @@ public class UserInfoController {
     // 先创建用户登录，在用户信息设置
     @RequestMapping(value = "/toSave",method = RequestMethod.GET)
     public String toSave(Model model){
-        if(LoginSession.getUserInfo() == null){
+        if(LoginContext.getUserInfo() == null){
             model.addAttribute("save", true);
         } else {
-            UserInfo info = userInfoService.getUserInfoById(LoginSession.getUserInfo().getUserInfoId());
+            UserInfo info = userInfoService.getUserInfoById(LoginContext.getUserInfo().getUserInfoId());
             model.addAttribute("update", true);
             model.addAttribute("userInfo", info);
         }
@@ -58,18 +57,18 @@ public class UserInfoController {
                          RedirectAttributes redirectAttr){
         Assert.notNull(userInfo);
         UserLogin createdLogin = userLoginService.getUserLoginById(
-                LoginSession.getUserLogin().getCreatedUserId());
-        _logger.info("用户账户：{}保存用户信息成功：{}", LoginSession.getUserLogin(), userInfo);
-        userInfoService.saveOrUpdate(userInfo, createdLogin, LoginSession.getUserLogin());
+                LoginContext.getUserLogin().getCreatedUserId());
+        _logger.info("用户账户：{}保存用户信息成功：{}", LoginContext.getUserLogin(), userInfo);
+        userInfoService.saveOrUpdate(userInfo, createdLogin, LoginContext.getUserLogin());
         redirectAttr.addAttribute("infoMsg", "修改用户信息成功");
-        return "redirect:/userInfo/toList?loginId=" + LoginSession.getUserLogin().getLoginId();
+        return "redirect:/userInfo/toList?loginId=" + LoginContext.getUserLogin().getLoginId();
     }
 
     @RequestMapping(value = "/toList", method = RequestMethod.GET)
     public String toList(Model model, String infoMsg){
-        model.addAttribute("noUserInfo", null == LoginSession.getUserInfo());
+        model.addAttribute("noUserInfo", null == LoginContext.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
-        if(null == LoginSession.getUserInfo()){
+        if(null == LoginContext.getUserInfo()){
             return "/userInfo/toList";
         }
         return "/userInfo/toList";
@@ -85,8 +84,8 @@ public class UserInfoController {
 
         try {
             checkAndSetParam(dataTableParam, userInfoPageParam);
-            _logger.info("用户：{}查询用户信息：{}", LoginSession.getUserInfo());
-            List<UserInfoPerfor> userInfoPerfors = userInfoService.getUserIPByParam(LoginSession.getUserInfo(), userInfoPageParam);
+            _logger.info("用户：{}查询用户信息：{}", LoginContext.getUserInfo());
+            List<UserInfoPerfor> userInfoPerfors = userInfoService.getUserIPByParam(LoginContext.getUserInfo(), userInfoPageParam);
             Long count = userInfoService.getUserIPCount(userInfoPageParam);
 
             vo.setData(userInfoPerfors);
@@ -95,11 +94,11 @@ public class UserInfoController {
             vo.setRecordsFiltered(count);
 
         } catch (IllegalArgumentException ex) {
-            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
+            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginContext.getUserInfo() + "，原因：" + ex.getMessage()
                     , ex);
             return vo.setError(ex.getMessage());
         } catch (IllegalStateException ex) {
-            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginSession.getUserInfo() + "，原因：" + ex.getMessage()
+            _logger.error("获取：UserInfoController.listData异常！用户信息：UserInfo" + LoginContext.getUserInfo() + "，原因：" + ex.getMessage()
                     , ex);
             return vo.setError(ex.getMessage());
         }
@@ -109,8 +108,8 @@ public class UserInfoController {
     private void checkAndSetParam(DataTableParam dataTableParam, UserInfoPageParam param)
             throws IllegalArgumentException, IllegalStateException{
         Assert.notNull(dataTableParam);
-        if(null == LoginSession.getUserInfo()){
-            _logger.error("用户账号：{}查看用户信息失败：没有记录用户信息", LoginSession.getUserLogin());
+        if(null == LoginContext.getUserInfo()){
+            _logger.error("用户账号：{}查看用户信息失败：没有记录用户信息", LoginContext.getUserLogin());
             throw new IllegalStateException("只有完善用户信息后才能查看当前月份用户信息列表!");
         }
         param = param == null ? new UserInfoPageParam() : param;
@@ -125,14 +124,14 @@ public class UserInfoController {
         param.setPageSize(dataTableParam.getPageSize());
 //        param.setOrderDir(dataTableParam.getOrderDir());
 //        param.setOrderField(dataTableParam.getOrderField());
-        param.setPid(LoginSession.getUserInfo().getUserInfoId());
+        param.setPid(LoginContext.getUserInfo().getUserInfoId());
 //        Assert.notNull(param.getPerformanceTime(), "审核时间不能为空！");
     }
 
     @RequestMapping(value = "/performanceToAdd", method = RequestMethod.POST)
     @ResponseBody
     public Result performanceToAdd(String performanceTime){
-        List<Long> childInfos = userInfoService.getIdsByPid(LoginSession.getUserInfo().getUserInfoId());
+        List<Long> childInfos = userInfoService.getIdsByPid(LoginContext.getUserInfo().getUserInfoId());
         Long perforCount = userPerformanceService.selectCountByInfoIDs(childInfos, performanceTime);
         boolean res = childInfos.size() > perforCount;
         return new Result(res,"", res);

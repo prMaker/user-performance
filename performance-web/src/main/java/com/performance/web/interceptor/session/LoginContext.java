@@ -6,7 +6,7 @@ import com.performance.pojo.UserLogin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginSession {
+public class LoginContext {
 
     private static ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<>();
 

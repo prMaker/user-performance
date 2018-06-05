@@ -3,7 +3,8 @@ package com.performance.web.controller;
 import com.performance.common.query.UserLoginPageParam;
 import com.performance.pojo.UserLogin;
 import com.performance.service.UserLoginService;
-import com.performance.web.interceptor.session.LoginSession;
+import com.performance.web.interceptor.session.LoginContext;
+import com.performance.web.vo.DataTableVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -71,33 +72,41 @@ public class UserLoginController {
         // 由于根据url加参数验证登录状态 这里自动装配上了此处设置为null
         userLogin.setLoginId(null);
         packUserLAndInfoParam(userLogin);
-        _logger.info("userLoginName：{}新建用户：{}", LoginSession.getUserLogin().getLoginName(), userLogin);
+        _logger.info("userLoginName：{}新建用户：{}", LoginContext.getUserLogin().getLoginName(), userLogin);
         userLoginService.save(userLogin);
         redirectAttr.addAttribute("infoMsg","创建成功！");
-        return "redirect:/userLogin/list?loginId=" + LoginSession.getUserLogin().getLoginId();
+        return "redirect:/userLogin/list?loginId=" + LoginContext.getUserLogin().getLoginId();
     }
 
     private void packUserLAndInfoParam(UserLogin userLogin) {
-        userLogin.setCreatedUser(LoginSession.getUserLogin().getLoginName());
-        userLogin.setCreatedUserId(LoginSession.getUserLogin().getLoginId());
-        userLogin.setModifiedUser(LoginSession.getUserLogin().getLoginName());
-        userLogin.setModifiedUserId(LoginSession.getUserLogin().getLoginId());
+        userLogin.setCreatedUser(LoginContext.getUserLogin().getLoginName());
+        userLogin.setCreatedUserId(LoginContext.getUserLogin().getLoginId());
+        userLogin.setModifiedUser(LoginContext.getUserLogin().getLoginName());
+        userLogin.setModifiedUserId(LoginContext.getUserLogin().getLoginId());
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list(ModelMap modelMap){
-        if(null == LoginSession.getUserInfo()){
-            _logger.info("没有创建个人信息无法看到员工列表用户账号信息：" + LoginSession.getUserLogin());
+    @RequestMapping(value = "/toList", method = RequestMethod.GET)
+    public String toList(ModelMap modelMap){
+        if(null == LoginContext.getUserInfo()){
+            _logger.info("没有创建个人信息无法看到员工列表用户账号信息：" + LoginContext.getUserLogin());
             modelMap.put("infoMsg", "没有创建个人信息无法看到员工列表");
-            return "login/list";
+            return "login/toList";
         }
         UserLoginPageParam pageParam = new UserLoginPageParam();
-        pageParam.setCreatedUserId(LoginSession.getUserLogin().getLoginId());
+        pageParam.setCreatedUserId(LoginContext.getUserLogin().getLoginId());
         List<UserLogin> logins = userLoginService.getForPage(pageParam);
-        Long count = userLoginService.getCountByCreatedId(LoginSession.getUserLogin().getLoginId());
+        Long count = userLoginService.getCountByCreatedId(LoginContext.getUserLogin().getLoginId());
         modelMap.addAttribute("logins" , logins);
         modelMap.addAttribute("count" , count);
-        return "login/list";
+        return "login/toList";
+    }
+
+    @RequestMapping(value = "/listData", method = RequestMethod.POST)
+    @ResponseBody
+    public DataTableVO listData(){
+        DataTableVO vo = new DataTableVO();
+        
+        return vo;
     }
 
     @InitBinder("userLogin")
