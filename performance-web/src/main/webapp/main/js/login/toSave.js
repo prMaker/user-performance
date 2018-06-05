@@ -32,7 +32,7 @@
                 $("#loginName-errMsg").text("登陆名必填！");
                 return false;
             }
-            if(loginName.length > 2 || loginName.length < 20){
+            if(loginName.length < 2 || loginName.length > 20){
                 $("#loginName-errMsg").text("登录名长度不能小于2不能大于20！");
                 return false;
             }
@@ -40,7 +40,7 @@
                 $("#password-errMsg").text("密码必填！");
                 return false;
             }
-            if(passWord.length > 2 || passWord.length < 20){
+            if(passWord.length < 2 || passWord.length > 20){
                 $("#password-errMsg").text("密码长度不能小于2不能大于20！");
                 return false;
             }

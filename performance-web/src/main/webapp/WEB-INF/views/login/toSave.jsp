@@ -32,6 +32,8 @@
                         <td>登录用户名：</td>
                         <td>
                             <input type="text" id="user-login-login-name" name="userLogin.loginName">
+                        </td>
+                        <td width="150px">
                             <span id="loginName-errMsg"></span>
                         </td>
                     </tr>
@@ -39,6 +41,8 @@
                         <td>登录密码：</td>
                         <td>
                             <input type="password" id="user-login-password" name="userLogin.password">
+                        </td>
+                        <td width="150px">
                             <span id="password-errMsg"></span>
                         </td>
                     </tr>
@@ -47,6 +51,8 @@
                         <td>确认登录密码：</td>
                         <td>
                             <input type="password" name="repeatPassword" id="user-login-repeat-password">
+                        </td>
+                        <td width="150px">
                             <span id="repeatPassword-errMsg"></span>
                         </td>
                     </tr>
@@ -69,6 +75,8 @@
                                     <option value="1">普通员工</option>
                                 </c:if>
                             </select>
+                        </td>
+                        <td width="150px">
                             <span class="text-danger" id="dispostion-errMsg"></span>
                         </td>
                     </tr>

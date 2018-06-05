@@ -72,7 +72,7 @@ public class UserLoginController {
         _logger.info("userLoginName：{}新建用户：{}", LoginContext.getUserLogin().getLoginName(), userLogin);
         userLoginService.save(userLogin);
         redirectAttr.addAttribute("infoMsg","创建成功！");
-        return "redirect:/userLogin/list?loginId=" + LoginContext.getUserLogin().getLoginId();
+        return "redirect:/userLogin/toList?loginId=" + LoginContext.getUserLogin().getLoginId();
     }
 
     /**

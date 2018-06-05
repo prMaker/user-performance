@@ -48,87 +48,46 @@
             </tr>
             <tr>
                 <td colspan="2" align="center">
-                    <button type="submit">登录</button>
+                    <button type="submit" id="login-button">登录</button>
                 </td>
             </tr>
         </table>
-
-
     </form>
 
 </div>
 
 <script>
     (function(){
-
-
-        //校验
-        $("#do-login-form").validate({
-            errorClass:"text-danger",
-            errorElement:"span",
-            rules:{
-                loginName:{
-                    required:true,
-                    rangelength:[1,20]
-                },
-                password:{
-                    required:true,
-                    rangelength:[1,20]
-                }
-            },
-            messages:{
-                loginName:{
-                    required:"请输入用户名",
-                    rangelength:"用户名长度2~20位"
-                },
-                password:{
-                    required:"请输入密码",
-                    rangelength:"密码长度2~20位"
-                }
-            },
-            submitHandler:function(form){
-                $("#do-login-form").submit();
+        $("#login-button").click(function (e) {
+            var loginName = $("#user-login-name").val();
+            var password = $("#user-login-password").val();
+            if(!checkParam()){
+                e.preventDefault();
+                return;
             }
-        });
+            console.log("提交表单")
 
-        $("#saveUserInfo").delegate("click",function () {
-            $.ajax({
-                url:"/userInfo/doSave",
-                type:"POST",
-                data:{
-                    loginId:67,
-                    idCard:410,
-                    userName:"测试添加",
-                    birthday:"20170905",
-                    sex:1,
-                    phone:110,
-                    pid:33,
-                    dispostion:1,
-                    createdUserInfoId:33,
-                    modifiedUserInfoId:33
-                },
-                success:function (data) {
-                    alert(data);
-                },
-                error:function () {
-                    alert("请求异常！");
+            function checkParam() {
+                if(!loginName){
+                    alert("用户名必填");
+                    return false;
                 }
-            });
-        });
+                if(!password){
+                    alert("密码必填！")
+                    return false;
+                }
+                if(loginName.length > 20 || loginName.length < 2){
+                    alert("用户名长度2~20位");
+                    return false;
+                }
+                if(password.length > 20 || password.length < 2){
+                    alert("密码长度2~20位");
+                    return false;
+                }
+                return true;
+            }
 
-        $("#userInfoList").delegate("click", function () {
-            $.ajax({
-                url:"/userInfo/doSave",
-                type:"POST",
-                data:{},
-                success:function (data) {
-                    alert(data);
-                },
-                error:function () {
-                    alert("请求异常！");
-                }
-            });
-        })
+        });
     })();
 </script>
 </body>
