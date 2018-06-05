@@ -49,16 +49,25 @@
                     --%>
                     <tr>
                         <td>登录用户名：</td>
-                        <td><input type="text" id="user-login-login-name" name="userLogin.loginName"></td>
+                        <td>
+                            <input type="text" id="user-login-login-name" name="userLogin.loginName">
+                            <span id="loginName-errMsg"></span>
+                        </td>
                     </tr>
                     <tr>
                         <td>登录密码：</td>
-                        <td><input type="password" id="user-login-password" name="userLogin.password"></td>
+                        <td>
+                            <input type="password" id="user-login-password" name="userLogin.password">
+                            <span id="password-errMsg"></span>
+                        </td>
                     </tr>
 
                     <tr>
                         <td>确认登录密码：</td>
-                        <td><input type="password" name="repeatPassword" id="user-login-repeat-password"></td>
+                        <td>
+                            <input type="password" name="repeatPassword" id="user-login-repeat-password">
+                            <span id="repeatPassword-errMsg"></span>
+                        </td>
                     </tr>
 
                     <tr>
@@ -79,7 +88,7 @@
                                     <option value="1">普通员工</option>
                                 </c:if>
                             </select>
-                            <span class="text-danger" id="dispostion-error"></span>
+                            <span class="text-danger" id="dispostion-errMsg"></span>
                         </td>
                     </tr>
                     <tr>
@@ -97,15 +106,25 @@
 <%--<script src="/main/js/login/toSave.js"></script>--%>
 <script>
     (function(){
-        $("#save-btn").click(function () {
+        $("#user-login-login-name").blur(checkUserNameIsRepeat);
 
+        $("#save-btn").click(formSave);
 
+        function checkUserNameIsRepeat() {
+            $.ajax({
+                url:"/userLogin/checkUserNameIsRepeat",
+                type:"POST",
+                dataType:"json",
+                data:{loginName:$("#user-login-name").val()},
+                success:function (data) {
+                    if(!data.success()){
+                        $("#loginName-errMsg").text(data.msg);
+                    }
+                }
+            });
+        }
+        function formSave() {
 
-
-
-
-
-            ////////////个人写的保存校验  不完整///////////////////
             var loginName = $("#user-login-login-name").val();
             var passWord = $("#user-login-password").val();
             var repeatPassWord = $("#user-login-repeat-password").val();
@@ -116,26 +135,32 @@
             $("#do-save-form").submit();
             function checkparam() {
                 if(!loginName){
-                    alert("登陆名必填！");
+                    $("#loginName-errMsg").text("登陆名必填！");
+                    return false;
+                }
+                if(loginName.length > 2 || loginName.length < 20){
+                    $("#loginName-errMsg").text("登录名长度不能小于2不能大于20！");
                     return false;
                 }
                 if(!passWord){
-                    alert("密码必填！");
+                    $("#password-errMsg").text("密码必填！");
+                    return false;
+                }
+                if(passWord.length > 2 || passWord.length < 20){
+                    $("#password-errMsg").text("密码长度不能小于2不能大于20！");
                     return false;
                 }
                 if(passWord !== repeatPassWord){
-                    alert("密码必须相等！");
+                    $("#repeatPassword-errMsg").text("两次密码请相同！");
                     return false;
                 }
                 if(!disposition){
-                    alert("请选择职位！");
+                    $("#dispostion-errMsg").text("请选择职位！");
                     return false;
                 }
                 return true;
             }
-        });
-
-
+        }
     })();
 </script>
 

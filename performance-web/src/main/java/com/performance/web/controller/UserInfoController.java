@@ -118,15 +118,10 @@ public class UserInfoController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
             param.setPerformanceTime(sdf.format(new Date()));
         }
-//        dataTableParam.setOrderDir("");
-//        dataTableParam.setOrderField("");
 
         param.setPageNum(dataTableParam.getPageNo());
         param.setPageSize(dataTableParam.getPageSize());
-//        param.setOrderDir(dataTableParam.getOrderDir());
-//        param.setOrderField(dataTableParam.getOrderField());
         param.setPid(LoginSession.getUserInfo().getUserInfoId());
-//        Assert.notNull(param.getPerformanceTime(), "审核时间不能为空！");
     }
 
     @RequestMapping(value = "/performanceToAdd", method = RequestMethod.POST)

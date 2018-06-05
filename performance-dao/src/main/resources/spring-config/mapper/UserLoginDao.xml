@@ -56,7 +56,9 @@
 
     </select>
 
-    <select id="selectByCondition" resultMap="resultMap" resultType="com.performance.pojo.UserLogin" parameterType="com.performance.pojo.UserLogin">
+    <select id="selectByCondition" resultMap="resultMap"
+            resultType="com.performance.pojo.UserLogin"
+            parameterType="com.performance.pojo.UserLogin">
         SELECT
         <include refid="Base_Column_List"/>
         FROM user_login
