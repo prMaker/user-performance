@@ -22,23 +22,7 @@
     <%--新增--%>
     <c:when test="${save}">
         <div class="padding_20">
-            <form action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
-                    <%--
-                        protected Long userInfoId;
-                        protected Long loginId;
-                        protected String idCard;
-                        protected String userName;
-                        protected String birthday;
-                        protected Integer sex;
-                        protected String phone;
-                        protected Integer isDeleted;
-                        protected Long pid;
-                        protected Integer dispostion;
-                        protected Timestamp createdTime;
-                        protected Timestamp modifiedTime;
-                        protected Long createdUserInfoId;
-                        protected Long modifiedUserInfoId;
-                    --%>
+            <form id="do-save-form" action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
 
                 <input type="hidden" name="loginId" value="${sessionScope.userLogin.loginId}">
                 <table>
@@ -67,7 +51,7 @@
                     <tr>
                         <td>用户生日</td>
                         <td>
-                            <input type="text" id="user-info-birthday" name="birthday">
+                            <input type="text" id="user-info-birthday" name="userInfo.birthday">
                         </td>
                     </tr>
                     <tr>
@@ -97,7 +81,7 @@
         <%-- 编辑 --%>
 
 
-            <form action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
+            <form id="do-save-form" action="/userInfo/doSave?loginId=${sessionScope.userLogin.loginId}" method="post">
 
         <input type="hidden" name="userInfoId" value="${sessionScope.userInfo.userInfoId}">
         <input type="hidden" name="loginId" value="${sessionScope.userLogin.loginId}">
@@ -122,7 +106,7 @@
             <tr>
                 <td>用户生日</td>
                 <td>
-                    <input type="text" id="user-info-birthday" name="birthday" value="${sessionScope.userInfo.birthday}">
+                    <input type="text" id="user-info-birthday" name="userInfo.birthday" value="${sessionScope.userInfo.birthday}">
                 </td>
             </tr>
             <tr>
@@ -139,7 +123,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" align="center">
+                <td></td>
+                <td align="center">
                     <button type="submit">保存</button>
                 </td>
             </tr>
@@ -155,6 +140,6 @@
 </c:choose>
 
 
-
+<script src="/main/js/userInfo/toSave.js"></script>
 </body>
 </html>

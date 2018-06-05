@@ -7,12 +7,8 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="./../header.jsp"%>
 
-<%
-    String path = request.getContextPath();
-    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-            + path + "/";
-%>
 <html>
 <head>
     <title>新增用户信息</title>
@@ -62,7 +58,7 @@
 
                     <tr>
                         <td>确认登录密码：</td>
-                        <td><input type="password" id="user-login-repeat-password"></td>
+                        <td><input type="password" name="repeatPassword" id="user-login-repeat-password"></td>
                     </tr>
 
                     <tr>
@@ -83,23 +79,33 @@
                                     <option value="1">普通员工</option>
                                 </c:if>
                             </select>
+                            <span class="text-danger" id="dispostion-error"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td align="center">
+                            <input type="button" id="save-btn" value="保存">
                         </td>
                     </tr>
                 </form>
 
-                <tr>
-                    <td colspan="2" align="center">
-                        <button type="submit" id="save-btn">保存</button>
-                    </td>
-                </tr>
 
             </tbody>
         </table>
 </div>
-<script src="/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<%--<script src="/main/js/login/toSave.js"></script>--%>
 <script>
     (function(){
         $("#save-btn").click(function () {
+
+
+
+
+
+
+
+            ////////////个人写的保存校验  不完整///////////////////
             var loginName = $("#user-login-login-name").val();
             var passWord = $("#user-login-password").val();
             var repeatPassWord = $("#user-login-repeat-password").val();
@@ -107,34 +113,7 @@
             if(!checkparam()){
                 return;
             }
-            $.extend({
-                PostSubmitForm: function (url, args) {
-                    var body = $(document.body),
-                        form = $("<form method='post' style='display:none'></form>"),
-                        input;
-                    form.attr({ "action": url });
-                    $.each(args, function (key, value) {
-                        input = $("<input type='hidden'>");
-                        input.attr({ "name": key });
-                        input.val(value);
-                        form.append(input);
-                    });
-
-                    //IE低版本和火狐下
-                    form.appendTo(document.body);
-                    form.submit();
-                    document.body.removeChild(form[0]);
-                }
-            });
-
-            var url = $("#do-save-form").attr("action");
-            var data = {
-                "userLogin.loginName":loginName,
-                "userLogin.password":passWord,
-                "userLogin.dispostion":disposition
-            };
-            $.PostSubmitForm(url , data);
-
+            $("#do-save-form").submit();
             function checkparam() {
                 if(!loginName){
                     alert("登陆名必填！");
@@ -155,6 +134,8 @@
                 return true;
             }
         });
+
+
     })();
 </script>
 

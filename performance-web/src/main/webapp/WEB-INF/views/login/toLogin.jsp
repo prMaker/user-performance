@@ -24,7 +24,7 @@
 <div class="pd50">
 
 
-    <form action="/userLogin/doLogin" method="post">
+    <form action="/userLogin/doLogin" id="do-login-form" method="post">
 
         <div class="pd20">
             <span id="infoMsg">
@@ -72,6 +72,39 @@
 
 <script>
     (function(){
+
+
+        //校验
+        $("#do-login-form").validate({
+            errorClass:"text-danger",
+            errorElement:"span",
+            rules:{
+                loginName:{
+                    required:true,
+                    rangelength:[1,20]
+                },
+                password:{
+                    required:true,
+                    rangelength:[1,20]
+                }
+            },
+            messages:{
+                loginName:{
+                    required:"请输入用户名",
+                    rangelength:"用户名长度2~20位"
+                },
+                password:{
+                    required:"请输入密码",
+                    rangelength:"密码长度2~20位"
+                }
+            },
+            submitHandler:function(form){
+                $("#do-login-form").submit();
+            }
+        });
+
+
+
 
         $("#userInfoList").click(function () {
             console.log("点击时间");

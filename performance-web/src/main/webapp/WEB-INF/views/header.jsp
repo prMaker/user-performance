@@ -23,3 +23,4 @@
 <script src="/plugins/datatables/js/dataTables.bootstrap.min.js"></script>
 <script src="/plugins/xdate/xdate.js"></script>
 <script src="/plugins/dateFormat/dateformat.js"></script>
+<script src="/plugins/validate/jquery.validate.min.js"></script>
