@@ -55,7 +55,7 @@ public class UserLoginController {
         } else{
             _logger.warn("用户登录失败：{}",userLogin);
             redirectAttr.addAttribute("infoMsg", "用户名或密码错误！");
-            return "redirect:/login/toLogin";
+            return "redirect:/userLogin/toLogin";
         }
     }
 
