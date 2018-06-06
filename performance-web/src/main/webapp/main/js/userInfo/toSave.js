@@ -66,7 +66,38 @@ $("#do-save-form").validate({
         }
     },
     submitHandler:function(form){
-        $("#do-save-form").submit();
+        // $("#do-save-form").submit();
+
+
+        $.extend({
+            PostSubmitForm: function (url, args) {
+                var body = $(document.body),
+                    form = $("<form method='post' style='display:none'></form>"),
+                    input;
+                form.attr({ "action": url });
+                $.each(args, function (key, value) {
+                    input = $("<input type='hidden'>");
+                    input.attr({ "name": key });
+                    input.val(value);
+                    form.append(input);
+                });
+
+                //IE低版本和火狐下
+                form.appendTo(document.body);
+                form.submit();
+                document.body.removeChild(form[0]);
+            }
+        });
+        var url = $("#do-save-form").attr("action");
+        var data = {
+            "userInfo.idCard":$("input[name='userInfo.idCard']").val(),
+            "userInfo.userName":$("input[name='userInfo.userName']").val(),
+            "userInfo.birthday":$("input[name='userInfo.birthday']").val(),
+            "userInfo.sex":$("input[name='userInfo.sex']").val(),
+            "userInfo.phone":$("input[name='userInfo.phone']").val(),
+        };
+        $.PostSubmitForm(url , data);
+
     }
 });
 
