@@ -55,7 +55,7 @@
                                 <span>选择绩效月份</span>
                             </div>
                             <div class="inline">
-                                <span><input type="text" id="user-info-check-performance-time"></span>
+                                <span><input type="text" readonly id="user-info-check-performance-time"></span>
                                 <input type="hidden" id="user-info-performance-time">
                             </div>
                             <button id="user-info-btn-search">搜索</button>
