@@ -60,6 +60,15 @@
         ,user_performance.performance_id,user_performance.user_info_id,user_performance.is_deleted ,user_performance.performance_content,user_performance.performance_score,user_performance.operate_user_info_id, user_performance.created_time,user_performance.modified_time,user_performance.is_locked,user_performance.operate_disposition,user_performance.performance_time
     </sql>
 
+    <sql id="userPerformance_Base_Column_List_toBetter">
+        user_info.user_info_id,user_info.login_id,user_info.id_card,user_info.user_name,user_info.birthday,user_info.sex,user_info.phone,user_info.is_deleted,user_info.pid,user_info.dispostion,user_info.created_time,user_info.modified_time,user_info.created_user_info_id,user_info.modified_user_info_id
+        ,user_performance.performance_id,user_performance.user_info_id,user_performance.is_deleted ,user_performance.performance_content,user_performance.performance_score,user_performance.operate_user_info_id, user_performance.created_time,user_performance.modified_time,user_performance.is_locked,user_performance.operate_disposition,user_performance.performance_time
+    </sql>
+
+    <sql id="Base_Column_List_performance">
+        performance_id,user_info_id,is_deleted,performance_content,performance_score,operate_user_info_id,created_time,modified_time,is_locked,operate_disposition,performance_time
+    </sql>
+
     <insert id="insert" parameterType="com.performance.pojo.UserInfo" useGeneratedKeys="true" keyProperty="userInfoId">
         INSERT INTO user_info (login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id)
         VALUES (#{loginId},#{idCard},#{userName},#{birthday}
@@ -136,6 +145,7 @@
             AND is_deleted=0;
     </select>
 
+    <!--优化前-->
     <select id="selectForPage" parameterType="com.performance.common.query.UserInfoPageParam"
             resultMap="userPerformanceResultMap">
         SELECT
@@ -166,6 +176,46 @@
         </if>
         limit #{offset},#{limit}
     </select>
+
+    <!--优化后：-->
+    <select id="selectForPage"  parameterType="com.performance.common.query.UserInfoPageParam"
+            resultMap="userPerformanceResultMap">
+        SELECT
+        <include refid="userPerformance_Base_Column_List_toBetter"/>
+        FROM
+          (
+              SELECT
+              <include refid="Base_Column_List"/>
+              FROM user_info
+              <where>
+                  user_info.is_deleted = 0
+                  <if test="infoIds != null and infoIds.size != 0">
+                      AND user_info.user_info_id IN
+                      <foreach collection="infoIds" index="index" item="item" open="(" close=")" separator=",">
+                          #{item}
+                      </foreach>
+                  </if>
+              </where>
+          ) AS user_info_child
+        LEFT JOIN
+          (
+              SELECT
+              <include refid="Base_Column_List_performance"/>
+              FROM user_performance
+              <where>
+                  user_performance.is_deleted = 0
+                  <if test="performanceTime != null and performanceTime != ''">
+                      AND user_performance.performance_time = #{performanceTime}
+                  </if>
+              </where>
+          ) AS user_performance_child
+        ON user_info_child.user_info_id = user_performance_child.user_info_id
+        <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
+            ORDER BY ${orderField} ${orderDir}
+        </if>
+        limit #{offset},#{limit}
+    </select>
+    <!--优化后数据-->
 
     <select id="selectPageCount" resultType="java.lang.Long" parameterType="com.performance.common.query.UserInfoPageParam">
         SELECT count(1) FROM user_info
