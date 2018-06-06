@@ -126,7 +126,7 @@ public class UserLoginController {
 //        Assert.notNull(userLoginPageParam);
         vo.setDraw(dataTableParam.getDraw());
         packDTToUserLoginParam(dataTableParam, userLoginPageParam);
-        userLoginPageParam.setCreatedUserId(LoginContext.getUserInfo().getUserInfoId());
+        userLoginPageParam.setCreatedUserId(LoginContext.getUserLogin().getLoginId());
         _logger.info("获取数据列表：dTParam:{},uLPageParam:{}", dataTableParam, userLoginPageParam);
         List<UserLogin> logins = userLoginService.getForPage(userLoginPageParam);
         Long count = userLoginService.getCountByCreatedId(LoginContext.getUserLogin().getLoginId());

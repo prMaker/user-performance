@@ -51,7 +51,7 @@
                     <tr>
                         <td>用户生日</td>
                         <td>
-                            <input type="text" id="user-info-birthday" name="userInfo.birthday">
+                            <input type="text" readonly id="user-info-birthday" name="userInfo.birthday">
                         </td>
                     </tr>
                     <tr>
@@ -106,7 +106,7 @@
             <tr>
                 <td>用户生日</td>
                 <td>
-                    <input type="text" id="user-info-birthday" name="userInfo.birthday" value="${sessionScope.userInfo.birthday}">
+                    <input type="text" readonly id="user-info-birthday" name="userInfo.birthday" value="${sessionScope.userInfo.birthday}">
                 </td>
             </tr>
             <tr>
