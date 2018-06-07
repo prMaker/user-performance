@@ -178,7 +178,7 @@
     </select>
 
     <!--优化后：-->
-    <select id="selectForPage"  parameterType="com.performance.common.query.UserInfoPageParam"
+    <select id="selectForPageOptimization"  parameterType="com.performance.common.query.UserInfoPageParam"
             resultMap="userPerformanceResultMap">
         SELECT
         <include refid="userPerformance_Base_Column_List_toBetter"/>
