@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 登录校验 + 存储用户基本信息
@@ -38,10 +39,10 @@ public class LoginInterceptor implements HandlerInterceptor {
                     request.getRequestURI().startsWith("/userLogin/doLogin")){// 登录页面
                 return true;
             }
-            if(StringUtils.isBlank(request.getParameter("loginId"))) return false;// FIXME 重定向到登陆页面
+            if(StringUtils.isBlank(request.getParameter("loginId"))) return getFalseToUrl(response);// FIXME 重定向到登陆页面
             // userLogin 信息必有
             userLogin = userLoginService.getUserLoginById(Long.valueOf(request.getParameter("loginId")));
-            if(null == userLogin) return false;// FIXME  拦截之后重新定位到新的页面
+            if(null == userLogin) return getFalseToUrl(response);// FIXME  拦截之后重新定位到新的页面
             request.getSession().setAttribute("userLogin", userLogin);
 
             // userInfo 信息，填了才有
@@ -52,7 +53,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
         } catch (IllegalArgumentException e) {
             _logger.error("登录id:" + request.getParameter("userInfoId") + "登录校验异常！", e);
-            return false;
+            return getFalseToUrl(response);
         }
         _logger.info("用户id:{}已经登录", userLogin.getLoginId());
         LoginContext.setUserInfo(userInfo);
@@ -60,9 +61,19 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * 失败后跳转到登陆页面
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    private boolean getFalseToUrl(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/userLogin/toLogin");
+        return false;
+    }
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
     }
 
     @Override

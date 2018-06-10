@@ -16,13 +16,6 @@
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <jstl-version>1.2</jstl-version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -31,27 +24,31 @@
         </dependency>
 
         <dependency>
-            <groupId>com.bksx</groupId>
-            <artifactId>performance-service</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl-version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
             <version>${spring-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bksx</groupId>
+            <artifactId>performance-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
         </dependency>
 
         <!--spring-mvc json 解析-->
@@ -61,11 +58,11 @@
             <version>2.5.4</version>
         </dependency>
         <!-- fastjson -->
-        <!--<dependency>-->
-            <!--<groupId>com.alibaba</groupId>-->
-            <!--<artifactId>fastjson</artifactId>-->
-            <!--<version>1.2.15</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.15</version>
+        </dependency>
         <!--json 包-->
 
 
@@ -93,40 +90,40 @@
 
     </dependencies>
 
-    <build>
-        <finalName>performance-web</finalName>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-            <plugins>
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.20.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+    <!--<build>-->
+        <!--<finalName>performance-web</finalName>-->
+        <!--<pluginManagement>&lt;!&ndash; lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) &ndash;&gt;-->
+            <!--<plugins>-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-clean-plugin</artifactId>-->
+                    <!--<version>3.0.0</version>-->
+                <!--</plugin>-->
+                <!--&lt;!&ndash; see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging &ndash;&gt;-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-resources-plugin</artifactId>-->
+                    <!--<version>3.0.2</version>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                    <!--<version>3.7.0</version>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-surefire-plugin</artifactId>-->
+                    <!--<version>2.20.1</version>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-war-plugin</artifactId>-->
+                    <!--<version>3.2.0</version>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-install-plugin</artifactId>-->
+                    <!--<version>2.5.2</version>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<artifactId>maven-deploy-plugin</artifactId>-->
+                    <!--<version>2.8.2</version>-->
+                <!--</plugin>-->
+            <!--</plugins>-->
+        <!--</pluginManagement>-->
+    <!--</build>-->
 </project>

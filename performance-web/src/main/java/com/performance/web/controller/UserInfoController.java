@@ -70,6 +70,9 @@ public class UserInfoController {
         model.addAttribute("noUserInfo", null == LoginContext.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
         // 添加
+        if(true){
+            throw new RuntimeException("获取数据页面异常！");
+        }
         return "/userInfo/toList";
     }
 
