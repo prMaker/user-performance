@@ -18,12 +18,12 @@
     </modules>
 
     <properties>
-        <spring-version>4.0.0.RELEASE</spring-version>
-        <slf4j.version>1.7.5</slf4j.version>
-        <logback.version>1.2.3</logback.version>
         <java.version>1.8</java.version>
         <server.port>80</server.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-version>4.0.0.RELEASE</spring-version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <logback.version>1.2.3</logback.version>
         <jstl-version>1.2</jstl-version>
     </properties>
 
@@ -210,6 +210,17 @@
                 <version>2.7</version>
             </plugin>
             <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>${server.port}</port>
+                    <path>/${project.artifactId}</path>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -227,44 +238,89 @@
                     <warName>/${project.artifactId}</warName>
                 </configuration>
             </plugin>
+
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
                 <configuration>
-                    <port>${server.port}</port>
-                    <path>/${project.artifactId}</path>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.2.v20170220</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/${project.artifactId}</contextPath>
-                    </webApp>
-                    <httpConnector>
-                        <port>${server.port}</port>
-                    </httpConnector>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/${env}/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
-            <!-- Intellij idea兼容 -->
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
+                    <include>**/*.properties</include>
                 </includes>
             </resource>
-
             <resource>
                 <directory>src/main/resources</directory>
-                <!-- 过滤替换配置文件变量 -->
                 <filtering>true</filtering>
+                <includes>
+                    <include>**/**.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xsd</include>
+                </includes>
             </resource>
         </resources>
-
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
     </build>
+
+
+    <profiles>
+        <profile>
+            <id>dev-druid</id>
+        </profile>
+        <profile>
+            <id>dev-dbcp</id>
+        </profile>
+        <profile>
+            <id>dvo-druid</id>
+        </profile>
+        <profile>
+            <id>dvo-dbcp</id>
+        </profile>
+    </profiles>
+
+
+
+    <!-- maven 发布管理 start-->
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>jd-central</id>-->
+            <!--<name>libs-releases</name>-->
+            <!--<url>${maven.server.url}/libs-releases-local</url>-->
+        <!--</repository>-->
+        <!--<snapshotRepository>-->
+            <!--<id>jd-snapshots</id>-->
+            <!--<name>libs-snapshots</name>-->
+            <!--<url>${maven.server.url}/libs-snapshots-local</url>-->
+        <!--</snapshotRepository>-->
+    <!--</distributionManagement>-->
+    <!-- maven 发布管理 end-->
 </project>

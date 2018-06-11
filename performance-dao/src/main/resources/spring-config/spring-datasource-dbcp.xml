@@ -24,24 +24,24 @@
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
-        <!--&lt;!&ndash; 设定最大连接数  &ndash;&gt;-->
-        <!--<property name="maxActive" value="${pop-form.jdbc.maxActive}"/>-->
-        <!--&lt;!&ndash; 初始化连接数 &ndash;&gt;-->
-        <!--<property name="initialSize" value="${pop-form.jdbc.initialSize}"/>-->
-        <!--&lt;!&ndash; 设定最大等待时间（毫秒） &ndash;&gt;-->
-        <!--<property name="maxWait" value="${pop-form.jdbc.maxWait}"/>-->
-        <!--&lt;!&ndash; 设定最大空闲时间（毫秒） &ndash;&gt;-->
-        <!--<property name="maxIdle" value="${pop-form.jdbc.maxIdle}"></property>-->
-        <!--&lt;!&ndash; 最小空闲连接 &ndash;&gt;-->
-        <!--<property name="minIdle" value="${pop-form.jdbc.minIdle}"/>-->
-        <!--&lt;!&ndash; 是否自动回收超时连接 &ndash;&gt;-->
+        <!-- 设定最大连接数  -->
+        <property name="maxActive" value="${jdbc.maxsize}"/>
+        <!-- 初始化连接数 -->
+        <property name="initialSize" value="${jdbc.initsize}"/>
+        <!-- 设定最大等待时间（毫秒） -->
+        <property name="maxWait" value="${jdbc.maxwait}"/>
+        <!-- 设定最大空闲时间（毫秒） -->
+        <property name="maxIdle" value="${jdbc.maxidle}"></property>
+        <!-- 最小空闲连接 -->
+        <property name="minIdle" value="${jdbc.minidle}"/>
+        <!-- 是否自动回收超时连接 -->
         <!--<property name="removeAbandoned" value="${pop-form.jdbc.removeAbandoned}"/>-->
-        <!--&lt;!&ndash; 超时时间(以s为单位) &ndash;&gt;-->
+        <!-- 超时时间(以s为单位) -->
         <!--<property name="removeAbandonedTimeout" value="${pop-form.jdbc.removeAbandonedTimeout}"/>-->
-        <property name="validationQuery" value="SELECT 1"></property>
-        <property name="testWhileIdle" value="true"></property>
-        <property name="testOnBorrow" value="false"></property>
-        <property name="numTestsPerEvictionRun" value="50"></property>
+        <!--<property name="validationQuery" value="SELECT 1"></property>-->
+        <!--<property name="testWhileIdle" value="true"></property>-->
+        <!--<property name="testOnBorrow" value="false"></property>-->
+        <!--<property name="numTestsPerEvictionRun" value="50"></property>-->
         <!--<property name="timeBetweenEvictionRunsMillis" value="${pop-form.jdbc.timeBetweenEvictionRunsMillis}"></property>-->
         <!--<property name="minEvictableIdleTimeMillis" value="${pop-form.jdbc.minEvictableIdleTimeMillis}"></property>-->
     </bean>

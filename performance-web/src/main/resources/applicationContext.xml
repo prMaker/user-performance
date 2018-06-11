@@ -16,5 +16,6 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <import resource="classpath:spring-config/spring-datasource.xml"/>
+    <import resource="classpath:spring-config/spring-datasource-dbcp.xml"/>
+    <!--<import resource="classpath:spring-config/spring-datasource-druid.xml"/>-->
 </beans>
