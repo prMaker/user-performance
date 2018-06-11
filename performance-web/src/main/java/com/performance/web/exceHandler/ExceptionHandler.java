@@ -31,7 +31,7 @@ public class ExceptionHandler implements HandlerExceptionResolver{
     public ModelAndView resolveException(HttpServletRequest request
             , HttpServletResponse response, Object o, Exception e) {
         /*PROBLEM request.getParameterMap 获取的数据*/
-        _logger.error("系统访问路径：" + request.getRequestURI() + ",参数：" + request.getParameterMap()
+        _logger.error("系统访问路径：" + request.getRequestURI() + ",参数：" + JSON.toJSONString(request.getParameterMap())
                 + "出现异常：" + e.getMessage(), e);
         String xRequestedWith = request.getHeader(X_REQUESTED_WITH_HEADER);
         if(xRequestedWith != null && xRequestedWith.equals(X_REQUESTED_WITH)){
