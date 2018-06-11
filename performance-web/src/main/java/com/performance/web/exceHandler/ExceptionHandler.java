@@ -30,13 +30,11 @@ public class ExceptionHandler implements HandlerExceptionResolver{
     @Override
     public ModelAndView resolveException(HttpServletRequest request
             , HttpServletResponse response, Object o, Exception e) {
-        /*PROBLEM request.getParameterMap 获取的数据*/
         _logger.error("系统访问路径：" + request.getRequestURI() + ",参数：" + JSON.toJSONString(request.getParameterMap())
                 + "出现异常：" + e.getMessage(), e);
         String xRequestedWith = request.getHeader(X_REQUESTED_WITH_HEADER);
         if(xRequestedWith != null && xRequestedWith.equals(X_REQUESTED_WITH)){
             Result result = new Result(false, e.getMessage());
-            // TODO 测试乱码
             response.setContentType(APP_CONTEXT_JSON_CHARSET_UTF8);
             response.setStatus(HttpStatus.OK.value());
             try {
@@ -49,6 +47,7 @@ public class ExceptionHandler implements HandlerExceptionResolver{
             }
         }
         else{
+            // PROBLEM 测试乱码
             Map<String, String> map = new HashMap<>();
             map.put("errMsg", e.getMessage());
             return new ModelAndView("/handler/error", map);
