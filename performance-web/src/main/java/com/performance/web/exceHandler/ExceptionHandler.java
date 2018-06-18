@@ -30,8 +30,14 @@ public class ExceptionHandler implements HandlerExceptionResolver{
     @Override
     public ModelAndView resolveException(HttpServletRequest request
             , HttpServletResponse response, Object o, Exception e) {
-        _logger.error("系统访问路径：" + request.getRequestURI() + ",参数：" + JSON.toJSONString(request.getParameterMap())
-                + "出现异常：" + e.getMessage(), e);
+        _logger.error(new StringBuilder("系统访问路径：")
+                .append(request.getRequestURI())
+                .append(",参数：")
+                .append(JSON.toJSONString(request.getParameterMap()))
+                .append("出现异常：")
+                .append(e.getMessage())
+                .toString()
+                , e);
         String xRequestedWith = request.getHeader(X_REQUESTED_WITH_HEADER);
         if(xRequestedWith != null && xRequestedWith.equals(X_REQUESTED_WITH)){
             Result result = new Result(false, e.getMessage());

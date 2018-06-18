@@ -21,7 +21,7 @@
         <java.version>1.8</java.version>
         <server.port>80</server.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-version>4.0.0.RELEASE</spring-version>
+        <spring-version>4.3.17.RELEASE</spring-version>
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <jstl-version>1.2</jstl-version>
@@ -62,7 +62,8 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>${spring-version}</version>
+                <version>4.0.0.Release</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -292,19 +293,45 @@
     </build>
 
 
+
+
     <profiles>
         <profile>
-            <id>dev-druid</id>
+            <id>dev</id>
+            <properties>
+                <env>config_online</env>
+                <pip.log.path>/export/home/tomcat/shop/</pip.log.path>
+                <pip.log.level>info</pip.log.level>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
+
         <profile>
-            <id>dev-dbcp</id>
+            <id>test</id>
+            <properties>
+                <env>config_online</env>
+                <pip.log.path>/export/home/tomcat/shop/</pip.log.path>
+                <pip.log.level>info</pip.log.level>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
         </profile>
+
         <profile>
-            <id>dvo-druid</id>
+            <id>prod</id>
+            <properties>
+                <env>config_online</env>
+                <pip.log.path>/export/home/tomcat/shop/</pip.log.path>
+                <pip.log.level>info</pip.log.level>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
         </profile>
-        <profile>
-            <id>dvo-dbcp</id>
-        </profile>
+
     </profiles>
 
 

@@ -89,7 +89,7 @@
         <if test="orderField != null and orderDir != null and orderField != '' and orderDir != ''">
             ORDER BY #{orderField},#{orderDir}
         </if>
-        limit #{offset},#{limit}
+        limit #{offset},#{limit};
     </select>
 
     <select id="selectCount" parameterType="com.performance.pojo.UserPerformance" resultType="java.lang.Long">

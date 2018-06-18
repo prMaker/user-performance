@@ -69,9 +69,6 @@ public class UserInfoController {
     public String toList(Model model, String infoMsg){
         model.addAttribute("noUserInfo", null == LoginContext.getUserInfo());
         model.addAttribute("infoMsg", infoMsg);
-        if(true){
-            throw new RuntimeException("获取数据页面异常！");
-        }
         return "/userInfo/toList";
     }
 
