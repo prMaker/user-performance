@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 public class MockDataTest {
 
     @Resource
-    private SqlSessionTemplate sqlTemplate;
+    private SqlSessionTemplate sqlSessionTemplate;
 
     public void testT(){
         System.out.println("11111111111111111111");
@@ -29,16 +29,17 @@ public class MockDataTest {
         String modified_user = "admin";
         int created_user_id = 1;
         int modified_user_id = 1;
+/*
+user_info_id,login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id
 
-        String statement = "INSERT INTO user_login " +
-                "(is_deleted,login_name,password,dispostion,created_time,modified_time " +
-                ",created_user,modified_user,created_user_id,modified_user_id) " +
+
+*/
+        String statement = "INSERT INTO user_info " +
+                "(login_id,id_card,user_name,birthday,sex,phone,is_deleted,pid,dispostion,created_time,modified_time,created_user_info_id,modified_user_info_id) " +
                 " VALUES " +
-                "(0,'" + login_name + "','" + login_name + "'," + dispostion + ",'2018-05-30 11:54:12','2018-05-30 11:54:12' " +
-                ",'" + created_user + "','" + created_user + "',"
-                + created_user_id + "," + modified_user_id + ");";
+                "(9999999, 410882199009013413,'测试', '20190105' , 1, 18832058799, 0, 99999, 4, '2018-06-27 22:26:15', '2018-06-27 22:26:15', 1, 1);";
 
-//        sqlTemplate.insert(statement);
+        sqlSessionTemplate.insert(statement);
     }
 
 
